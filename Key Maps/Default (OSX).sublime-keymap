@@ -1,0 +1,12 @@
+[
+	//Suggested OSX key bindings for Kick Assembler Build System
+
+	{ "keys": ["super+b"], "command": "build" },
+
+	{ "keys": ["f5"], "command": "build", "args": {"variant": "Build and Run Startup"} },
+	{ "keys": ["shift+f5"], "command": "build", "args": {"variant": "Build and Debug Startup"} },
+
+	{ "keys": ["f7"], "command": "build", "args": {"variant": "Build and Run"} },
+	{ "keys": ["shift+f7"], "command": "build", "args": {"variant": "Build and Debug"} },
+	
+]

@@ -1,0 +1,1 @@
+java -jar "C:/C64/Tools/bin/KickAss.jar" %*

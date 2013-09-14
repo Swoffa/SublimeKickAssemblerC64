@@ -1,0 +1,57 @@
+.DS_Store
+*.cache
+*.swp
+tmp/**/*
+
+# SublimeText project files
+*.sublime-workspace
+
+# Java
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
+# Rails
+*.rbc
+*.sassc
+.sass-cache
+capybara-*.html
+.rspec
+.rvmrc
+/.bundle
+/vendor/bundle
+/log/*
+/tmp/*
+/db/*.sqlite3
+/public/system/*
+/coverage/
+/spec/tmp/*
+**.orig
+rerun.txt
+pickle-email-*.html
+.project
+
+# Ruby
+*.gem
+*.rbc
+.bundle
+.config
+coverage
+InstalledFiles
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
+
+# YARD artifacts
+.yardoc
+_yardoc
+doc/
+
