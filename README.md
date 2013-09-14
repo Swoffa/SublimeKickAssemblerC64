@@ -5,15 +5,15 @@ Support for Windows and OSX.
 
 Requirements, Windows
 =====================
-Ensure java 1.7 is installed 
-Ensure path to java-binaries (probably %programfiles(x86)%\Java\jre7\bin) exists in the PATH environment variable on your computer.
-Ensure path to KickAss.jar is correct in %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)/Build Systems/KickAss.bat
+ - Ensure java 1.7 is installed 
+ - Ensure path to java-binaries (probably %programfiles(x86)%\Java\jre7\bin) exists in the PATH environment variable on your computer.
+ - Ensure path to KickAss.jar is correct in %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)/Build Systems/KickAss.bat
 
 Requirements, OSX
 =====================
-Ensure java 1.7 is installed 
-Ensure KickAss.jar is installed in folder /Applications/KickAssembler/ (or edit KickAss.sublime-build with your path)
-Ensure VICE is installed in folder /Applications/ (or edit KickAss.sublime-build with your path)
+ - Ensure java 1.7 is installed
+ - Ensure KickAss.jar is installed in folder /Applications/KickAssembler/ (or edit KickAss.sublime-build with your path)
+ - Ensure VICE is installed in folder /Applications/ (or edit KickAss.sublime-build with your path)
 
 Details, Build System
 =====================
