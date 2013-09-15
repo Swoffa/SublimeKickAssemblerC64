@@ -15,7 +15,7 @@ Requirements, OSX
  - Download KickAssembler compiler from http://theweb.dk/KickAssembler/, extract and copy/install into folder KickAssembler in your Application folder (\*)
  - Download Vice C64 emulator from http://www.viceteam.org/#download, extract and copy/install into folder VICE in your Application folder (\*)
  
-(\*) If you did not use the recommended paths above, edit KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
+\* If you did not use the recommended paths above, edit KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
 
 Details, Build System
 ---------------------
