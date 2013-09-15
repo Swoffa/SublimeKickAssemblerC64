@@ -15,12 +15,12 @@ Requirements, OSX
  - Download KickAssembler compiler from http://theweb.dk/KickAssembler/, extract and copy/install into folder KickAssembler in your Application folder (\*)
  - Download Vice C64 emulator from http://www.viceteam.org/#download, extract and copy/install into folder VICE in your Application folder (\*)
  
-\* If you did not use the recommended paths above, edit KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
+\* If you did not use the recommended paths above, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
 
 Details, Build System
 ---------------------
-Build (command+b/ctrl+b) compiles the current file.
-Other build variants, accessed by pressing Command+Shift+P/Ctrl+Shift+P, or by using the associated key (after each variant below):
+Build (Super+b/Ctrl+b) compiles the current file.
+Other build variants, accessed by pressing Super+Shift+P/Ctrl+Shift+P, or by using the associated key (after each variant below):
 
  - Build and Run (F7), compiles the current file and runs it using the Vice emulator
  - Build and Debug (Shift+F7), compiles the current file and runs it using the Vice emulator. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging
@@ -31,5 +31,11 @@ Details, language and syntax
 ----------------------------
 The language bundle is downloaded and modified from https://github.com/cbmeeks/cbmeeks-6502kickass-asm-tmbundle. Thanks!
 It is under improvement and will hopefully be updated.
+
+More info
+---------
+See http://goatpower.org/
+
+
 
 //Swoffa of Noice
