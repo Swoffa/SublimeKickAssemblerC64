@@ -25,7 +25,6 @@
 		    {
 		    	//Argument "$file " must end with space tp ensure quotes
 				"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"$file_path\\Startup.vs\""], 
-			    "working_dir": "${packages}\\KickAssembler (C64)",
 		    },
 		    "name": "Build and Run",
         },
