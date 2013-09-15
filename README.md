@@ -5,13 +5,17 @@ Support for Windows and OSX.
 
 Requirements, Windows
 =====================
+ - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/
+ - Download Vice C64 emulator from http://www.viceteam.org/#download
  - Ensure java 1.7 is installed 
- - Ensure path to java-binaries (probably %programfiles(x86)%\Java\jre7\bin) exists in the PATH environment variable on your computer.
+ - Ensure path to java-binaries (probably %programfiles(x86)%\Java\jre7\bin) exists in the PATH environment variable on your computer
  - Ensure path to KickAss.jar is correct in %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)/Build Systems/KickAss.bat
+ - Ensure the path to Vice executable x64.exe exists in the PATH environment variable on your computer
 
 Requirements, OSX
 =====================
- - Ensure java 1.7 is installed
+ - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/
+ - Download Vice C64 emulator from http://www.viceteam.org/#download
  - Ensure KickAss.jar is installed in folder /Applications/KickAssembler/ (or edit KickAss.sublime-build with your path)
  - Ensure VICE is installed in folder /Applications/ (or edit KickAss.sublime-build with your path)
 
