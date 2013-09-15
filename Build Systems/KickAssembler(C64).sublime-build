@@ -4,9 +4,10 @@
 	//"line_regex": "^- included at line [0-9]*, column [0-9]* in ...*",
 	//"file_regex": "^at line [0-9]*, column [0-9]* in ...*",
 	//"file_regex": "^- included at line ([0-9]*), column ([0-9]*) in (...*)",
-	"shell": true, 		//Windows: Needed if KickAss.bat is not used, otherwise it doensnt matter
-						//OSX: Must be true and arguments in one string with quoted paths, otherwise error
- 	"encoding": "cp1252", //Windows: Needed if KickAss.bat is not used
+	"shell": true,      //Windows: Needed if KickAss.bat is not used, otherwise it doensnt matter
+                        //OSX: Must be true and arguments in one string with quoted paths, otherwise error
+ 	//"encoding": "cp1252", //Windows: Needed if KickAss.bat is not used
+    "working_dir": "${packages}/KickAssembler (C64)/",
 
     // Build only
 	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '$file' -log '$file_path/${file_base_name}_BuildLog.txt' -o '$file_path/${file_base_name}_Compiled.prg' -vicesymbols -showmem"],
@@ -14,7 +15,7 @@
     {
 		//Argument "$file " must end with space tp ensure quotes
     	// -aom = Allow overlapping memory blocks. With this option, overlapping memory blocks will produce a warning instead of an error.
-		"cmd": ["$packages\\KickAssembler (C64)\\Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem",],
+		"cmd": ["Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem",],
     },
 
     "variants": [
@@ -24,7 +25,7 @@
 			"windows":
 		    {
 		    	//Argument "$file " must end with space tp ensure quotes
-				"cmd": ["$packages\\KickAssembler (C64)\\Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"$file_path\\Startup.vs\""], 
+				"cmd": ["Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"$file_path\\Startup.vs\""], 
 		    },
 		    "name": "Build and Run",
         },
@@ -35,7 +36,7 @@
 			"windows":
 		    {
 		    	//Argument "$file " must end with space tp ensure quotes
-				"cmd": ["$packages\\KickAssembler (C64)\\Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
+				"cmd": ["Build Systems\\KickAss.bat", "$file ",  "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-log", "$file_path\\\\${file_base_name}_BuildLog.txt", "-o", "$file_path\\\\${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
 		    },
 		    "name": "Build and Debug"
         },
@@ -46,7 +47,7 @@
 			"windows":
 		    {
 		    	//Argument "$file " must end with space tp ensure quotes
-				"cmd": ["$packages\\KickAssembler (C64)\\Build Systems\\KickAss.bat", "$file_path\\Startup.$file_extension ", "-log", "$file_path\\Startup_BuildLog.txt", "-o", "$file_path\\Startup_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"$file_path\\Startup.vs\""], 
+				"cmd": ["Build Systems\\KickAss.bat", "$file_path\\Startup.$file_extension ", "-log", "$file_path\\Startup_BuildLog.txt", "-o", "$file_path\\Startup_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"$file_path\\Startup.vs\""], 
 		    },
 		    "name": "Build and Run Startup",
         },
@@ -57,7 +58,7 @@
 			"windows":
 		    {
 		    	//Argument "$file " must end with space tp ensure quotes
-				"cmd": ["$packages\\KickAssembler (C64)\\Build Systems\\KickAss.bat", "$file_path\\Startup.$file_extension ", "-log", "$file_path\\Startup_BuildLog.txt", "-o", "$file_path\\Startup_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
+				"cmd": ["Build Systems\\KickAss.bat", "$file_path\\Startup.$file_extension ", "-log", "$file_path\\Startup_BuildLog.txt", "-o", "$file_path\\Startup_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
 		    },
 		    "name": "Build and Debug Startup",
         },
