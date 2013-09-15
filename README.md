@@ -5,19 +5,18 @@ Support for Windows and OSX.
 
 Requirements, Windows
 =====================
- - Ensure java 1.7 is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
+ - Ensure a fairly modern version of java is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
  - Ensure path to java-binaries (probably %programfiles(x86)%\Java\jre7\bin) exists in the PATH environment variable on your computer
- - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/
- - Download Vice C64 emulator from http://www.viceteam.org/#download
- - Ensure path to KickAss.jar is correct in %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)/Build Systems/KickAss.bat
+ - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/, extract and copy folder to c:\C64\Tools\KickAssembler\ saves you some work later (or ensure path to KickAss.jar is correct in %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)/Build Systems/KickAss.bat
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract and copy folder to some good location on your computer (c:\C64\Tools\Vice\ is recommended)
  - Ensure the path to Vice executable x64.exe exists in the PATH environment variable on your computer
 
 Requirements, OSX
 =====================
- - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/
- - Download Vice C64 emulator from http://www.viceteam.org/#download
- - Ensure KickAss.jar is installed in folder /Applications/KickAssembler/ (or edit KickAss.sublime-build with your path)
- - Ensure VICE is installed in folder /Applications/ (or edit KickAss.sublime-build with your path)
+ - Download and KickAssembler compiler from http://theweb.dk/KickAssembler/, extract and copy/install into folder KickAssembler in your Application folder (*)
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract and copy/install into folder VICE in your Application folder (*)
+ 
+ If you did not use the recommended paths above, edit KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
 
 Details, Build System
 =====================
