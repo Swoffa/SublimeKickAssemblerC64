@@ -1,9 +1,9 @@
 {
 	"selector": "source.assembly.kickassembler",
 	//filename, line number, column number and error message
-	//"line_regex": "^- included at line [0-9]*, column [0-9]* in ...*",
-	//"file_regex": "^at line [0-9]*, column [0-9]* in ...*",
-	//"file_regex": "^- included at line ([0-9]*), column ([0-9]*) in (...*)",
+	"file_regex": "^at line (?=[0-9]*, column [0-9]* in ([^ ]*).*$)([0-9]*), column ([0-9]*)",
+	//"line_regex": "^at line (?=[0-9]*, column [0-9]* in ([^ ]*).*$)([0-9]*), column ([0-9]*)",
+	//"file_regex": "^Error: (.*)$",
 	"shell": true,      //Windows: Does nt matter
                          //OSX: Must be true and arguments in one string with quoted paths, otherwise error
  	"encoding": "cp1252", //Windows: Needed if KickAss.bat is not used
