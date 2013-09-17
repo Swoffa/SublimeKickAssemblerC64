@@ -1,8 +1,8 @@
 {
     // BUGS
     //-----
-    // - If filename contaisn å, ö, ä it will not launch in Vice
-    // - If filename contaisn spaces, it will not launch in Vice for Variants Build and Run and Build and Debug
+    // - Windows: If filename contaisn å, ö, ä it will not launch in Vice
+    // - Windows+OSX: If filename contaisn spaces, it will not launch in Vice for Variants Build and Run and Build and Debug
 
     // TODO
     //-----
