@@ -1,7 +1,12 @@
 {
     // BUGS
+    //-----
     // - If filename contaisn å, ö, ä it will not launch in Vice
     // - If filename contaisn spaces, it will not launch in Vice for Variants Build and Run and Build and Debug
+
+    // TODO
+    //-----
+    // - Test and simplify OSX-commands, see changes done for Windows-commands
 
     "selector": "source.assembly.kickassembler",
     "shell": false,  //Windows: Doesnt matter
