@@ -17,7 +17,7 @@
     "cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem"],
     "windows":
     {
-    	//${file} can probably be replaced by ${file} below
+    	//${file} can probably be replaced by ${file_name} below, since working directory is file directory (applys to all Variants)
     	"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "${file_base_name}_BuildLog.txt", "-o", "${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem",],
     	"path": "%path%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
     },
@@ -29,7 +29,6 @@
         	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit' -moncommands '${file_path}/${file_base_name}.vs'"],
         	"windows":
         	{
-        		//${file} can probably be replaced by ${file} below
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "${file_base_name}_BuildLog.txt", "-o", "${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"${file_base_name}.vs\""], 
         		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
         	},
@@ -41,7 +40,6 @@
         	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem -afo -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt'"],
         	"windows":
         	{
-        		//${file} can probably be replaced by ${file} below
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "${file_base_name}_BuildLog.txt", "-o", "${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
         		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
         	},
@@ -53,7 +51,6 @@
         	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_path}/Startup.${file_extension}' -log '${file_path}/Startup_BuildLog.txt' -o '${file_path}/Startup_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit' -moncommands '${file_path}/Startup.vs'"],
         	"windows":
         	{
-        		//${file} can probably be replaced by ${file} below
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "Startup_BuildLog.txt", "-o", "Startup_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"${file_path}\\Startup.vs\""], 
         		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
         	},
@@ -65,7 +62,6 @@
         	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_path}/Startup.${file_extension}' -log '${file_path}/Startup_BuildLog.txt' -o '${file_path}/Startup_Compiled.prg' -vicesymbols -showmem -afo -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt"],
         	"windows":
         	{
-        		//${file} can probably be replaced by ${file} below
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "Startup_BuildLog.txt", "-o", "Startup_Compiled.prg", "-vicesymbols", "-showmem", "-afo", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
         		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
         	},
