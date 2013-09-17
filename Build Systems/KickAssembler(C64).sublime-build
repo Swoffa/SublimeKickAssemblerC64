@@ -9,8 +9,8 @@
     // - Test and simplify OSX-commands, see changes done for Windows-commands
 
     "selector": "source.assembly.kickassembler",
-    "shell": false,  //Windows: Doesnt matter
-                     //OSX: Must be true and arguments in one string with quoted paths, otherwise error
+    "shell": true,  //Windows: Doesnt matter
+                    //OSX: Must be true and arguments in one string with quoted paths, otherwise error
     "encoding": "cp1252", //Windows: Needed
     "file_regex": "^at line (?=[0-9]*, column [0-9]* in ([^ ]*).*$)([0-9]*), column ([0-9]*)", //filename, line number, column number and error message
 
@@ -19,7 +19,7 @@
     //"file_regex": "^Error: (.*)$",
 
     // Build only (Super+B / Ctrl+B)
-    "cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem"],
+    "cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_base_name}_BuildLog.txt' -o '${file_base_name}_Compiled.prg' -vicesymbols -showmem"],
     "windows":
     {
     	//${file} can probably be replaced by ${file_name} below, since working directory is file directory (applys to all Variants)
@@ -31,7 +31,7 @@
         {
         	// Build and Run (F7)
         	"name": "Build and Run",
-        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit' -moncommands '${file_path}/${file_base_name}.vs'"],
+        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_name}' -log '{file_base_name}_BuildLog.txt' -o '${file_base_name}_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands ${file_base_name}.vs'"],
         	"windows":
         	{
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "${file_base_name}_BuildLog.txt", "-o", "${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"${file_base_name}.vs\""], 
@@ -42,7 +42,7 @@
         {
         	// Build and Debug (Shift+F7)
         	"name": "Build and Debug",
-        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log '${file_path}/${file_base_name}_BuildLog.txt' -o '${file_path}/${file_base_name}_Compiled.prg' -vicesymbols -showmem -afo :afo=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt'"],
+        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_name}' -log '${file_base_name}_BuildLog.txt' -o '${file_base_name}_Compiled.prg' -vicesymbols -showmem -afo :afo=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt'"],
         	"windows":
         	{
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ", "-log", "${file_base_name}_BuildLog.txt", "-o", "${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-afo", ":afo=true", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
@@ -53,7 +53,7 @@
         { 
         	// Build and Run startup (F5)
         	"name": "Build and Run Startup",
-        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_path}/Startup.${file_extension}' -log '${file_path}/Startup_BuildLog.txt' -o '${file_path}/Startup_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit' -moncommands '${file_path}/Startup.vs'"],
+        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'Startup_BuildLog.txt' -o 'Startup_Compiled.prg' -vicesymbols -showmem -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands Startup.vs'"],
         	"windows":
         	{
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "Startup_BuildLog.txt", "-o", "Startup_Compiled.prg", "-vicesymbols", "-showmem", "-execute", "X64 +confirmexit -moncommands \"${file_path}\\Startup.vs\""], 
@@ -64,7 +64,7 @@
         { 
         	// Build and Debug startup (Shift+F5)
         	"name": "Build and Debug Startup",
-        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' '${file_path}/Startup.${file_extension}' -log '${file_path}/Startup_BuildLog.txt' -o '${file_path}/Startup_Compiled.prg' -vicesymbols -showmem -afo :afo=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt"],
+        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'Startup_BuildLog.txt' -o 'Startup_Compiled.prg' -vicesymbols -showmem -afo :afo=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands breakpoints.txt'"],
         	"windows":
         	{
         		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "Startup_BuildLog.txt", "-o", "Startup_Compiled.prg", "-vicesymbols", "-showmem", "-afo", ":afo=true", "-execute", "X64 +confirmexit -moncommands breakpoints.txt"], 
