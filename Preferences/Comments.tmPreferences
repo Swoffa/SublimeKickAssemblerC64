@@ -18,6 +18,12 @@
 			</dict>
 			<dict>
 				<key>name</key>
+				<string>TM_COMMENT_MODE</string>
+				<key>value</key>
+				<string>line</string>
+			</dict>
+			<dict>
+				<key>name</key>
 				<string>TM_COMMENT_START_2</string>
 				<key>value</key>
 				<string>/*</string>
@@ -27,6 +33,12 @@
 				<string>TM_COMMENT_END_2</string>
 				<key>value</key>
 				<string>*/</string>
+			</dict>
+			<dict>
+				<key>name</key>
+				<string>TM_COMMENT_MODE_2</string>
+				<key>value</key>
+				<string>block</string>
 			</dict>
 		</array>
 	</dict>
