@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+.macro ${1:MACRONAME} (${2:parameters}) {
+				$3
+}
+]]></content>
+    <tabTrigger>macro</tabTrigger>
+    <scope>source.assembly.kickassembler</scope>
+    <description>Kick Assembler macro</description>
+</snippet>

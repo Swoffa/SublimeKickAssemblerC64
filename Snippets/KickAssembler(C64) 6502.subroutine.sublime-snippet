@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+${1:name}:	${2}
+			rts
+]]></content>
+    <tabTrigger>sub</tabTrigger>
+    <scope>source.assembly.kickassembler</scope>
+    <description>6502 assembler subroutine</description>
+</snippet>

@@ -5,13 +5,13 @@
 	<key>name</key>
 	<string>Symbol List</string>
 	<key>scope</key>
-	<string>entity.name.label, entity.name.macro</string>
+	<string>entity.name.macro</string>
 	<key>settings</key>
 	<dict>
 		<key>showInSymbolList</key>
 		<integer>1</integer>
 	</dict>
 	<key>uuid</key>
-	<string>4ade2039-95df-4777-abde-d2571c1b4f9c</string>
+	<string>06ae4814-0491-47b4-b294-f486e7991a7a</string>
 </dict>
 </plist>

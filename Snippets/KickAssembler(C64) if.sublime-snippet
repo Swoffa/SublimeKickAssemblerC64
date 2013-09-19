@@ -1,0 +1,11 @@
+<snippet>
+	<content><![CDATA[
+		.if(${1:EXPR}) {
+$SELECTION$4
+		}
+
+]]></content>
+    <tabTrigger>if</tabTrigger>
+    <scope>source.assembly.kickassembler</scope>
+    <description>Kick Assembler if block</description>
+</snippet>

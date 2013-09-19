@@ -1,0 +1,13 @@
+<snippet>
+	<content><![CDATA[
+//----------------------------------------------------------
+//				${1:Description}
+//----------------------------------------------------------
+${SELECTION}
+//----------------------------------------------------------
+
+]]></content>
+    <tabTrigger>region</tabTrigger>
+    <scope>source.assembly.kickassembler</scope>
+    <description>Kick Assembler region</description>
+</snippet>

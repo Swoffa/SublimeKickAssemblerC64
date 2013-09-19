@@ -1,0 +1,13 @@
+<snippet>
+	<content><![CDATA[
+		.if(${1:EXPR}) {
+$SELECTION
+		} else {
+$5
+		}
+
+]]></content>
+    <tabTrigger>ifel</tabTrigger>
+    <scope>source.assembly.kickassembler</scope>
+    <description>Kick Assembler if-else block</description>
+</snippet>
