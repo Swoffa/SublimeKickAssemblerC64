@@ -1,25 +1,42 @@
 SublimeKickAssemblerC64
 =======================
 Sublime Package for for C64 development with Kick Assembler.  
-Support for Windows and OSX.
 
-Requirements, OSX
+Description
+-----------
+Package for Sublime text editor, contains  language configuration/syntax coloring, build system and some snippets. Support for Windows and OSX.
+
+Installation, OSX
 -----------------
- - Download KickAssembler from http://theweb.dk/KickAssembler/ and extract to folder KickAssembler in your Application folder (\*)
- - Download Vice C64 emulator from http://www.viceteam.org/#download and extract to folder VICE in your Application folder (\*)
+ - Download KickAssembler from http://theweb.dk/KickAssembler/, extract to folder KickAssembler in your Applications folder (\*)  
+   Folder /Applications/Kick Assembler/ should now contain KickAss.jar and some other files/folders.
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder Vice in your Applications folder (\*)  
+   Folder /Applications/Vice/ should now contain x64 and some other files/folders.
+ - Clone or download this GitHub repository into subfolder of ~/Library/Application Support/Sublime Text 3/Packages/  
+   Package is also available from Package Control, see https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)
  
 \* If you did not use the recommended paths above, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
 
-Requirements, Windows
+Installation, Windows
 ---------------------
  - Ensure a fairly modern version of java is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
- - Download and KickAssembler from http://theweb.dk/KickAssembler/and extract to folder c:\C64\Tools\KickAssembler\ (\*)  
+ - Download and KickAssembler from http://theweb.dk/KickAssembler/, extract to folder c:\C64\Tools\KickAssembler\ (\*)  
    Folder c:\C64\Tools\KickAssembler\ should now contain KickAss.jar and some other files/folders.
- - Download Vice C64 emulator from http://www.viceteam.org/#downloaand extract to folder c:\C64\Tools\Vice\ (\*\*)  
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder c:\C64\Tools\Vice\ (\*\*)  
    Folder c:\C64\Tools\Vice\ should now contain x64.exe and some other files/folders.
+ - Clone or download this GitHub repository to subfolder of %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\  
+   Package is also available from Package Control, see https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)
 
 \* If you did not use the recommended path for Kick Assembler in step 2, edit file %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)\Build Systems\KickAssembler(C64).sublime-build with the correct path to KickAss.jar  
 \*\* If you did not use the recommended path for Vice in step 3, add the path to the Vice folder containing x64.exe to the PATH environment variable
+
+Develop, build and run
+----------------------
+ 1. Open a Kick Assembler code file in Sublime text. Example code file [here](https://dl.dropbox.com/s/cl7391x5hqwk8zf/GoatPowerExample.asm?dl=1).
+ 2. Hit the `F7` key to start Build and Run (see below for more build options)
+ 3. Hopefully watch your lovely code execute! (\*)
+
+\* IF you get error saying java is not recognized as an internal or external command, ensure java is installed and add the path to your java binaries folder to the PATH environment variable
 
 Details, Build System
 ---------------------
@@ -33,8 +50,8 @@ Other build variants, accessed by pressing `Super+Shift+P` (OSX) / `Ctrl+Shift+P
 
 Details, language and syntax
 ----------------------------
+The syntax coloring and language configuration is under improvement and will hopefully be updated. 
 The language bundle is downloaded and modified from https://github.com/cbmeeks/cbmeeks-6502kickass-asm-tmbundle. Thanks!
-It is under improvement and will hopefully be updated.
 
 More info
 ---------
