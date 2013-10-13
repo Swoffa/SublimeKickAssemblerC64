@@ -67,5 +67,16 @@
         		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
         	},
         },
+
+        {
+        	// Build Startup (Super+Shift+B / Ctrl+Shift+B)
+        	"name": "Build Startup",
+        	"cmd": ["java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'Startup_BuildLog.txt' -o 'Startup_Compiled.prg' -vicesymbols -showmem"],
+        	"windows":
+        	{
+        		"cmd": ["java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "Startup_BuildLog.txt", "-o", "Startup_Compiled.prg", "-vicesymbols", "-showmem"], 
+        		"path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+        	},
+        },
     ]
 }
