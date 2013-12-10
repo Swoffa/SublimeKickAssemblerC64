@@ -16,7 +16,7 @@
 				<key>value</key>
 				<string>// </string>
 			</dict>
-<!-- 			<dict>
+			<dict>
 				<key>name</key>
 				<string>TM_COMMENT_START_2</string>
 				<key>value</key>
@@ -28,13 +28,7 @@
 				<key>value</key>
 				<string>*/</string>
 			</dict>
-			<dict>
-				<key>name</key>
-				<string>TM_COMMENT_MODE_2</string>
-				<key>value</key>
-				<string>line</string>
-			</dict>
- -->		</array>
+		</array>
 	</dict>
 	<key>uuid</key>
 	<string>23792dda-5591-462d-bd92-a068940ecccf</string>
