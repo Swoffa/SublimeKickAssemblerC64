@@ -120,7 +120,7 @@ More...
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>^\s*(\.(pc|namespace|filenamespace|importonce|pseudopc|return|eval))\b</string>
+			<string>^\s*(\.(pc|importonce|pseudopc|return|eval))\b</string>
 			<key>name</key>
 			<string>keyword.kickass</string>
 		</dict>
@@ -253,68 +253,136 @@ More...
 				<key>1</key>
 				<dict>
 					<key>name</key>
+					<string>meta.label.identifier</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
 					<string>entity.name.label</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*(!?([A-Za-z_][A-Za-z0-9_]*)*):</string>
+			<string>^\s*((!?([A-Za-z_][A-Za-z0-9_]*)+)\:)</string>
 			<key>name</key>
 			<string>label</string>
 		</dict>
 		<dict>
 			<key>captures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.filenamespace.identifier</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.type.filenamespace</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.filenamespace</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>^\s*((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
+			<key>name</key>
+			<string>filenamespace</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.namespace.identifier</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.type.namespace</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.namespace</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>^\s*((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
+			<key>name</key>
+			<string>namespace</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.pseudocommand.identifier</string>
+				</dict>
+				<key>2</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.pseudocommand</string>
 				</dict>
-				<key>1</key>
+				<key>3</key>
 				<dict>
 					<key>name</key>
 					<string>entity.name.pseudocommand</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*\.pseudocommand\s*([A-Za-z_][A-Za-z0-9_]*)\b</string>
+			<string>^\s*((\.pseudocommand)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 			<key>name</key>
 			<string>pseudocommand</string>
 		</dict>
 		<dict>
 			<key>captures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.label.identifier</string>
+				</dict>
+				<key>2</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.function</string>
 				</dict>
-				<key>1</key>
+				<key>3</key>
 				<dict>
 					<key>name</key>
 					<string>entity.name.function</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*\.function\s*([A-Za-z_][A-Za-z0-9_]*)\b</string>
+			<string>^\s*((\.function)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 			<key>name</key>
 			<string>function</string>
 		</dict>
 		<dict>
 			<key>captures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.macro.identifier</string>
+				</dict>
+				<key>2</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.macro</string>
 				</dict>
-				<key>1</key>
+				<key>3</key>
 				<dict>
 					<key>name</key>
 					<string>entity.name.macro</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*\.macro\s*([A-Za-z_][A-Za-z0-9_]*)\b</string>
+			<string>^\s*((\.macro)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 			<key>name</key>
 			<string>macro</string>
 		</dict>
