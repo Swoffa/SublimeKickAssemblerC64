@@ -132,7 +132,7 @@ More...
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(BLACK|WHITE|RED|CYAN|PURPLE|GREEN|BLUE|YELLOW|ORANGE|BROWN|LIGHT_RED|DARK_GRAY|GRAY|LIGHT_GREEN|LIGHT_BLUE|LIGHT_GRAY)\b</string>
+			<string>\b(BLACK|WHITE|RED|CYAN|PURPLE|GREEN|BLUE|YELLOW|ORANGE|BROWN|LIGHT_RED|DARK_GRAY|GRAY|DARK_GREY|GREY|LIGHT_GREEN|LIGHT_BLUE|LIGHT_GRAY|LIGHT_GREY)\b</string>
 			<key>name</key>
 			<string>constant.language.color</string>
 		</dict>
