@@ -16,9 +16,9 @@ More...
 		<string>.s</string>
 		<string>.a</string>
 	</array>
-	<key>foldingStartMarker</key>
+	<key>foldingStartMarker</key> <!-- Ignored by sublime, folding is by indentation only -->
 	<string>\/\*|\{\s*$</string>
-	<key>foldingStopMarker</key>
+	<key>foldingStopMarker</key> <!-- Ignored by sublime, folding is by indentation only -->
 	<string>\*\/|^\s*\}</string>
 	<key>name</key>
 	<string>KickAssembler (C64)</string>
@@ -44,13 +44,23 @@ More...
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(\/\*).*</string>
+			<string>/\*</string>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.comment</string>
+				</dict>
+			</dict>
 			<key>end</key>
-			<string>.*(\*\/)</string>
+			<string>\*/\n?</string>
 			<key>name</key>
 			<string>comment.block</string>
 		</dict>
 		<dict>
+			<key>begin</key>
+			<string>//</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -59,22 +69,28 @@ More...
 					<string>punctuation.definition.comment</string>
 				</dict>
 			</dict>
-			<key>match</key>
-			<string>(//).*$</string>
+			<key>end</key>
+			<string>$\n?</string>
 			<key>name</key>
-			<string>comment.line.double-dash</string>
+			<string>comment.line.double-slashs</string>
 		</dict>
  		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.kickass</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>(\.(word|byte|text|dword))\b</string> <!-- TODO: Mathc optional la el at beginning instead of just .* -->
-			<key>name</key>
-			<string>storage.type</string>
+			<string>(?:^|\s)(\.(word|byte|text|dword))\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(CmdArgument|Hashtable)\b</string> <!-- TODO: Mathc optional la el at beginning instead of just .* -->
+			<string>\b(CmdArgument|Hashtable)\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
 			<key>name</key>
-			<string>storage.type</string>
+			<string>storage.type.kickass</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -101,28 +117,52 @@ More...
 			<string>support.function.3d</string>
 		</dict>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.keyword.kickass.field</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>^\s*(\.(var|label|const))\b</string>
-			<key>name</key>
-			<string>storage.type.keyword.kickass.field</string>
+			<string>(?:^|\s)(\.(var|label|const))\b</string>
 		</dict>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.function.object</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>(\.(struct|enum))\b</string> <!-- TODO: Mathc optional la el at beginning instead of just .* -->
-			<key>name</key>
-			<string>keyword.kickass.function.object</string>
+			<string>(?:^|\s)(\.(struct|enum))\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
 		</dict>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.function</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>^\s*(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b</string>
-			<key>name</key>
-			<string>keyword.kickass.function</string>
+			<string>(?:^|\s)(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b</string>
 		</dict>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>^\s*(\.(pc|importonce|pseudopc|return|eval))\b</string>
-			<key>name</key>
-			<string>keyword.kickass</string>
+			<string>(?:^|\s)(\.(pc|importonce|pseudopc|return|eval))\b</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -195,23 +235,19 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*\.\b(for)\s*\((var)\b</string>
-			<key>name</key>
-			<string>for</string>
+			<string>(?:^|\s)(\.for)\s*\((var)\b</string>
 		</dict>
-		<!--
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string></string>
-			<key>name</key>
-			<string>keyword.operator</string>
-		</dict>
-		-->
-		<dict>
-			<key>match</key>
-			<string>^\s*\.\b(if)\b|\b(else)\b</string>
-			<key>name</key>
-			<string>keyword.control</string>
+			<string>(?:^|\s)(\.if)\b|\b(else)\b</string>
 		</dict>
 		<dict>
 			<key>begin</key>
@@ -226,27 +262,11 @@ More...
 					<key>match</key>
 					<string>\\.</string>
 					<key>name</key>
-					<string>constant.character.escape.untitled</string>
+					<string>constant.character.escape</string>
 				</dict>
 			</array>
 		</dict>
 
-		<!--
-		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.label</string>
-				</dict>
-			</dict>
-			<key>match</key>
-	 			<string>(!|(^\w+))\w+(:|-|\+)</string>
-  			<key>name</key>
-			<string>label</string>
-		</dict>
-		-->
 		<dict>
 			<key>captures</key>
 			<dict>
@@ -262,7 +282,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*((!?([A-Za-z_][A-Za-z0-9_]*)+)\:)</string>
+			<string>^\s*(((!)|(!?([A-Za-z_][A-Za-z0-9_]*)+))\:)</string>
 			<key>name</key>
 			<string>label</string>
 		</dict>
@@ -287,8 +307,6 @@ More...
 			</dict>
 			<key>match</key>
 			<string>^\s*((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
-			<key>name</key>
-			<string>filenamespace</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -310,9 +328,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
-			<key>name</key>
-			<string>namespace</string>
+			<string>(?:^|\s)((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -334,9 +350,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*((\.pseudocommand)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
-			<key>name</key>
-			<string>pseudocommand</string>
+			<string>(?:^|\s)((\.pseudocommand)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -358,9 +372,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*((\.function)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
-			<key>name</key>
-			<string>function</string>
+			<string>(?:^|\s)((\.function)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -382,9 +394,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*((\.macro)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
-			<key>name</key>
-			<string>macro</string>
+			<string>(?:^|\s)((\.macro)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>match</key>
