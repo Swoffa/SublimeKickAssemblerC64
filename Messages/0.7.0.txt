@@ -1,0 +1,13 @@
+New in version 0.7.0:
+- Bin-folder, all results of build a ends up in sub folder called bin
+- Language-definition corrections:
+ - New: Support for char data type (coloring)
+ - Fix: Block comments on single line is now correctly colored
+ - Fix: !: labels are now correctly colored
+ - Fix: Coloring of List key word
+ - Fix: Coloring added for GREY/LIGHT_GREY/DARK_GREY color constants
+ - Fix: Various coloring issues when several commands are stacked on one line
+
+//Swoffa of Noice
+
+
