@@ -1,5 +1,5 @@
 New in version 0.7.0:
-- Bin-folder, all results of build a ends up in sub folder called bin
+- Bin-folder, all results of build (prg, symbols etc.) ends up in sub folder called bin
 - Language-definition corrections:
  - New: Support for char data type (coloring)
  - Fix: Block comments on single line is now correctly colored
