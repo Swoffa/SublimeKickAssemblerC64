@@ -3,7 +3,7 @@ SublimeKickAssemblerC64
 Sublime Package for for C64 development with Kick Assembler, 
 contains language configuration/syntax coloring, build system and some snippets. Support for Windows and OSX.
 
-Installation With Package Control, OSX and Windows
+Installation with Package Control, OSX and Windows
 -----------------
 Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://sublime.wbond.net/packages/Kick%20Assembler%20(C64))
 
