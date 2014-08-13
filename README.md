@@ -7,12 +7,12 @@ Installation, OSX
 -----------------
  - Download KickAssembler from http://theweb.dk/KickAssembler/, extract to folder KickAssembler in your Applications folder (\*)  
    Folder /Applications/Kick Assembler/ should now contain KickAss.jar and some other files/folders.
- - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder Vice in your Applications folder (\*)  
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder Vice in your Applications folder (\**)  
    Folder /Applications/Vice/ should now contain x64 and some other files/folders.
- - Clone or download this GitHub repository into subfolder of ~/Library/Application Support/Sublime Text 3/Packages/  
-   Package is also available from Package Control, see https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)
- 
-\* If you did not use the recommended paths above, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct paths to KickAssembler and Vice
+ - Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)), or clone/download this GitHub repository into subfolder of ~/Library/Application Support/Sublime Text 3/Packages/  
+
+\* If you did not use the recommended path for Kick Assembler, add the path to KickAss.jar to the CLASSPATH environment variable
+\*\* If you did not use the recommended path for Vice, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Vice (requires "download" install) 
 
 Installation, Windows
 ---------------------
@@ -21,11 +21,10 @@ Installation, Windows
    Folder c:\C64\Tools\KickAssembler\ should now contain KickAss.jar and some other files/folders.
  - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder c:\C64\Tools\Vice\ (\*\*)  
    Folder c:\C64\Tools\Vice\ should now contain x64.exe and some other files/folders.
- - Clone or download this GitHub repository to subfolder of %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\  
-   Package is also available from Package Control, see https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)
+ - Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)), or clone/download this GitHub repository to subfolder of %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\  
 
-\* If you did not use the recommended path for Kick Assembler in step 2, edit file %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\KickAssembler (C64)\Build Systems\KickAssembler(C64).sublime-build with the correct path to KickAss.jar  
-\*\* If you did not use the recommended path for Vice in step 3, add the path to the Vice folder containing x64.exe to the PATH environment variable
+\* If you did not use the recommended path for Kick Assembler, add the path to KickAss.jar to the CLASSPATH environment variable  
+\*\* If you did not use the recommended path for Vice, add the path to the Vice folder containing x64.exe to the PATH environment variable
 
 Develop, build and run
 ----------------------
