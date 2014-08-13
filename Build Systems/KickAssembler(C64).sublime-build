@@ -1,8 +1,7 @@
 {
     // BUGS
     //-----
-    // - Windows: If filename contains å, ö, ä it will not launch in Vice
-    // - Windows+OSX: If filename contains spaces, it will not launch in Vice for Variants Build and Run and Build and Debug
+    // - Windows+OSX: If filename contains spaces, it will not launch in Vice for Variants "Build and Run" and "Build and Debug". Somethiong with quotes. Kick Assembler bug?
 
     "selector": "source.assembly.kickassembler",
     "shell": true,  //Windows: Doesnt matter
@@ -15,67 +14,73 @@
     //"file_regex": "^Error: (.*)$",
 
     // Build only (Super+B / Ctrl+B)
-    "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
+    "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
+    "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
     "windows":
     {
-        //${file} can probably be replaced by ${file_name} below, since working directory is file directory (applys to all Variants)
-        "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"],
-        "path": "%path%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+        "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "${file_name}" ,  "-log", "\"bin/${file_base_name}_BuildLog.txt\"", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"],
+        "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+        "path": "%PATH%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
     },
 
     "variants": [
         {
             // Build and Run (F7)
             "name": "Build and Run",
-            "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/${file_base_name}.vs'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/${file_base_name}.vs'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ",  "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands \"bin/${file_base_name}.vs\""], 
-                "path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "${file_name}",  "-log", "\"bin/${file_base_name}_BuildLog.txt\"", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands \"bin/${file_base_name}.vs\""], 
+                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
         },
 
         {
             // Build and Debug (Shift+F7)
             "name": "Build and Debug",
-            "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/breakpoints.txt'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/breakpoints.txt'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "${file} ", "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", "-execute", "X64 +confirmexit -moncommands bin\\breakpoints.txt"], 
-                "path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "${file_name}", "-log", "\"bin/${file_base_name}_BuildLog.txt\"", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", "-execute", "X64 +confirmexit -moncommands bin\\breakpoints.txt"], 
+                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
         },
 
         { 
             // Build and Run startup (F5)
             "name": "Build and Run Startup",
-            "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/Startup.vs'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/Startup.vs'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands bin\\Startup.vs"], 
-                "path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands bin\\Startup.vs"], 
+                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
         },
 
         { 
             // Build and Debug startup (Shift+F5)
             "name": "Build and Debug Startup",
-            "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/breakpoints.txt'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true -execute '/Applications/VICE/X64.app/Contents/MacOS/x64 +confirmexit -moncommands bin/breakpoints.txt'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", "-execute", "X64 +confirmexit -moncommands bin\\breakpoints.txt"], 
-                "path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", "-execute", "X64 +confirmexit -moncommands bin\\breakpoints.txt"], 
+                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
         },
 
         {
             // Build Startup (Super+Shift+B / Ctrl+Shift+B)
             "name": "Build Startup",
-            "cmd": ["mkdir -p bin & java -jar '/Applications/KickAssembler/KickAss.jar' 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "-jar", "C:/C64/Tools/KickAssembler/KickAss.jar", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"], 
-                "path": "%path%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"], 
+                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
         },
     ]
