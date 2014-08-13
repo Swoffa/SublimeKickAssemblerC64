@@ -11,8 +11,8 @@ Installation, OSX
    Folder /Applications/Vice/ should now contain x64 and some other files/folders.
  - Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://sublime.wbond.net/packages/Kick%20Assembler%20(C64)), or clone/download this GitHub repository into subfolder of ~/Library/Application Support/Sublime Text 3/Packages/  
 
-\* If you did not use the recommended path for Kick Assembler, add the path to KickAss.jar to the CLASSPATH environment variable
-\*\* If you did not use the recommended path for Vice, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Vice (requires "download" install) 
+\* If you did not use the recommended path for Kick Assembler, add the path to KickAss.jar to the CLASSPATH environment variable  
+\*\* If you did not use the recommended path for Vice, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Vice (requires "download" install)
 
 Installation, Windows
 ---------------------
