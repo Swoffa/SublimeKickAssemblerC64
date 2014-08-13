@@ -11,11 +11,11 @@ Manual installation, OSX
 -----------------
  - Download KickAssembler from http://theweb.dk/KickAssembler/, extract to folder KickAssembler in your Applications folder (\*)  
    Folder /Applications/Kick Assembler/ should now contain KickAss.jar and some other files/folders.
- - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder Vice in your Applications folder (\*)  
+ - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder Vice in your Applications folder (\**)  
    Folder /Applications/Vice/ should now contain x64 and some other files/folders.
  - Clone or download this GitHub repository into subfolder of ~/Library/Application Support/Sublime Text 3/Packages/  
 
-\* If you did not use the recommended path for Kick Assembler in step 1, add the path to KickAss.jar to the CLASSPATH environment variable, or edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Kick Assembler 
+\* If you did not use the recommended path for Kick Assembler in step 1, add the path to KickAss.jar to the CLASSPATH environment variable, or edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Kick Assembler  
 \*\* If you did not use the recommended path for Vice in step 2, edit file KickAss.sublime-build in folder ~/Library/Application Support/Sublime Text 3/Packages/ with the correct path to Vice
 
 Manual installation, Windows
@@ -27,7 +27,7 @@ Manual installation, Windows
    Folder c:\C64\Tools\Vice\ should now contain x64.exe and some other files/folders.
  - Clone or download this GitHub repository to subfolder of %USERPROFILE%\AppData\Roaming\Sublime Text 3\Packages\  
 
-\* If you did not use the recommended path for Kick Assembler in step 2, add the path to KickAss.jar to the CLASSPATH environment variable
+\* If you did not use the recommended path for Kick Assembler in step 2, add the path to KickAss.jar to the CLASSPATH environment variable  
 \*\* If you did not use the recommended path for Vice in step 3, add the path to the Vice folder containing x64.exe to the PATH environment variable
 
 Develop, build and run
