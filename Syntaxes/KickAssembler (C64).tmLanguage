@@ -372,7 +372,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^|\s)((\.function)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
+			<string>(?:^|\s)((\.function)\s*([A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
