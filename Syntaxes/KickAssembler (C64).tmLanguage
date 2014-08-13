@@ -216,7 +216,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>\b(list|List)\(\s*(\d+)*\s*\)</string>
+			<string>\b(list|List)\(\s*(\$?\d+)*\s*\)</string>
 			<key>name</key>
 			<string>list</string>
 		</dict>
