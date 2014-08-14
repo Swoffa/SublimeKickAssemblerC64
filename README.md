@@ -32,7 +32,7 @@ Develop, build and run
  2. Hit the `F7` key to start Build and Run (see below for more build options)
  3. Hopefully watch your lovely code execute! (\*)
 
-\* IF you get error saying java is not recognized as an internal or external command, ensure java is installed and add the path to your java binaries folder to the PATH environment variable
+\* If you get error saying java is not recognized as an internal or external command, ensure java is installed and add the path to your java binaries folder to the PATH environment variable
 
 Details, Build System
 ---------------------
