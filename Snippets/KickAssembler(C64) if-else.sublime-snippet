@@ -1,10 +1,10 @@
 <snippet>
 	<content><![CDATA[
-		.if(${1:EXPR}) {
-$SELECTION
-		} else {
-$5
-		}
+.if(${1:EXPR}) {
+	$SELECTION
+} else {
+	$5
+}
 
 ]]></content>
     <tabTrigger>ifel</tabTrigger>

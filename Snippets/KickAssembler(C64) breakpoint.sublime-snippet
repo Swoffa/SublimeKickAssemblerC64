@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-			:break()
+:break()
 ]]></content>
     <tabTrigger>bp</tabTrigger>
     <scope>source.assembly.kickassembler</scope>
