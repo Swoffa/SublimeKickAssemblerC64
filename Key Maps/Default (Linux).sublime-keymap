@@ -1,5 +1,5 @@
 [
-	//Suggested Windows key bindings for Kick Assembler Build System
+	//Suggested OSX key bindings for Kick Assembler Build System
 
 	{ "keys": ["ctrl+b"], "command": "build" },
 	{ "keys": ["ctrl+shift+b"], "command": "build", "args": {"variant": "Build Startup"} },
