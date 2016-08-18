@@ -1,6 +1,9 @@
 {
 	"extensions":
 	[
-		"asm"
+		"asm",
+		"inc",
+		"s",
+		"a"
 	]
 }

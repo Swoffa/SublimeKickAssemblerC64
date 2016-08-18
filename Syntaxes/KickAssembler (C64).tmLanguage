@@ -13,6 +13,7 @@ More...
 	<key>fileTypes</key>
 	<array>
 		<string>.asm</string>
+		<string>.inc</string>
 		<string>.s</string>
 		<string>.a</string>
 	</array>
