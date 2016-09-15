@@ -89,10 +89,15 @@
         { 
             // Build and Debug startup (Shift+F5)
             "name": "Build and Debug Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true -execute 'x64 +confirmexit -moncommands bin/breakpoints.txt'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && cat 'bin/Startup.vs' 'bin/breakpoints.txt' > 'bin/Startup_MonCommands.mon' && x64 -logfile 'bin/Startup_ViceLog.txt' +confirmexit -moncommands 'bin/Startup_MonCommands.mon' 'bin/Startup_Compiled.prg'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", "-execute", "X64 +confirmexit -moncommands bin\\breakpoints.txt"], 
+                "cmd": [
+                    "(", "if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", 
+                    "(", "java", "cml.kickass.KickAssembler", "Startup.${file_extension}", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", ")", "&&",
+                    "(", "copy", "bin\\\\Startup.vs", "+", "bin\\\\breakpoints.txt", "bin\\\\Startup_MonCommands.mon", ")", "&&", 
+                    "(", "x64.exe", "-logfile", "bin\\\\Startup_ViceLog.txt", "+confirmexit", "-moncommands", "bin\\\\Startup_MonCommands.mon", "bin\\\\Startup_Compiled.prg", ")"
+                    ], 
                 "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
                 "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
