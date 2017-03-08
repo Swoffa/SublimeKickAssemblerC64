@@ -85,11 +85,11 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^|\s)(\.(word|byte|text|dword))\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
+			<string>(?:^|\s)(\.(word|byte|text|dword))\b</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(CmdArgument|Hashtable)\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
+			<string>\b(CmdArgument|Hashtable)\b</string>
 			<key>name</key>
 			<string>storage.type.kickass</string>
 		</dict>
@@ -139,7 +139,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^|\s)(\.(struct|enum))\b</string> <!-- TODO: Match optional label at beginning instead of just .* -->
+			<string>(?:^|\s)(\.(struct|enum))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
