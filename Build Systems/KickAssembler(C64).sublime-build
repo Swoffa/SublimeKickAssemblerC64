@@ -7,11 +7,7 @@
     "shell": true,  //Windows: Doesnt matter
                     //OSX: Must be true and arguments in one string with quoted paths, otherwise error
     "encoding": "cp1252", //Windows: Needed
-    "file_regex": "^at line (?=[0-9]*, column [0-9]* in ([^ ]*).*$)([0-9]*), column ([0-9]*)", //filename, line number, column number and error message
-
-    // Ongoing work with extracting error message, does not currently work
-    //"line_regex": "^at line (?=[0-9]*, column [0-9]* in ([^ ]*).*$)([0-9]*), column ([0-9]*)",
-    //"file_regex": "^Error: (.*)$",
+    "file_regex": "^\\s*\\(\/(?:.+\/)*([^\\.]+\\.[^\\s]+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     // Build only (Super+B / Ctrl+B)
     "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
