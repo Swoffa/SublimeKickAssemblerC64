@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-.pc=${1:\$ADDR} "${2:Cosinus}"
+*=${1:\$ADDR} "${2:Cosinus}"
 .fill ${3:LENGTH}, ${4:AMPLITUDE} + ${5:$4}*cos(toRadians(i*360/${6:SIZE}))
 
 ]]></content>
