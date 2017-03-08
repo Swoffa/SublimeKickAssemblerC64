@@ -166,6 +166,78 @@ More...
 			<string>(?:^|\s)(\.(pc|importonce|pseudopc|return|eval))\b</string>
 		</dict>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(\*)(?=\s*\=\s*)</string>
+		</dict>
+
+ 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.preprocessor</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.kickass.preprocessor</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b</string>
+		</dict>
+ 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.preprocessor</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(\#(else|endif|importonce))\b</string>
+		</dict>
+ 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.preprocessor</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(\#(import))(?=\s+\".*\")</string>
+		</dict>
+ 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.kickass.preprocessor</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.kickass.preprocessor</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(\#(importif))\s+!*(([A-Za-z_][A-Za-z0-9_]*)+)(?=\s+\".*\")</string>
+		</dict>
+
+		<dict>
 			<key>match</key>
 			<string>\b(true|false)\b</string>
 			<key>name</key>
@@ -244,7 +316,7 @@ More...
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.control</string>
+					<string>keyword.control.if</string>
 				</dict>
 			</dict>
 			<key>match</key>
