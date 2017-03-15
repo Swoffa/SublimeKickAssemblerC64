@@ -7,7 +7,7 @@
     "shell": true,  //Windows: Doesnt matter
                     //OSX: Must be true and arguments in one string with quoted paths, otherwise error
     "encoding": "cp1252", //Windows: Needed
-    "file_regex": "^\\s*\\(\/(?:.+\/)*([^\\.]+\\.[^\\s]+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
+    "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     // Build only (Super+B / Ctrl+B)
     "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
@@ -16,8 +16,6 @@
         "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}" , "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"],
         "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
         "path": "%PATH%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
-        "file_regex": "^\\s*\\(.*\\\\(?:.+\\\\)*([^\\.]+\\.[^\\s]+)\\s(\\d*):(\\d*)\\)\\s(.*)"
-
     },
     "osx":
     {
