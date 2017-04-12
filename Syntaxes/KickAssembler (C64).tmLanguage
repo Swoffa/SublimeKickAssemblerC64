@@ -482,7 +482,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^\s*|\s)((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b</string>
+			<string>(?:^\s*|;\s*)((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>match</key>
