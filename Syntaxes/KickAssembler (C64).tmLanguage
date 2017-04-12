@@ -348,25 +348,6 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>meta.label.identifier</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.label</string>
-				</dict>
-			</dict>
-			<key>match</key>
-			<string>(?:^\s*|;\s*)(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)</string>
-			<key>name</key>
-			<string>label</string>
-		</dict>
-		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
 					<string>meta.filenamespace.identifier</string>
 				</dict>
 				<key>2</key>
@@ -404,6 +385,25 @@
 			</dict>
 			<key>match</key>
 			<string>(?:^\s*|;\s*)((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>meta.label.identifier</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.label</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(?:^\s*|;\s*)(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)</string>
+			<key>name</key>
+			<string>label</string>
 		</dict>
 		<dict>
 			<key>captures</key>
