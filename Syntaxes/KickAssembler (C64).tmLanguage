@@ -84,6 +84,12 @@
 		</dict>
 		<dict>
 			<key>match</key>
+			<string>\b(getNamespace)\b</string>
+			<key>name</key>
+			<string>support.function.language</string>
+		</dict>
+		<dict>
+			<key>match</key>
 			<string>\b(toIntString|toBinaryString|toOctalString|toHexString)\b</string>
 			<key>name</key>
 			<string>support.function.string</string>
