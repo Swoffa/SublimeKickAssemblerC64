@@ -75,7 +75,7 @@ More...
 			<key>name</key>
 			<string>comment.line.double-slashs</string>
 		</dict>
- 		<dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -177,8 +177,7 @@ More...
 			<key>match</key>
 			<string>(?:^\s*|;\s*)(\*)(?=\s*\=\s*)</string>
 		</dict>
-
- 		<dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -195,7 +194,7 @@ More...
 			<key>match</key>
 			<string>(?:^\s*|;\s*)(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b</string>
 		</dict>
- 		<dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -207,7 +206,7 @@ More...
 			<key>match</key>
 			<string>(?:^\s*|;\s*)(\#(else|endif|importonce))\b</string>
 		</dict>
- 		<dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -219,7 +218,7 @@ More...
 			<key>match</key>
 			<string>(?:^\s*|;\s*)(\#(import))(?=\s+\".*\")</string>
 		</dict>
- 		<dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -236,7 +235,6 @@ More...
 			<key>match</key>
 			<string>(?:^\s*|;\s*)(\#(importif))\s+!*(([A-Za-z_][A-Za-z0-9_]*)+)(?=\s+\".*\")</string>
 		</dict>
-
 		<dict>
 			<key>match</key>
 			<string>\b(true|false)\b</string>
@@ -285,7 +283,7 @@ More...
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>storage.type</string>
+					<string>storage.type.list</string>
 				</dict>
 				<key>2</key>
 				<dict>
@@ -356,7 +354,6 @@ More...
 				</dict>
 			</array>
 		</dict>
-
 		<dict>
 			<key>captures</key>
 			<dict>
