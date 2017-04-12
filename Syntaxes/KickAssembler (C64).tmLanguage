@@ -367,7 +367,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^\s*|;\s*)(((!)|(!?([A-Za-z_][A-Za-z0-9_]*)+))\:)</string>
+			<string>(?:^\s*|;\s*)(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)</string>
 			<key>name</key>
 			<string>label</string>
 		</dict>
@@ -435,7 +435,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^\s*|;\s*)((\.pseudocommand)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string>
+			<string>(?:^\s*|;\s*)((\.pseudocommand)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -457,7 +457,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^\s*|;\s*)((\.function)\s*([A-Za-z0-9_]*))\b</string>
+			<string>(?:^\s*|;\s*)((\.function)\s*(\@*[A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -479,7 +479,7 @@ More...
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?:^\s*|\s)((\.macro)\s*([A-Za-z_][A-Za-z0-9_]*))\b</string> <!--|\s too sloppy? -->
+			<string>(?:^\s*|\s)((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b</string>
 		</dict>
 		<dict>
 			<key>match</key>
