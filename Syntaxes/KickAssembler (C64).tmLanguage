@@ -89,7 +89,7 @@ More...
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(CmdArgument|Hashtable)\b</string>
+			<string>\b(CmdArgument)\b</string>
 			<key>name</key>
 			<string>storage.type.kickass</string>
 		</dict>
@@ -273,7 +273,12 @@ More...
 			<key>name</key>
 			<string>constant.language.math</string>
 		</dict>
-
+		<dict>
+			<key>match</key>
+			<string>\b(Hashtable)\b</string>
+			<key>name</key>
+			<string>storage.type.hashtable</string>
+		</dict>
 		<dict>
 			<key>captures</key>
 			<dict>
