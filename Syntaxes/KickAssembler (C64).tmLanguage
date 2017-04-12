@@ -17,10 +17,6 @@ More...
 		<string>.s</string>
 		<string>.a</string>
 	</array>
-	<key>foldingStartMarker</key> <!-- Ignored by sublime, folding is by indentation only -->
-	<string>\/\*|\{\s*$</string>
-	<key>foldingStopMarker</key> <!-- Ignored by sublime, folding is by indentation only -->
-	<string>\*\/|^\s*\}</string>
 	<key>name</key>
 	<string>KickAssembler (C64)</string>
 	<key>patterns</key>
