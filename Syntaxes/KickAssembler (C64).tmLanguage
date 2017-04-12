@@ -173,6 +173,12 @@
 			<string>(?:^\s*|;\s*)(\*)(?=\s*\=\s*)</string>
 		</dict>
 		<dict>
+			<key>match</key>
+			<string>(?:^|\s)(\.(encoding))\b</string>
+			<key>name</key>
+			<string>keyword.kickass.encoding</string>
+		</dict>
+		<dict>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
