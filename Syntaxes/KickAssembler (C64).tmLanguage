@@ -8,6 +8,7 @@
 		<string>.inc</string>
 		<string>.s</string>
 		<string>.a</string>
+		<string>.lib</string>
 	</array>
 	<key>name</key>
 	<string>KickAssembler (C64)</string>
