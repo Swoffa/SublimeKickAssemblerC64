@@ -29,10 +29,10 @@
         {
             // Build and Run (F7)
             "name": "Build and Run",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute 'x64 +confirmexit -moncommands bin/${file_base_name}.vs'"],
+            "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 +confirmexit -moncommands 'bin/${file_base_name}.vs' 'bin/${file_base_name}_Compiled.prg'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}",  "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands \"bin/${file_base_name}.vs\""], 
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}",  "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "&&", "X64", "+confirmexit", "-moncommands", "bin/${file_base_name}.vs", "bin/${file_base_name}_Compiled.prg"], 
                 "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
                 "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
@@ -53,7 +53,7 @@
                     "(", "if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", 
                     "(", "java", "cml.kickass.KickAssembler", "${file_name}", "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", ")", "&&",
                     "(", "copy", "bin\\\\${file_base_name}.vs", "+", "bin\\\\breakpoints.txt", "bin\\\\${file_base_name}_MonCommands.mon", ")", "&&", 
-                    "(", "x64.exe", "-logfile", "bin\\\\${file_base_name}_ViceLog.txt", "+confirmexit", "-moncommands", "bin\\\\${file_base_name}_MonCommands.mon", "bin\\\\${file_base_name}_Compiled.prg", ")"
+                    "(", "X64", "-logfile", "bin\\\\${file_base_name}_ViceLog.txt", "+confirmexit", "-moncommands", "bin\\\\${file_base_name}_MonCommands.mon", "bin\\\\${file_base_name}_Compiled.prg", ")"
                     ], 
                 "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
                 "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
@@ -68,10 +68,10 @@
         { 
             // Build and Run startup (F5)
             "name": "Build and Run Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -execute 'x64 +confirmexit -moncommands bin/Startup.vs'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 +confirmexit -moncommands 'bin/Startup.vs' 'bin/Startup_Compiled.prg'"],
             "windows":
             {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-execute", "X64 +confirmexit -moncommands bin\\Startup.vs"], 
+                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "&&", "X64", "+confirmexit", "-moncommands", "bin/Startup.vs", "bin/Startup_Compiled.prg"], 
                 "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
                 "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
             },
@@ -92,7 +92,7 @@
                     "(", "if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", 
                     "(", "java", "cml.kickass.KickAssembler", "Startup.${file_extension}", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", ")", "&&",
                     "(", "copy", "bin\\\\Startup.vs", "+", "bin\\\\breakpoints.txt", "bin\\\\Startup_MonCommands.mon", ")", "&&", 
-                    "(", "x64.exe", "-logfile", "bin\\\\Startup_ViceLog.txt", "+confirmexit", "-moncommands", "bin\\\\Startup_MonCommands.mon", "bin\\\\Startup_Compiled.prg", ")"
+                    "(", "X64", "-logfile", "bin\\\\Startup_ViceLog.txt", "+confirmexit", "-moncommands", "bin\\\\Startup_MonCommands.mon", "bin\\\\Startup_Compiled.prg", ")"
                     ], 
                 "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
                 "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
