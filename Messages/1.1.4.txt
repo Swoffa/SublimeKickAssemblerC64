@@ -1,3 +1,7 @@
+New in version 1.1.4:
+- Bug fix! Due to changes in Kick Assembler 4.10 the "Build and Run" and "Build and Run Startup" commands stopped working.
+  This is now fixed.
+
 New in version 1.1.3:
 - Support for Kick Assembler 4.x (supports for Kick Assembler 3.x discontinued)
    - Improved error detection. 
@@ -6,7 +10,7 @@ New in version 1.1.3:
    - Updated snippets
 - Added filetypes .lib as expected filetype
 
-Also, changes in version 1.1.2:
+Also, news in version 1.1.2:
 - Added filetypes .inc .s .a as expected filetypes
 - Both breakpoints and labels to Vice for for build variants Build and Debug and Build and Debug startup
 - Last version compatible with Kick Assembler 3.x
