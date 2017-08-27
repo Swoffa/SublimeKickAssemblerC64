@@ -38,6 +38,7 @@
             },
             "osx":
             {
+                "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 -moncommands 'bin/${file_base_name}.vs' 'bin/${file_base_name}_Compiled.prg'"],
                 "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
                 "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
             }
@@ -60,6 +61,7 @@
             },
             "osx":
             {
+                "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && cat 'bin/${file_base_name}.vs' 'bin/breakpoints.txt' > 'bin/${file_base_name}_MonCommands.mon' && x64 -logfile 'bin/${file_base_name}_ViceLog.txt' -moncommands 'bin/${file_base_name}_MonCommands.mon' 'bin/${file_base_name}_Compiled.prg'"],
                 "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
                 "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
             }
@@ -77,6 +79,7 @@
             },
             "osx":
             {
+                "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 -moncommands 'bin/Startup.vs' 'bin/Startup_Compiled.prg'"],
                 "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
                 "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
             }
@@ -99,6 +102,7 @@
             },
             "osx":
             {
+                "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && cat 'bin/Startup.vs' 'bin/breakpoints.txt' > 'bin/Startup_MonCommands.mon' && x64 -logfile 'bin/Startup_ViceLog.txt' -moncommands 'bin/Startup_MonCommands.mon' 'bin/Startup_Compiled.prg'"],
                 "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
                 "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
             }
