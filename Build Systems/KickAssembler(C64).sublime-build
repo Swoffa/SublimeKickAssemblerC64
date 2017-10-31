@@ -46,7 +46,7 @@
         {
             // Build and Debug (Shift+F7)
             "name": "Build and Debug",
-            "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && cat 'bin/${file_base_name}.vs' 'bin/breakpoints.txt' > 'bin/${file_base_name}_MonCommands.mon' && x64 -logfile 'bin/${file_base_name}_ViceLog.txt' -moncommands 'bin/${file_base_name}_MonCommands.mon' 'bin/${file_base_name}_Compiled.prg'"],
+            "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && [ -f 'bin/breakpoints.txt' ] && cat 'bin/${file_base_name}.vs' 'bin/breakpoints.txt' > 'bin/${file_base_name}_MonCommands.mon' || cat 'bin/${file_base_name}.vs' > 'bin/${file_base_name}_MonCommands.mon' && x64 -logfile 'bin/${file_base_name}_ViceLog.txt' -moncommands 'bin/${file_base_name}_MonCommands.mon' 'bin/${file_base_name}_Compiled.prg'"],
             "windows":
             {
                 "cmd": [
@@ -85,7 +85,7 @@
         { 
             // Build and Debug startup (Shift+F5)
             "name": "Build and Debug Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && cat 'bin/Startup.vs' 'bin/breakpoints.txt' > 'bin/Startup_MonCommands.mon' && x64 -logfile 'bin/Startup_ViceLog.txt' -moncommands 'bin/Startup_MonCommands.mon' 'bin/Startup_Compiled.prg'"],
+            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && [ -f 'bin/breakpoints.txt' ] && cat 'bin/Startup.vs' 'bin/breakpoints.txt' > 'bin/Startup_MonCommands.mon' || cat 'bin/Startup.vs' > 'bin/Startup_MonCommands.mon' && x64 -logfile 'bin/Startup_ViceLog.txt' -moncommands 'bin/Startup_MonCommands.mon' 'bin/Startup_Compiled.prg'"],
             "windows":
             {
                 "cmd": [
