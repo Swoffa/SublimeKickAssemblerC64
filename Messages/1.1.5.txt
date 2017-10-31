@@ -1,0 +1,8 @@
+New in version 1.1.5:
+- Commandline argument confirmexit for Vice removed, since it seems to differ 
+  between confirmexit and confirmonexit in different versions/distributions of Vice.
+  Instead, you can easily remove the confirm exit dialog by configuring the default setting for Vice.
+- Fixed a crash when staring debug without creating breakpoint file
+
+//Swoffa of Noice
+
