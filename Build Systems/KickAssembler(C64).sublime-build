@@ -1,8 +1,4 @@
 {
-    // BUGS
-    //-----
-    // - Windows+OSX: If filename contains spaces, it will not launch in Vice for Variants "Build and Run" and "Build and Debug". Somethiong with quotes. Kick Assembler bug?
-
     "selector": "source.assembly.kickassembler",
     "shell": true,  //Windows: Doesnt matter
                     //OSX: Must be true and arguments in one string with quoted paths, otherwise error
