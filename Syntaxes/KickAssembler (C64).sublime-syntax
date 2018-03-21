@@ -11,8 +11,7 @@ file_extensions:
 scope: source.assembly.kickassembler
 
 variables:
-  startofline: '(?:^|\s)'
-  startofcommand: '(?:^\s*|;\s*)'
+  startofcommand: '(?:^\s*|;\s*|\s*\{)'
 
 contexts:
   main:
@@ -31,7 +30,7 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.begin
       push: double_quoted_string
-    - match: '{{startofline}}(\.(word|byte|text|dword))\b'
+    - match: '{{startofcommand}}(\.(word|byte|text|dword))\b'
       captures:
         1: storage.type.kickass
     - match: \b(CmdArgument)\b
@@ -46,22 +45,22 @@ contexts:
       scope: support.function.file
     - match: \b(Matrix|RotationMatrix|ScaleMatrix|MoveMatrix|PerspectiveMatrix|Vector)\b
       scope: support.function.3d
-    - match: '{{startofline}}(\.(var|label|const))\b'
+    - match: '{{startofcommand}}(\.(var|label|const))\b'
       captures:
         1: storage.type.keyword.kickass.field
-    - match: '{{startofline}}(\.(struct|enum))\b'
+    - match: '{{startofcommand}}(\.(struct|enum))\b'
       captures:
         1: keyword.kickass.function.object
-    - match: '{{startofline}}(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b'
+    - match: '{{startofcommand}}(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b'
       captures:
         1: keyword.kickass.function
-    - match: '{{startofline}}(\.(pc|importonce|pseudopc|return|eval))\b'
+    - match: '{{startofcommand}}(\.(pc|importonce|pseudopc|return))\b'
       captures:
         1: keyword.kickass
     - match: '{{startofcommand}}(\*)(?=\s*\=\s*)'
       captures:
         1: keyword.kickass
-    - match: '{{startofline}}(\.(encoding))\b'
+    - match: '{{startofcommand}}(\.(encoding))\b'
       scope: keyword.kickass.encoding
     - match: '{{startofcommand}}(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b'
       captures:
@@ -96,14 +95,14 @@ contexts:
       captures:
         1: storage.type.list
         2: variable.parameter
-    - match: '{{startofline}}(\.for)\s*\((var)\b'
+    - match: '{{startofcommand}}(\.for)\s*\((var)\b'
       captures:
         1: keyword.control.for
         2: storage.type.for
-    - match: '{{startofline}}((\.if)\b|(else)\b)'
+    - match: '{{startofcommand}}((\.if)\b|(else)\b)'
       captures:
         1: keyword.control.if
-    - match: '{{startofline}}(\.while)(?=\s*\(.*\))'
+    - match: '{{startofcommand}}(\.while)(?=\s*\(.*\))'
       captures:
         1: keyword.control.while
     - match: '{{startofcommand}}((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
