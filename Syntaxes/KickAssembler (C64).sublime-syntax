@@ -9,6 +9,11 @@ file_extensions:
   - .a
   - .lib
 scope: source.assembly.kickassembler
+
+variables:
+  startofline: '(?:^|\s)'
+  startofcommand: '(?:^\s*|;\s*)'
+
 contexts:
   main:
     - match: \b(adc|and|asl|bit|clc|cld|cli|clv|cmp|cpx|cpy|dec|dex|dey|eor|inc|inx|iny|lda|ldx|ldy|lsr|nop|ora|pha|php|pla|plp|rol|ror|sbc|sec|sed|sei|sta|stx|sty|tax|txa|tay|tya|tsx|txs)\b
@@ -35,7 +40,7 @@ contexts:
           captures:
             1: punctuation.definition.comment
           pop: true
-    - match: (?:^|\s)(\.(word|byte|text|dword))\b
+    - match: '{{startofline}}(\.(word|byte|text|dword))\b'
       captures:
         1: storage.type.kickass
     - match: \b(CmdArgument)\b
@@ -50,34 +55,34 @@ contexts:
       scope: support.function.file
     - match: \b(Matrix|RotationMatrix|ScaleMatrix|MoveMatrix|PerspectiveMatrix|Vector)\b
       scope: support.function.3d
-    - match: (?:^|\s)(\.(var|label|const))\b
+    - match: '{{startofline}}(\.(var|label|const))\b'
       captures:
         1: storage.type.keyword.kickass.field
-    - match: (?:^|\s)(\.(struct|enum))\b
+    - match: '{{startofline}}(\.(struct|enum))\b'
       captures:
         1: keyword.kickass.function.object
-    - match: (?:^|\s)(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b
+    - match: '{{startofline}}(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b'
       captures:
         1: keyword.kickass.function
-    - match: (?:^|\s)(\.(pc|importonce|pseudopc|return|eval))\b
+    - match: '{{startofline}}(\.(pc|importonce|pseudopc|return|eval))\b'
       captures:
         1: keyword.kickass
-    - match: (?:^\s*|;\s*)(\*)(?=\s*\=\s*)
+    - match: '{{startofcommand}}(\*)(?=\s*\=\s*)'
       captures:
         1: keyword.kickass
-    - match: (?:^|\s)(\.(encoding))\b
+    - match: '{{startofline}}(\.(encoding))\b'
       scope: keyword.kickass.encoding
-    - match: '(?:^\s*|;\s*)(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b'
+    - match: '{{startofcommand}}(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b'
       captures:
         1: keyword.kickass.preprocessor
         3: constant.kickass.preprocessor
-    - match: (?:^\s*|;\s*)(\#(else|endif|importonce))\b
+    - match: '{{startofcommand}}(\#(else|endif|importonce))\b'
       captures:
         1: keyword.kickass.preprocessor
-    - match: (?:^\s*|;\s*)(\#(import))(?=\s+\".*\")
+    - match: '{{startofcommand}}(\#(import))(?=\s+\".*\")'
       captures:
         1: keyword.kickass.preprocessor
-    - match: '(?:^\s*|;\s*)(\#(importif))\s+!*(([A-Za-z_][A-Za-z0-9_]*)+)(?=\s+\".*\")'
+    - match: '{{startofcommand}}(\#(importif))\s+!*(([A-Za-z_][A-Za-z0-9_]*)+)(?=\s+\".*\")'
       captures:
         1: keyword.kickass.preprocessor
         3: constant.kickass.preprocessor
@@ -100,14 +105,14 @@ contexts:
       captures:
         1: storage.type.list
         2: variable.parameter
-    - match: (?:^|\s)(\.for)\s*\((var)\b
+    - match: '{{startofline}}(\.for)\s*\((var)\b'
       captures:
         1: keyword.control.for
         2: storage.type.for
-    - match: (?:^|\s)((\.if)\b|(else)\b)
+    - match: '{{startofline}}((\.if)\b|(else)\b)'
       captures:
         1: keyword.control.if
-    - match: (?:^|\s)(\.while)(?=\s*\(.*\))
+    - match: '{{startofline}}(\.while)(?=\s*\(.*\))'
       captures:
         1: keyword.control.while
     - match: '"'
@@ -117,32 +122,32 @@ contexts:
           pop: true
         - match: \\.
           scope: constant.character.escape
-    - match: '(?:^\s*|;\s*)((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
+    - match: '{{startofcommand}}((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
       captures:
         1: meta.filenamespace.identifier
         2: keyword.type.filenamespace
         3: entity.name.filenamespace
-    - match: '(?:^\s*|;\s*)((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
+    - match: '{{startofcommand}}((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
       captures:
         1: meta.namespace.identifier
         2: keyword.type.namespace
         3: entity.name.namespace
-    - match: '(?:^\s*|;\s*)(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)'
+    - match: '{{startofcommand}}(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)'
       scope: label
       captures:
         1: meta.label.identifier
         2: entity.name.label
-    - match: '(?:^\s*|;\s*)((\.pseudocommand)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
+    - match: '{{startofcommand}}((\.pseudocommand)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
       captures:
         1: meta.pseudocommand.identifier
         2: storage.type.pseudocommand
         3: entity.name.pseudocommand
-    - match: '(?:^\s*|;\s*)((\.function)\s*(\@*[A-Za-z0-9_]*))\b'
+    - match: '{{startofcommand}}((\.function)\s*(\@*[A-Za-z0-9_]*))\b'
       captures:
         1: meta.label.identifier
         2: storage.type.function
         3: entity.name.function
-    - match: '(?:^\s*|;\s*)((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
+    - match: '{{startofcommand}}((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
       captures:
         1: meta.macro.identifier
         2: storage.type.macro
