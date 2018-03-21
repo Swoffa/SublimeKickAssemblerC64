@@ -11,7 +11,7 @@ file_extensions:
 scope: source.assembly.kickassembler
 
 variables:
-  startofcommand: '(?:^\s*|;\s*|\s*\{)'
+  startofcommand: '(?:^\s*|;\s*|\s*\{\s*)'
 
 contexts:
   main:
