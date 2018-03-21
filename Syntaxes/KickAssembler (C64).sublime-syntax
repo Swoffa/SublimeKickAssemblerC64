@@ -22,24 +22,15 @@ contexts:
       scope: illegal
     - match: \b(bcc|bcs|beq|bmi|bne|bpl|brk|bvc|bvs|jmp|jsr|rti|rts)\b
       scope: keyword.control
-    - match: /\*
-      captures:
-        0: punctuation.definition.comment
-      push:
-        - meta_scope: comment.block
-        - match: \*/\n?
-          captures:
-            0: punctuation.definition.comment
-          pop: true
-    - match: //
-      captures:
-        1: punctuation.definition.comment
-      push:
-        - meta_scope: comment.line.double-slashs
-        - match: $\n?
-          captures:
-            1: punctuation.definition.comment
-          pop: true
+    - match: '/\*'
+      scope: punctuation.definition.comment
+      push: block_comment
+    - match: '//'
+      scope: punctuation.definition.comment
+      push: line_comment
+    - match: '"'
+      scope: punctuation.definition.string.begin
+      push: double_quoted_string
     - match: '{{startofline}}(\.(word|byte|text|dword))\b'
       captures:
         1: storage.type.kickass
@@ -115,13 +106,6 @@ contexts:
     - match: '{{startofline}}(\.while)(?=\s*\(.*\))'
       captures:
         1: keyword.control.while
-    - match: '"'
-      push:
-        - meta_scope: string.quoted.double.untitled
-        - match: '"'
-          pop: true
-        - match: \\.
-          scope: constant.character.escape
     - match: '{{startofcommand}}((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
       captures:
         1: meta.filenamespace.identifier
@@ -158,3 +142,21 @@ contexts:
       scope: constant.numeric.decimal
     - match: '\#?%[01]+'
       scope: constant.numeric.binary
+
+  line_comment:
+    - meta_scope: comment.line.double-slashs
+    - match: $
+      pop: true
+
+  block_comment:
+    - meta_scope: comment.block
+    - match: '\*/'
+      pop: true
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double
+    - match: '\\.'
+      scope: constant.character.escape
+    - match: '"'
+      scope: punctuation.definition.string.end
+      pop: true
