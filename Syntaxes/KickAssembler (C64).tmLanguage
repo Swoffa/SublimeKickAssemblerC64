@@ -486,7 +486,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>#?\$[0-9a-fA-F]+</string>
+			<string>#?\$\h+</string>
 			<key>name</key>
 			<string>constant.numeric.hex</string>
 		</dict>
