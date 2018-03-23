@@ -492,12 +492,6 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\#[0-9a-fA-F]+\b</string>
-			<key>name</key>
-			<string>constant.numeric.decimal</string>
-		</dict>
-		<dict>
-			<key>match</key>
 			<string>\b\d+\b</string>
 			<key>name</key>
 			<string>constant.numeric.decimal</string>
