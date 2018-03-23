@@ -492,7 +492,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b\d+\b</string>
+			<string>\b\d+</string>
 			<key>name</key>
 			<string>constant.numeric.decimal</string>
 		</dict>
