@@ -498,7 +498,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\#%[0-1]+\b</string>
+			<string>\#?%[01]+</string>
 			<key>name</key>
 			<string>constant.numeric.binary</string>
 		</dict>
