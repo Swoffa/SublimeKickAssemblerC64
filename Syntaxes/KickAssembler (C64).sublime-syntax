@@ -1,6 +1,11 @@
 %YAML 1.2
 ---
 # http://www.sublimetext.com/docs/3/syntax.html
+# TODO:
+#  - Real scope hierarchy for {}, scopes in scopes...
+#  - .return as part of function instead
+#  - Operators
+
 name: KickAssembler (C64)
 file_extensions:
   - .asm
