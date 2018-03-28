@@ -1,0 +1,155 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+name: KickAssembler (C64)
+file_extensions:
+  - .asm
+  - .inc
+  - .s
+  - .a
+  - .lib
+scope: source.assembly.kickassembler
+contexts:
+  main:
+    - match: \b(adc|and|asl|bit|clc|cld|cli|clv|cmp|cpx|cpy|dec|dex|dey|eor|inc|inx|iny|lda|ldx|ldy|lsr|nop|ora|pha|php|pla|plp|rol|ror|sbc|sec|sed|sei|sta|stx|sty|tax|txa|tay|tya|tsx|txs)\b
+      scope: keyword
+    - match: \b(aac|aax|alr|anc|ane|arr|aso|asr|atx|axa|axs|dcm|dcp|dop|hlt|ins|isb|isc|jam|kil|lae|lar|las|lax|lse|lxa|oal|rla|rra|sax|sbx|skb|sha|shs|say|shx|shy|slo|skw|sre|sxa|sya|tas|top|xaa|xas)\b
+      scope: illegal
+    - match: \b(bcc|bcs|beq|bmi|bne|bpl|brk|bvc|bvs|jmp|jsr|rti|rts)\b
+      scope: keyword.control
+    - match: /\*
+      captures:
+        0: punctuation.definition.comment
+      push:
+        - meta_scope: comment.block
+        - match: \*/\n?
+          captures:
+            0: punctuation.definition.comment
+          pop: true
+    - match: //
+      captures:
+        1: punctuation.definition.comment
+      push:
+        - meta_scope: comment.line.double-slashs
+        - match: $\n?
+          captures:
+            1: punctuation.definition.comment
+          pop: true
+    - match: (?:^|\s)(\.(word|byte|text|dword))\b
+      captures:
+        1: storage.type.kickass
+    - match: \b(CmdArgument)\b
+      scope: storage.type.kickass
+    - match: \b(getNamespace)\b
+      scope: support.function.language
+    - match: \b(toIntString|toBinaryString|toOctalString|toHexString)\b
+      scope: support.function.string
+    - match: \b(abs|acos|asin|atan|atan2|cbrt|ceil|cos|cosh|exp|expm1|floor|hypot|IEEEremainder|log|log10|log1p|max|min|pow|mod|random|round|signum|sin|sinh|sqrt|tan|tanh|toDegrees|toRadians)\b
+      scope: support.function.math
+    - match: \b(LoadBinary|LoadPicture|LoadSid|createFile)\b
+      scope: support.function.file
+    - match: \b(Matrix|RotationMatrix|ScaleMatrix|MoveMatrix|PerspectiveMatrix|Vector)\b
+      scope: support.function.3d
+    - match: (?:^|\s)(\.(var|label|const))\b
+      captures:
+        1: storage.type.keyword.kickass.field
+    - match: (?:^|\s)(\.(struct|enum))\b
+      captures:
+        1: keyword.kickass.function.object
+    - match: (?:^|\s)(\.(eval|fill|print|printnow|import|align|assert|asserterror|error))\b
+      captures:
+        1: keyword.kickass.function
+    - match: (?:^|\s)(\.(pc|importonce|pseudopc|return|eval))\b
+      captures:
+        1: keyword.kickass
+    - match: (?:^\s*|;\s*)(\*)(?=\s*\=\s*)
+      captures:
+        1: keyword.kickass
+    - match: (?:^|\s)(\.(encoding))\b
+      scope: keyword.kickass.encoding
+    - match: '(?:^\s*|;\s*)(\#(define|elif|if|undef))\s+(([A-Za-z_][A-Za-z0-9_]*)+)\b'
+      captures:
+        1: keyword.kickass.preprocessor
+        3: constant.kickass.preprocessor
+    - match: (?:^\s*|;\s*)(\#(else|endif|importonce))\b
+      captures:
+        1: keyword.kickass.preprocessor
+    - match: (?:^\s*|;\s*)(\#(import))(?=\s+\".*\")
+      captures:
+        1: keyword.kickass.preprocessor
+    - match: '(?:^\s*|;\s*)(\#(importif))\s+!*(([A-Za-z_][A-Za-z0-9_]*)+)(?=\s+\".*\")'
+      captures:
+        1: keyword.kickass.preprocessor
+        3: constant.kickass.preprocessor
+    - match: \b(true|false)\b
+      scope: constant.language
+    - match: \b(BLACK|WHITE|RED|CYAN|PURPLE|GREEN|BLUE|YELLOW|ORANGE|BROWN|LIGHT_RED|DARK_GRAY|GRAY|DARK_GREY|GREY|LIGHT_GREEN|LIGHT_BLUE|LIGHT_GRAY|LIGHT_GREY)\b
+      scope: constant.language.color
+    - match: \b(LDA_IMM|LDA_ZP|LDA_ZPX|LDX_ZPY|LDA_IZPX|LDA_IZPY|LDA_ABS|LDA_ABSX|LDA_ABSY|JMP_IND|BNE_REL|RTS)\b
+      scope: constant.language.opcodes
+    - match: \b(BF_C64FILE|BF_BITMAP_SINGLECOLOR|BF_KOALA|BF_FLI)\b
+      scope: constant.language.file
+    - match: \b(AT_ABSOLUTE|AT_ABSOLUTEX|AT_ABSOLUTEY|AT_IMMEDIATE|AT_INDIRECT|AT_IZEROPAGEX|AT_IZEROPAGEY|AT_NONE)\b
+      scope: constant.language.pseudocommand
+    - match: \b(PI|E)\b
+      scope: constant.language.math
+    - match: \b(Hashtable)\b
+      scope: storage.type.hashtable
+    - match: \b(list|List)\(\s*(\$?\d+)*\s*\)
+      scope: list
+      captures:
+        1: storage.type.list
+        2: variable.parameter
+    - match: (?:^|\s)(\.for)\s*\((var)\b
+      captures:
+        1: keyword.control.for
+        2: storage.type.for
+    - match: (?:^|\s)((\.if)\b|(else)\b)
+      captures:
+        1: keyword.control.if
+    - match: (?:^|\s)(\.while)(?=\s*\(.*\))
+      captures:
+        1: keyword.control.while
+    - match: '"'
+      push:
+        - meta_scope: string.quoted.double.untitled
+        - match: '"'
+          pop: true
+        - match: \\.
+          scope: constant.character.escape
+    - match: '(?:^\s*|;\s*)((\.filenamespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
+      captures:
+        1: meta.filenamespace.identifier
+        2: keyword.type.filenamespace
+        3: entity.name.filenamespace
+    - match: '(?:^\s*|;\s*)((\.namespace)\s*([A-Za-z_][A-Za-z0-9_]*))\b'
+      captures:
+        1: meta.namespace.identifier
+        2: keyword.type.namespace
+        3: entity.name.namespace
+    - match: '(?:^\s*|;\s*)(((!)|(!?(\@*[A-Za-z_][A-Za-z0-9_]*)+))\:)'
+      scope: label
+      captures:
+        1: meta.label.identifier
+        2: entity.name.label
+    - match: '(?:^\s*|;\s*)((\.pseudocommand)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
+      captures:
+        1: meta.pseudocommand.identifier
+        2: storage.type.pseudocommand
+        3: entity.name.pseudocommand
+    - match: '(?:^\s*|;\s*)((\.function)\s*(\@*[A-Za-z0-9_]*))\b'
+      captures:
+        1: meta.label.identifier
+        2: storage.type.function
+        3: entity.name.function
+    - match: '(?:^\s*|;\s*)((\.macro)\s*(\@*[A-Za-z_][A-Za-z0-9_]*))\b'
+      captures:
+        1: meta.macro.identifier
+        2: storage.type.macro
+        3: entity.name.macro
+    - match: '#?\$\h+'
+      scope: constant.numeric.hex
+    - match: \b\d+
+      scope: constant.numeric.decimal
+    - match: '\#?%[01]+'
+      scope: constant.numeric.binary
