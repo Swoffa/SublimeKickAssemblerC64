@@ -1,120 +1,52 @@
 {
     "selector": "source.assembly.kickassembler",
-    "shell": true,  //Windows: Doesnt matter
-                    //OSX: Must be true and arguments in one string with quoted paths, otherwise error
+    "shell": true,
     "encoding": "cp1252", //Windows: Needed
     "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     // Build only (Super+B / Ctrl+B)
-    "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
+    "target": "kickass_build",
+    "buildmode" : "build",
     "windows":
     {
-        "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}" , "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"],
-        "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-        "path": "%PATH%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
+        "env" : { "CLASSPATH" : "%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
+        "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
     },
     "osx":
     {
-        "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"}
+        "env" : { "CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
+        "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
     },
-    "linux":
-    {
-    },
-
+ 
     "variants": [
         {
             // Build and Run (F7)
             "name": "Build and Run",
-            "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 -moncommands 'bin/${file_base_name}.vs' 'bin/${file_base_name}_Compiled.prg'"],
-            "windows":
-            {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}",  "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "&&", "X64", "-moncommands", "bin/${file_base_name}.vs", "bin/${file_base_name}_Compiled.prg"], 
-                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
-            },
-            "osx":
-            {
-                "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
-                "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
-            }
+            "buildmode" : "build-run",
         },
 
         {
             // Build and Debug (Shift+F7)
             "name": "Build and Debug",
-            "cmd": ["mkdir -p bin && java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && [ -f 'bin/breakpoints.txt' ] && cat 'bin/${file_base_name}.vs' 'bin/breakpoints.txt' > 'bin/${file_base_name}_MonCommands.mon' || cat 'bin/${file_base_name}.vs' > 'bin/${file_base_name}_MonCommands.mon' && x64 -logfile 'bin/${file_base_name}_ViceLog.txt' -moncommands 'bin/${file_base_name}_MonCommands.mon' 'bin/${file_base_name}_Compiled.prg'"],
-            "windows":
-            {
-                "cmd": [
-                    "(", "if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", 
-                    "(", "java", "cml.kickass.KickAssembler", "${file_name}", "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", ")", "&&",
-                    "(", "copy", "bin\\\\${file_base_name}.vs", "+", "bin\\\\breakpoints.txt", "bin\\\\${file_base_name}_MonCommands.mon", ")", "&&", 
-                    "(", "X64", "-logfile", "bin\\\\${file_base_name}_ViceLog.txt", "-moncommands", "bin\\\\${file_base_name}_MonCommands.mon", "bin\\\\${file_base_name}_Compiled.prg", ")"
-                    ], 
-                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
-            },
-            "osx":
-            {
-                "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
-                "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
-            }
+            "buildmode" : "build-debug",
         },
 
         { 
             // Build and Run startup (F5)
             "name": "Build and Run Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin && x64 -moncommands 'bin/Startup.vs' 'bin/Startup_Compiled.prg'"],
-            "windows":
-            {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "&&", "X64", "-moncommands", "bin/Startup.vs", "bin/Startup_Compiled.prg"], 
-                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
-            },
-            "osx":
-            {
-                "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
-                "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
-            }
+            "buildmode" : "build-run-startup",
         },
 
         { 
             // Build and Debug startup (Shift+F5)
             "name": "Build and Debug Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin -afo :afo=true :usebin=true && [ -f 'bin/breakpoints.txt' ] && cat 'bin/Startup.vs' 'bin/breakpoints.txt' > 'bin/Startup_MonCommands.mon' || cat 'bin/Startup.vs' > 'bin/Startup_MonCommands.mon' && x64 -logfile 'bin/Startup_ViceLog.txt' -moncommands 'bin/Startup_MonCommands.mon' 'bin/Startup_Compiled.prg'"],
-            "windows":
-            {
-                "cmd": [
-                    "(", "if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", 
-                    "(", "java", "cml.kickass.KickAssembler", "Startup.${file_extension}", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin", "-afo", ":afo=true", ":usebin=true", ")", "&&",
-                    "(", "copy", "bin\\\\Startup.vs", "+", "bin\\\\breakpoints.txt", "bin\\\\Startup_MonCommands.mon", ")", "&&", 
-                    "(", "X64", "-logfile", "bin\\\\Startup_ViceLog.txt", "-moncommands", "bin\\\\Startup_MonCommands.mon", "bin\\\\Startup_Compiled.prg", ")"
-                    ], 
-                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
-            },
-            "osx":
-            {
-                "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
-                "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
-            }
+            "buildmode" : "build-debug-startup",
         },
 
         {
             // Build Startup (Super+Shift+B / Ctrl+Shift+B)
             "name": "Build Startup",
-            "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler 'Startup.${file_extension}' -log 'bin/Startup_BuildLog.txt' -o 'bin/Startup_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
-            "windows":
-            {
-                "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "Startup.${file_extension} ", "-log", "bin/Startup_BuildLog.txt", "-o", "bin/Startup_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"], 
-                "env" : {"CLASSPATH":"%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-                "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;"
-            },
-            "osx":
-            {
-                "env" : {"CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
-                "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
-            }
+            "buildmode" : "build-startup",
         }
     ]
 }
