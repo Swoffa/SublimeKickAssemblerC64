@@ -2,6 +2,13 @@
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
 #
 # Huge thanks to OdatNurd!!
+ 
+# List of variable names we want to support 
+custom_var_list = ["kickass_run_path", "kickass_debug_path"] 
+custom_var_list_defaults = { 
+    "kickass_run_path": "x64", 
+    "kickass_debug_path": "x64" 
+    } 
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -43,8 +50,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def createCommand(self, sourceDict):
         compileCommand = "java cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "X64 -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
-        debugCommand = "X64 -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
+        runCommand = "\"${kickass_run_path}\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
+        debugCommand = "\"${kickass_debug_path}\" -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 

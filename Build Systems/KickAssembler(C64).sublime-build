@@ -4,6 +4,10 @@
     "encoding": "cp1252", //Windows: Needed
     "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
+    //Settings,
+    // kickass_debug_path
+    // kickass_run_path
+
     // Build only (Super+B / Ctrl+B)
     "target": "kickass_build",
     "buildmode" : "build",
