@@ -6,7 +6,7 @@
     "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     // Build only (Super+B / Ctrl+B)
-    "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
+    "cmd": ["mkdir -p bin & java cml.kickass.KickAssembler '${file_name}' -log 'bin/${file_base_name}_BuildLog.txt' -o 'bin/${file_base_name}_Compiled.prg' -vicesymbols -showmem -symbolfiledir bin"],
     "windows":
     {
         "cmd": ["(","if", "not", "exist", "bin", "mkdir", "bin", ")", "&&", "java", "cml.kickass.KickAssembler", "${file_name}" , "-log", "bin/${file_base_name}_BuildLog.txt", "-o", "bin/${file_base_name}_Compiled.prg", "-vicesymbols", "-showmem", "-symbolfiledir", "bin"],
