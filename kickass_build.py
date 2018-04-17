@@ -1,3 +1,7 @@
+import sublime, sublime_plugin 
+import os 
+import platform 
+
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
 #
