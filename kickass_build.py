@@ -22,6 +22,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def createExecDict(self, sourceDict, additionalVariables):
         global custom_var_list
 
+        # Save path variable form expansion
+        tmpPath = sourceDict.pop('path', None)
+
         # Get the project specific settings
         project_data = self.window.project_data ()
         project_settings = (project_data or {}).get ('settings', {})
@@ -42,6 +45,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Rename the command parameter to what exec expects.
         args['shell_cmd'] = args.pop ('command')
+
+        # Reset path to unexpanded.
+        if tmpPath:
+            args['path'] = tmpPath
 
         return args
 
