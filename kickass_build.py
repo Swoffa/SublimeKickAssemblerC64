@@ -22,7 +22,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def createExecDict(self, sourceDict):
         global custom_var_list, buildMode
 
-        # Save path variable form expansion
+        # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
 
         # Get the project specific settings
