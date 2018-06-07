@@ -19,8 +19,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     Provide custom build variables to a build system, such as a value that needs
     to be specific to a current project.
     """
-    def createExecDict(self, sourceDict, additionalVariables):
-        global custom_var_list
+    def createExecDict(self, sourceDict):
+        global custom_var_list, buildMode
 
         # Save path variable form expansion
         tmpPath = sourceDict.pop('path', None)
@@ -34,7 +34,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Variables to expand; start with defaults, then add ours.
         variables = self.window.extract_variables ()
-        variables.update(additionalVariables)
+        useStartup = 'startup' in buildMode
+        variables.update({"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = view_settings.get (custom_var,
                 project_settings.get (custom_var, custom_var_list_defaults.get(custom_var,"")))
@@ -75,12 +76,6 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         return command
 
-    def createAdditionalVaiables(self):
-        global buildMode
-        variables = self.window.extract_variables()
-        useStartup = 'startup' in buildMode
-        return {"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]}
-
     def run(self, **kwargs):
         global buildMode
         buildMode = kwargs.pop('buildmode')
@@ -88,5 +83,4 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         os.makedirs("bin", exist_ok=True)
 
         kwargs['command'] = self.createCommand(kwargs)
-        additionalVariables = self.createAdditionalVaiables()
-        self.window.run_command('exec', self.createExecDict(kwargs, additionalVariables))
+        self.window.run_command('exec', self.createExecDict(kwargs))
