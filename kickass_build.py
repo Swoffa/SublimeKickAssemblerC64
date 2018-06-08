@@ -26,8 +26,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         tmpPath = sourceDict.pop('path', None)
 
         # Variables to expand; start with defaults, then add ours.
-        variables = self.window.extract_variables ()
         useStartup = 'startup' in buildMode
+        variables = self.window.extract_variables()
         variables.update({"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
@@ -39,7 +39,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Rename the command parameter to what exec expects.
         args['shell_cmd'] = args.pop ('command')
 
-        # Reset path to unexpanded.
+        # Reset path to unexpanded
         if tmpPath:
             args['path'] = tmpPath
 
@@ -71,11 +71,11 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def run(self, **kwargs):
         global buildMode
         buildMode = kwargs.pop('buildmode')
+        settings = SublimeSettings(self)
+        kwargs['command'] = self.createCommand(kwargs)
 
         os.makedirs("bin", exist_ok=True)
 
-        settings = SublimeSettings(self)
-        kwargs['command'] = self.createCommand(kwargs)
         self.window.run_command('exec', self.createExecDict(kwargs, settings))
 
 class SublimeSettings():
