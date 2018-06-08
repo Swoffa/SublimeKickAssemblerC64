@@ -19,26 +19,18 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     Provide custom build variables to a build system, such as a value that needs
     to be specific to a current project.
     """
-    def createExecDict(self, sourceDict):
-        global custom_var_list, custom_var_list_defaults, buildMode
+    def createExecDict(self, sourceDict, settings):
+        global custom_var_list, buildMode
 
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
-
-        # Get the project specific settings
-        project_data = self.window.project_data ()
-        project_settings = (project_data or {}).get ('settings', {})
-
-        # Get the view specific settings
-        view_settings = self.window.active_view ().settings ()
 
         # Variables to expand; start with defaults, then add ours.
         variables = self.window.extract_variables ()
         useStartup = 'startup' in buildMode
         variables.update({"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
-            variables[custom_var] = view_settings.get (custom_var,
-                project_settings.get (custom_var, custom_var_list_defaults.get(custom_var,"")))
+            variables[custom_var] = settings.getSetting(custom_var)
         
         # Create arguments to return by expanding variables in the
         # arguments given.
@@ -52,7 +44,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             args['path'] = tmpPath
 
         return args
-
+ 
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
             return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\")"
@@ -82,5 +74,20 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         os.makedirs("bin", exist_ok=True)
 
+        settings = SublimeSettings(self)
         kwargs['command'] = self.createCommand(kwargs)
-        self.window.run_command('exec', self.createExecDict(kwargs))
+        self.window.run_command('exec', self.createExecDict(kwargs, settings))
+
+class SublimeSettings():
+    def __init__(self, parentCommand):
+        # Get the project specific settings
+        project_data = parentCommand.window.project_data()
+        self.__project_settings = (project_data or {}).get('settings', {})
+
+        # Get the view specific settings
+        self.__view_settings = parentCommand.window.active_view().settings()
+
+    def getSetting(self, settingKey): 
+        global custom_var_list_defaults
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, custom_var_list_defaults.get(settingKey, None))) 
+
