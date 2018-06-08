@@ -8,7 +8,7 @@ import platform
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path"] 
+custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -22,7 +22,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         tmpPath = sourceDict.pop('path', None)
 
         # Create the command
-        sourceDict['shell_cmd'] = self.createCommand(sourceDict, buildMode)
+        sourceDict['shell_cmd'] = self.createCommand(sourceDict, buildMode, settings)
 
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
@@ -47,8 +47,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         else:
             return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
 
-    def createCommand(self, sourceDict, buildMode):
-        compileCommand = "java cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin"
+    def createCommand(self, sourceDict, buildMode, settings):
+        javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java" 
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin" 
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
         runCommand = "\"${kickass_run_path}\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
         debugCommand = "\"${kickass_debug_path}\" -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
