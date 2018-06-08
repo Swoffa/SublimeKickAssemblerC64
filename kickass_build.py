@@ -25,6 +25,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
 
+        # Create the command
+        sourceDict['shell_cmd'] = self.createCommand(sourceDict)
+
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
         variables = self.window.extract_variables()
@@ -35,9 +38,6 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Create arguments to return by expanding variables in the
         # arguments given.
         args = sublime.expand_variables (sourceDict, variables)
-
-        # Rename the command parameter to what exec expects.
-        args['shell_cmd'] = args.pop ('command')
 
         # Reset path to unexpanded
         if tmpPath:
@@ -72,7 +72,6 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         global buildMode
         buildMode = kwargs.pop('buildmode')
         settings = SublimeSettings(self)
-        kwargs['command'] = self.createCommand(kwargs)
 
         os.makedirs("bin", exist_ok=True)
 
