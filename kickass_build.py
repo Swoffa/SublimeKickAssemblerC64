@@ -87,5 +87,5 @@ class SublimeSettings():
 
     def getSetting(self, settingKey): 
         global custom_var_list_defaults
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, custom_var_list_defaults.get(settingKey, None))) 
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, custom_var_list_defaults.get(settingKey, ""))) 
 
