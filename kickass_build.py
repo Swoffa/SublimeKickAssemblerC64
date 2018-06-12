@@ -9,10 +9,6 @@ import platform
  
 # List of variable names we want to support 
 custom_var_list = ["kickass_run_path", "kickass_debug_path"] 
-custom_var_list_defaults = { 
-    "kickass_run_path": "x64", 
-    "kickass_debug_path": "x64" 
-    } 
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -87,5 +83,5 @@ class SublimeSettings():
 
     def getSetting(self, settingKey): 
         global custom_var_list_defaults
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, custom_var_list_defaults.get(settingKey, ""))) 
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, "")) 
 
