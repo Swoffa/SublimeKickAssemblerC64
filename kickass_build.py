@@ -8,7 +8,7 @@ import platform
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", "kickass_args", "kickass_run_args", "kickass_debug_args"] 
+custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", "kickass_args", "kickass_run_args", "kickass_debug_args", "kickass_startup_file_path"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -27,7 +27,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
         variables = self.window.extract_variables()
-        variables.update({"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]})
+        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
 
