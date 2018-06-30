@@ -8,7 +8,7 @@ import platform
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path"]
+custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", "kickass_args", "kickass_run_args", "kickass_debug_args"] 
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -30,7 +30,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         variables.update({"build_file_base_name": "Startup" if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
-        
+
         # Create arguments to return by expanding variables in the
         # arguments given.
         args = sublime.expand_variables (sourceDict, variables)
@@ -47,12 +47,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         else:
             return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
 
-    def createCommand(self, sourceDict, buildMode, settings):
-        javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java" 
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin" 
+    def createCommand(self, sourceDict, buildMode, settings): 
+        javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
-        debugCommand = "\"${kickass_debug_path}\" -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
