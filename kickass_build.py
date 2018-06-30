@@ -82,6 +82,5 @@ class SublimeSettings():
         self.__view_settings = parentCommand.window.active_view().settings()
 
     def getSetting(self, settingKey): 
-        global custom_var_list_defaults
         return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, "")) 
 
