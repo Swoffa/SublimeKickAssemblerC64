@@ -1,14 +1,15 @@
 import sublime, sublime_plugin 
 import os 
 import platform 
+import glob
 
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
 #
 # Huge thanks to OdatNurd!!
- 
-# List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path"] 
+
+# List of variable names we want to support
+custom_var_list = ["kickass_run_path", "kickass_debug_path"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -24,6 +25,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Create the command
         sourceDict['shell_cmd'] = self.createCommand(sourceDict, buildMode)
 
+        # Add pre and post variables
+        extendedDict = self.addPrePostVarsToDict(sourceDict, buildMode) if (hasPreCommand or hasPostCommand) else sourceDict
+
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
         variables = self.window.extract_variables()
@@ -33,7 +37,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         
         # Create arguments to return by expanding variables in the
         # arguments given.
-        args = sublime.expand_variables (sourceDict, variables)
+        args = sublime.expand_variables (extendedDict, variables)
 
         # Reset path to unexpanded
         if tmpPath:
@@ -46,10 +50,27 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\")"
         else:
             return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
+ 
+    def addPrePostVarsToDict(self, sourceDict, buildMode):
+        prePostEnvVars = {
+            "kickass_buildmode": buildMode,
+            "kickass_file": "${build_file_base_name}.${file_extension}",
+            "kickass_file_path": "${file_path}",
+            "kickass_prg_file": "${file_path}/bin/${build_file_base_name}_Compiled.prg",
+            "kickass_bin_folder": "${file_path}/bin",
+            }
+        sourceDict.get('env').update(prePostEnvVars)
+        return sourceDict
+
+    def getExt(self):
+        return "bat" if platform.system()=='Windows' else "sh"
+
+    def getRunScriptStatement(self, scriptname):
+        return "call "+scriptname if platform.system()=='Windows' else ". "+scriptname
 
     def createCommand(self, sourceDict, buildMode):
         compileCommand = "java cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin"
-        compileDebugCommandAdd = "-afo :afo=true :usebin=true"
+        compileDebugCommandAdd = " -afo :afo=true :usebin=true"
         runCommand = "\"${kickass_run_path}\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
         debugCommand = "\"${kickass_debug_path}\" -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
         useRun = 'run' in buildMode
@@ -57,6 +78,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
 
+        if hasPreCommand:
+            command = " ".join([self.getRunScriptStatement(preCommand), "&&", command])
+        if hasPostCommand:
+            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand)])
         if useDebug:
             command = " ".join([command, "&&", debugCommand])
         elif useRun:
@@ -65,8 +90,13 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         return command
 
     def run(self, **kwargs):
+        global preCommand, postCommand, hasPreCommand, hasPostCommand
         buildMode = kwargs.pop('buildmode')
         settings = SublimeSettings(self)
+        preCommand = "prebuild."+self.getExt()
+        postCommand = "postbuild."+self.getExt()
+        hasPreCommand = glob.glob(preCommand)
+        hasPostCommand =  glob.glob(postCommand)
 
         os.makedirs("bin", exist_ok=True)
 
@@ -82,5 +112,5 @@ class SublimeSettings():
         self.__view_settings = parentCommand.window.active_view().settings()
 
     def getSetting(self, settingKey): 
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, "")) 
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, ""))
 
