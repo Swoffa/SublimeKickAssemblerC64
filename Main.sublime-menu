@@ -48,8 +48,10 @@
                                 "args": {"file": "${packages}/User/Preferences.sublime-settings"},
                                 "caption": "Preferences – User"
                             }
-                        ],
+                        ]
+                    },
 
+                    {
                         "caption": "KickassTools",
                         "children":
                         [
