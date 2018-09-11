@@ -1,0 +1,37 @@
+{
+    "es_incloop": {
+        "descr": "Performs an incrementing loop (from start to end with step).<br><br>:es_incloop(start, end, step, <function>, [List initParams])<br><br>The function is called once with given parameters during setup. Then it's called every frame with the counter parameter passed to the function in X and Y registers (the counter is 16 bits). Stop when counter >= end",
+        "name": "Increment lopp",
+        "url": ""
+    },
+
+    "es_decloop": {
+        "descr": ":es_decloop(start, end, step, function, [List initParams])",
+        "name": "Decrement Loop",
+        "url": ""
+    },
+
+    "es_waitframes": {
+        "descr": ":es_waitframes(frames)",
+        "name": "Wait # frames",
+        "url": ""
+    },
+
+    "es_exec": {
+        "descr": ":es_exec(function, [List params])",
+        "name": "Call a fucntion with parameters",
+        "url": ""
+    },
+
+    "es_call": {
+        "descr": ":es_call()",
+        "name": "Call a function without parameters",
+        "url": ""
+    },
+
+    "es_end": {
+        "descr": ":es_end()",
+        "name": "End of script",
+        "url": ""
+    }
+  }
