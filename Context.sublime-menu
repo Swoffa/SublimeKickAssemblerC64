@@ -1,0 +1,15 @@
+[{
+	"id": "KickassDebugger-all",
+	"caption": "KickassDebugger",
+	"children": [
+		{
+			"id": "KickassDebugger-add",
+			"caption": "Add Breakpoint",
+			"command": "kickass_debugger_add"
+		},{
+			"id": "KickassDebugger-remove",
+			"caption": "Remove Breakpoint",
+			"command": "kickass_debugger_remove"
+		}
+	]
+}]
