@@ -1,4 +1,4 @@
-KickassTools
+KickassTooltips
 ============
 
 This is plugin for Sublime Text editor to make working with Kick Assembler
@@ -12,13 +12,13 @@ Install it via Package Control or extract the downloaded .zip to your packages d
 Configuration
 -------------
 
-Navigate to Preferences/Package Settings/KickassTools and select the configuration file to edit. Currently you can configure:
+Navigate to Preferences/Package Settings/KickassTooltips and select the configuration file to edit. Currently you can configure:
 
-"css_file": "KickassTools/css/default.css"
+"css_file": "KickassTooltips/css/default.css"
 
 This is a file that has the css file used to style the tooltips.
 
-    "help_directories": ["KickassTools/helpdb"],
+    "help_directories": ["KickassTooltips/helpdb"],
 
 This defines the directory where json formatted help files are. Feel free to drop in your own.
 

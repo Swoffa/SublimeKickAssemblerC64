@@ -55,7 +55,7 @@ class KickAssTooltip:
         Set the settings object and register callback for settings/plugin
         changes.
         """
-        self.settings = sublime.load_settings("KickassTools.sublime-settings")
+        self.settings = sublime.load_settings("KickassTooltips.sublime-settings")
         self.settings.add_on_change('reload', self.load)
 
     def load(self):
@@ -169,4 +169,4 @@ def plugin_loaded():
     """Plugin entry point"""
     tooltip = KickAssTooltip()
     tooltip.load()
-    logging.info('KickAssTooltip loaded.')
+    logging.info('KickAssTooltips loaded.')
