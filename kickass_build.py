@@ -47,7 +47,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
-            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\")"
+            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
         else:
             return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
  
