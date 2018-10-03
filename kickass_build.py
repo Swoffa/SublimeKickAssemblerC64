@@ -112,6 +112,8 @@ class SublimeSettings():
         # Get the view specific settings
         self.__view_settings = parentCommand.window.active_view().settings()
 
+        self.__default_settings = sublime.load_settings("Preferences.sublime-settings")
+
     def getSetting(self, settingKey): 
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, ""))
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
 
