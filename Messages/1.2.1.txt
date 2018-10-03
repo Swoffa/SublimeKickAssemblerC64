@@ -1,0 +1,10 @@
+New in version 1.2.1:
+- Bug fix: Breakpoints and monitor commands now works correctly in Windows. 
+  Big thanks to daleicious (https://github.com/daleicious) for bringing this bug to my attentions. 
+  Details: https://github.com/Swoffa/SublimeKickAssemblerC64/issues/14
+- Bug fix: Ensured loading of default settings, since Sublime sometimes fails to load them 
+  (thanks Carl Reeve and others)
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
