@@ -99,7 +99,13 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         hasPreCommand = glob.glob(preCommand)
         hasPostCommand =  glob.glob(postCommand)
 
-        os.makedirs("bin", exist_ok=True)
+        # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
+        # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
+        # (the "bin"-directory will be generated anyway via the output-parameter in the compile-command)
+        try:
+            os.makedirs("bin", exist_ok=True)
+        except:
+            pass
 
         self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
 
