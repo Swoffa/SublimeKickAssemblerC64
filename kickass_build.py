@@ -2,6 +2,7 @@ import sublime, sublime_plugin
 import os 
 import platform 
 import glob
+import shutil
 
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
@@ -90,6 +91,13 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         return command
 
+    def emptyFolder(self, path):
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                os.unlink(os.path.join(root, f))
+            for d in dirs:
+                shutil.rmtree(os.path.join(root, d))
+
     def run(self, **kwargs):
         global preCommand, postCommand, hasPreCommand, hasPostCommand
         buildMode = kwargs.pop('buildmode')
@@ -107,6 +115,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         except:
             pass
 
+        if settings.getSettingAsBool("empty_bin_folder_before_build") and os.path.isdir("bin"):
+            self.emptyFolder("bin")
+
         self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
 
 class SublimeSettings():
@@ -123,3 +134,5 @@ class SublimeSettings():
     def getSetting(self, settingKey): 
         return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
 
+    def getSettingAsBool(self, settingKey): 
+        return self.getSetting(settingKey).lower() == "true"

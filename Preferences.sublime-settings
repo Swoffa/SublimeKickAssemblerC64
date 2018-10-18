@@ -1,5 +1,6 @@
 {
-	"kickass_run_path":"x64",
-	"kickass_debug_path":"x64",
-	"kickass_startup_file_path": "Startup"
+	"kickass_run_path": "x64",
+	"kickass_debug_path": "x64",
+	"kickass_startup_file_path": "Startup",
+	"empty_bin_folder_before_build" : "true"	
 }
