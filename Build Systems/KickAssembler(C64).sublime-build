@@ -24,7 +24,7 @@
     "linux":
     {
         "env" : {},
-        "path": ""
+        "path": "$PATH"
     },
     "variants": [
         {
