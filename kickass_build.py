@@ -42,9 +42,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # arguments given.
         args = sublime.expand_variables (extendedDict, variables)
 
-        # Reset path to unexpanded
-        if tmpPath:
-            args['path'] = tmpPath
+        # Reset path to unexpanded add path addition from settings
+        args['path'] = self.getPathDelimiter().join([tmpPath, settings.getSetting("kickass_path")])
 
         return args
  
@@ -64,6 +63,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
+
+    def getPathDelimiter(self): 
+        return ";" if platform.system()=='Windows' else ":" 
 
     def getExt(self): 
         return "bat" if platform.system()=='Windows' else "sh" 
