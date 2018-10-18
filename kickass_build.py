@@ -10,7 +10,9 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", "kickass_args", "kickass_run_args", "kickass_debug_args", "kickass_startup_file_path"]
+custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
+"kickass_args", "kickass_run_args", "kickass_debug_args", 
+"kickass_startup_file_path", "kickass_breakpoint_filename"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -48,9 +50,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
-            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
+            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\${kickass_breakpoint_filename}\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
         else:
-            return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
+            return "[ -f \"bin/${kickass_breakpoint_filename}\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/${kickass_breakpoint_filename}\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
  
     def addPrePostVarsToDict(self, sourceDict, buildMode):
         prePostEnvVars = {
