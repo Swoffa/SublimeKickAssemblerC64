@@ -115,7 +115,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         except:
             pass
 
-        if settings.getSettingAsBool("empty_bin_folder_before_build") and os.path.isdir("bin"):
+        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir("bin"):
             self.emptyFolder("bin")
 
         self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
