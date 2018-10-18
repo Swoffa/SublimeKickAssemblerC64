@@ -21,7 +21,11 @@
         "env" : { "CLASSPATH":"$CLASSPATH:/Applications/KickAssembler/KickAss.jar"},
         "path": "$PATH:/Applications/VICE/X64.app/Contents/MacOS/"
     },
- 
+    "linux":
+    {
+        "env" : {},
+        "path": "$PATH"
+    },
     "variants": [
         {
             // Build and Run (F7)
