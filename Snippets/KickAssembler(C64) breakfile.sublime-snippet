@@ -11,9 +11,9 @@
 .var brkFile
 .if(_createDebugFiles) {
  .if(_useBinFolderForBreakpoints)
- .eval brkFile = createFile("bin/breakpoints.txt")
+ .eval brkFile = createFile("bin/${2:breakpoints.txt}")
  else
- .eval brkFile = createFile("breakpoints.txt")
+ .eval brkFile = createFile("${2:breakpoints.txt}")
 }
 .macro break() {
 .if(_createDebugFiles) {
