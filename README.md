@@ -2,7 +2,7 @@ Sublime KickAssembler (C64)
 ===========================
 Sublime Package for C64 development with Kick Assembler, 
 contains language configuration/syntax coloring, build system and some snippets. Support for OSX, Windows and Linux.
-Requires Sublime Text, version 2 or 3 is supported.
+Requires Sublime Text, version 3 is supported.
 
 Installation, OSX
 -----------------
