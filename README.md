@@ -4,6 +4,9 @@ Sublime Package for C64 development with Kick Assembler,
 contains language configuration/syntax coloring, build system and some snippets. Support for OSX, Windows and Linux.
 Requires Sublime Text, version 3 is supported.
 
+Below is a quick start guide, full documentation here: http://goatpower.wordpress.com/projects-releases/sublime-package-kick-assembler-c64/
+
+
 Installation, OSX
 -----------------
  - Ensure a fairly modern version of java is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
@@ -60,10 +63,6 @@ Details, language and syntax
 ----------------------------
 The syntax coloring and language configuration is under improvement and will hopefully be updated. 
 The language bundle is downloaded and modified from https://github.com/cbmeeks/cbmeeks-6502kickass-asm-tmbundle. Thanks!
-
-More info
----------
-See http://goatpower.wordpress.com/projects-releases/sublime-package-kick-assembler-c64/
 
 
 
