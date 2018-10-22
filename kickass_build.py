@@ -43,7 +43,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Expand variables
         variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
-        variables = self.merge_two_dicts(variables ,sublime.expand_variables (variables_to_expand, variables))
+        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
 
         # Create arguments to return by expanding variables in the
         # arguments given.
@@ -109,7 +109,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))
 
-    def merge_two_dicts(self, x, y):
+    def mergeDictionaries(self, x, y):
         z = x.copy()   # start with x's keys and values
         z.update(y)    # modifies z with y's keys and values & returns None
         return z
