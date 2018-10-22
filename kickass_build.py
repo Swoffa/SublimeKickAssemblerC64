@@ -10,9 +10,16 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
-"kickass_args", "kickass_run_args", "kickass_debug_args", 
-"kickass_startup_file_path", "kickass_breakpoint_filename"]
+custom_var_list = ["kickass_run_path",
+                   "kickass_debug_path",
+                   "kickass_jar_path",
+                   "kickass_args",
+                   "kickass_run_args",
+                   "kickass_debug_args",
+                   "kickass_startup_file_path",
+                   "kickass_breakpoint_filename",
+                   "default_prebuild_path",
+                   "default_postbuild_path"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -64,6 +71,23 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
 
+    def evaluatePrePostCommands(self, settings):
+        global defaultPreCommand, preCommand
+        global hasDefaultPreCommand, hasPreCommand
+        preCommandFilename = "prebuild"
+        defaultPreCommand = "%s/%s.%s" % (settings.getSetting("default_prebuild_path"), preCommandFilename, self.getExt())
+        hasDefaultPreCommand = glob.glob(defaultPreCommand)
+        preCommand = "%s.%s" % (preCommandFilename, self.getExt())
+        hasPreCommand = glob.glob(preCommand)
+
+        global defaultPostCommand, postCommand
+        global hasDefaultPostCommand, hasPostCommand
+        postCommandFilename = "postbuild"
+        defaultPostCommand = "%s/%s.%s" % (settings.getSetting("default_postbuild_path"), postCommandFilename, self.getExt())
+        hasDefaultPostCommand = glob.glob(defaultPostCommand)
+        postCommand = "%s.%s" % (postCommandFilename, self.getExt())
+        hasPostCommand = glob.glob(postCommand)
+
     def getPathDelimiter(self): 
         return ";" if platform.system()=='Windows' else ":" 
 
@@ -84,10 +108,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
 
-        if hasPreCommand:
-            command = " ".join([self.getRunScriptStatement(preCommand), "&&", command])
-        if hasPostCommand:
-            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand)])
+        self.evaluatePrePostCommands(settings)
+
+        if hasPreCommand or hasDefaultPreCommand:
+            command = " ".join([self.getRunScriptStatement(preCommand if hasPreCommand else defaultPreCommand), "&&", command])
+        if hasPostCommand or hasDefaultPostCommand:
+            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand if hasPostCommand else defaultPostCommand)])
         if useDebug:
             command = " ".join([command, "&&", debugCommand])
         elif useRun:
@@ -103,13 +129,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
                 shutil.rmtree(os.path.join(root, d))
 
     def run(self, **kwargs):
-        global preCommand, postCommand, hasPreCommand, hasPostCommand
-        buildMode = kwargs.pop('buildmode')
         settings = SublimeSettings(self)
-        preCommand = "prebuild."+self.getExt()
-        postCommand = "postbuild."+self.getExt()
-        hasPreCommand = glob.glob(preCommand)
-        hasPostCommand =  glob.glob(postCommand)
+        buildMode = kwargs.pop('buildmode')
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
