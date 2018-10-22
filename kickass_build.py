@@ -2,6 +2,7 @@ import sublime, sublime_plugin
 import os 
 import platform 
 import glob
+import shutil
 
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
@@ -9,7 +10,9 @@ import glob
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", "kickass_args", "kickass_run_args", "kickass_debug_args", "kickass_startup_file_path"]
+custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
+"kickass_args", "kickass_run_args", "kickass_debug_args", 
+"kickass_startup_file_path", "kickass_breakpoint_filename"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -39,17 +42,16 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # arguments given.
         args = sublime.expand_variables (extendedDict, variables)
 
-        # Reset path to unexpanded
-        if tmpPath:
-            args['path'] = tmpPath
+        # Reset path to unexpanded add path addition from settings
+        args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
         return args
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
-            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\breakpoints.txt\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
+            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\${kickass_breakpoint_filename}\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
         else:
-            return "[ -f \"bin/breakpoints.txt\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/breakpoints.txt\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
+            return "[ -f \"bin/${kickass_breakpoint_filename}\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/${kickass_breakpoint_filename}\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
  
     def addPrePostVarsToDict(self, sourceDict, buildMode):
         prePostEnvVars = {
@@ -61,6 +63,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
+
+    def getPathDelimiter(self): 
+        return ";" if platform.system()=='Windows' else ":" 
 
     def getExt(self): 
         return "bat" if platform.system()=='Windows' else "sh" 
@@ -90,6 +95,13 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         return command
 
+    def emptyFolder(self, path):
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                os.unlink(os.path.join(root, f))
+            for d in dirs:
+                shutil.rmtree(os.path.join(root, d))
+
     def run(self, **kwargs):
         global preCommand, postCommand, hasPreCommand, hasPostCommand
         buildMode = kwargs.pop('buildmode')
@@ -99,7 +111,16 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         hasPreCommand = glob.glob(preCommand)
         hasPostCommand =  glob.glob(postCommand)
 
-        os.makedirs("bin", exist_ok=True)
+        # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
+        # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
+        # (the "bin"-directory will be generated anyway via the output-parameter in the compile-command)
+        try:
+            os.makedirs("bin", exist_ok=True)
+        except:
+            pass
+
+        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir("bin"):
+            self.emptyFolder("bin")
 
         self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
 
@@ -112,8 +133,10 @@ class SublimeSettings():
         # Get the view specific settings
         self.__view_settings = parentCommand.window.active_view().settings()
 
-        self.__default_settings = sublime.load_settings("Preferences.sublime-settings")
+        self.__default_settings = sublime.load_settings("KickAssembler (C64).sublime-settings")
 
     def getSetting(self, settingKey): 
         return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
 
+    def getSettingAsBool(self, settingKey): 
+        return self.getSetting(settingKey).lower() == "true"
