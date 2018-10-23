@@ -12,7 +12,10 @@ import shutil
 # List of variable names we want to support 
 custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
 "kickass_args", "kickass_run_args", "kickass_debug_args", 
-"kickass_startup_file_path", "kickass_breakpoint_filename"]
+"kickass_startup_file_path", "kickass_breakpoint_filename",
+"kickass_compiled_filename"]
+
+vars_to_expand_list = ["kickass_compiled_filename"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -20,7 +23,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     to be specific to a current project.
     """
     def createExecDict(self, sourceDict, buildMode, settings):
-        global custom_var_list
+        global custom_var_list, vars_to_expand_list
 
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
@@ -37,6 +40,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
+
+        # Expand variables
+        variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
+        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
 
         # Create arguments to return by expanding variables in the
         # arguments given.
@@ -58,7 +65,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             "kickass_buildmode": buildMode,
             "kickass_file": "${build_file_base_name}.${file_extension}",
             "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/bin/${build_file_base_name}_Compiled.prg",
+            "kickass_prg_file": "${file_path}/bin/${kickass_compiled_filename}",
             "kickass_bin_folder": "${file_path}/bin",
             }
         sourceDict.get('env').update(prePostEnvVars)
@@ -75,10 +82,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createCommand(self, sourceDict, buildMode, settings): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin ${kickass_args}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir bin ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
@@ -101,6 +108,11 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
                 os.unlink(os.path.join(root, f))
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))
+
+    def mergeDictionaries(self, x, y):
+        z = x.copy()   # start with x's keys and values
+        z.update(y)    # modifies z with y's keys and values & returns None
+        return z
 
     def run(self, **kwargs):
         global preCommand, postCommand, hasPreCommand, hasPostCommand
