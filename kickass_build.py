@@ -10,10 +10,16 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
-"kickass_args", "kickass_run_args", "kickass_debug_args", 
-"kickass_startup_file_path", "kickass_breakpoint_filename",
-"kickass_compiled_filename", "kickass_output_path"]
+custom_var_list = ["kickass_run_path", 
+                   "kickass_debug_path", 
+                   "kickass_jar_path", 
+                   "kickass_args", 
+                   "kickass_run_args", 
+                   "kickass_debug_args", 
+                   "kickass_startup_file_path", 
+                   "kickass_breakpoint_filename",
+                   "kickass_compiled_filename", 
+                   "kickass_output_path"]
 
 vars_to_expand_list = ["kickass_compiled_filename"]
 
