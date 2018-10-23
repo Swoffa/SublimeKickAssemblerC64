@@ -18,8 +18,12 @@ custom_var_list = ["kickass_run_path",
                    "kickass_debug_args",
                    "kickass_startup_file_path",
                    "kickass_breakpoint_filename",
+                   "kickass_compiled_filename",
+                   "kickass_output_path",
                    "default_prebuild_path",
                    "default_postbuild_path"]
+
+vars_to_expand_list = ["kickass_compiled_filename"]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -27,7 +31,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     to be specific to a current project.
     """
     def createExecDict(self, sourceDict, buildMode, settings):
-        global custom_var_list
+        global custom_var_list, vars_to_expand_list
 
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
@@ -45,6 +49,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
 
+        # Expand variables
+        variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
+        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
+
         # Create arguments to return by expanding variables in the
         # arguments given.
         args = sublime.expand_variables (extendedDict, variables)
@@ -56,17 +64,17 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
-            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\${kickass_breakpoint_filename}\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
+            return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
         else:
-            return "[ -f \"bin/${kickass_breakpoint_filename}\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/${kickass_breakpoint_filename}\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
+            return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
  
     def addPrePostVarsToDict(self, sourceDict, buildMode):
         prePostEnvVars = {
             "kickass_buildmode": buildMode,
             "kickass_file": "${build_file_base_name}.${file_extension}",
             "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/bin/${build_file_base_name}_Compiled.prg",
-            "kickass_bin_folder": "${file_path}/bin",
+            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
+            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
@@ -88,7 +96,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         postCommand = "%s.%s" % (postCommandFilename, self.getExt())
         hasPostCommand = glob.glob(postCommand)
 
-    def getPathDelimiter(self): 
+    def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
 
     def getExt(self): 
@@ -99,10 +107,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createCommand(self, sourceDict, buildMode, settings): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${build_file_base_name}_Compiled.prg\" -vicesymbols -showmem -symbolfiledir bin ${kickass_args}"
-        compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${build_file_base_name}_Compiled.prg\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${build_file_base_name}_Compiled.prg\""
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
+        compileDebugCommandAdd = "-afo :afo=true :use${kickass_output_path}=true"
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
@@ -128,22 +136,27 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))
 
+    def mergeDictionaries(self, x, y):
+        z = x.copy()   # start with x's keys and values
+        z.update(y)    # modifies z with y's keys and values & returns None
+        return z
+
     def run(self, **kwargs):
         settings = SublimeSettings(self)
-        buildMode = kwargs.pop('buildmode')
+        outputFolder = settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
-        # (the "bin"-directory will be generated anyway via the output-parameter in the compile-command)
+        # (the output-directory will be generated anyway via the output-parameter in the compile-command)
         try:
-            os.makedirs("bin", exist_ok=True)
+            os.makedirs(outputFolder, exist_ok=True)
         except:
             pass
 
-        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir("bin"):
-            self.emptyFolder("bin")
+        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
+            self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
+        self.window.run_command('exec', self.createExecDict(kwargs, kwargs.pop('buildmode'), settings))
 
 class SublimeSettings():
     def __init__(self, parentCommand):
