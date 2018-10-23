@@ -13,7 +13,7 @@ import shutil
 custom_var_list = ["kickass_run_path", "kickass_debug_path", "kickass_jar_path", 
 "kickass_args", "kickass_run_args", "kickass_debug_args", 
 "kickass_startup_file_path", "kickass_breakpoint_filename",
-"kickass_compiled_filename"]
+"kickass_compiled_filename", "kickass_output_path"]
 
 vars_to_expand_list = ["kickass_compiled_filename"]
 
@@ -56,17 +56,17 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
-            return "copy /Y \"bin\\\\${build_file_base_name}.vs\" + \"bin\\\\${kickass_breakpoint_filename}\" \"bin\\\\${build_file_base_name}_MonCommands.mon\""
+            return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
         else:
-            return "[ -f \"bin/${kickass_breakpoint_filename}\" ] && cat \"bin/${build_file_base_name}.vs\" \"bin/${kickass_breakpoint_filename}\" > \"bin/${build_file_base_name}_MonCommands.mon\" || cat \"bin/${build_file_base_name}.vs\" > \"bin/${build_file_base_name}_MonCommands.mon\""
+            return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
  
     def addPrePostVarsToDict(self, sourceDict, buildMode):
         prePostEnvVars = {
             "kickass_buildmode": buildMode,
             "kickass_file": "${build_file_base_name}.${file_extension}",
             "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/bin/${kickass_compiled_filename}",
-            "kickass_bin_folder": "${file_path}/bin",
+            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
+            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
@@ -82,10 +82,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
  
     def createCommand(self, sourceDict, buildMode, settings): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"bin/${build_file_base_name}_BuildLog.txt\" -o \"bin/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir bin ${kickass_args}"
-        compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}.vs\" \"bin/${kickass_compiled_filename}\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"bin/${build_file_base_name}_ViceLog.txt\" -moncommands \"bin/${build_file_base_name}_MonCommands.mon\" \"bin/${kickass_compiled_filename}\""
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
+        compileDebugCommandAdd = "-afo :afo=true :use${kickass_output_path}=true"
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
@@ -122,17 +122,18 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         postCommand = "postbuild."+self.getExt()
         hasPreCommand = glob.glob(preCommand)
         hasPostCommand =  glob.glob(postCommand)
+        outputFolder = settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
-        # (the "bin"-directory will be generated anyway via the output-parameter in the compile-command)
+        # (the output-directory will be generated anyway via the output-parameter in the compile-command)
         try:
-            os.makedirs("bin", exist_ok=True)
+            os.makedirs(outputFolder, exist_ok=True)
         except:
             pass
 
-        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir("bin"):
-            self.emptyFolder("bin")
+        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
+            self.emptyFolder(outputFolder)
 
         self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
 

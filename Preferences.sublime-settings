@@ -4,5 +4,6 @@
 	"kickass_startup_file_path": "Startup",
 	"kickass_empty_bin_folder_before_build" : "true",
 	"kickass_breakpoint_filename" : "breakpoints.txt",
-	"kickass_compiled_filename": "${build_file_base_name}.prg"
+	"kickass_compiled_filename": "${build_file_base_name}.prg",
+	"kickass_output_path" : "bin"
 }
