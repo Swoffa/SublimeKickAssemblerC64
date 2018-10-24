@@ -152,12 +152,13 @@ class KickAssCommandFactory():
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
 
-        self.evaluatePrePostCommands()
+        preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
+        postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
 
-        if hasPreCommand or hasDefaultPreCommand:
-            command = " ".join([self.getRunScriptStatement(preCommand if hasPreCommand else defaultPreCommand), "&&", command])
-        if hasPostCommand or hasDefaultPostCommand:
-            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand if hasPostCommand else defaultPostCommand)])
+        if preBuildScript:
+            command = " ".join([preBuildScript, "&&", command])
+        if postBuildScript:
+            command = " ".join([command, "&&", postBuildScript])
         if useDebug:
             command = " ".join([command, "&&", debugCommand])
         elif useRun:
@@ -168,28 +169,15 @@ class KickAssCommandFactory():
     def getExt(self): 
         return "bat" if platform.system()=='Windows' else "sh" 
 
-    def getRunScriptStatement(self, scriptname): 
-        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", scriptname)
+    def getRunScriptStatement(self, scriptFilename, defaultScriptPathSetting):
+        defaultScriptCommand = "%s/%s.%s" % (self.__settings.getSetting(defaultScriptPathSetting), scriptFilename, self.getExt())
+        hasDefaultScriptCommand = glob.glob(defaultScriptCommand)
+        scriptCommand = "%s.%s" % (scriptFilename, self.getExt())
+        hasScriptCommand = glob.glob(scriptCommand)
+        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", (scriptCommand if hasScriptCommand else defaultScriptCommand)) if hasScriptCommand or hasDefaultScriptCommand else None 
  
     def createMonCommandsScript(self):
         if platform.system()=='Windows':
             return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
         else:
             return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
- 
-    def evaluatePrePostCommands(self):
-        global defaultPreCommand, preCommand
-        global hasDefaultPreCommand, hasPreCommand
-        preCommandFilename = "prebuild"
-        defaultPreCommand = "%s/%s.%s" % (self.__settings.getSetting("default_prebuild_path"), preCommandFilename, self.getExt())
-        hasDefaultPreCommand = glob.glob(defaultPreCommand)
-        preCommand = "%s.%s" % (preCommandFilename, self.getExt())
-        hasPreCommand = glob.glob(preCommand)
-
-        global defaultPostCommand, postCommand
-        global hasDefaultPostCommand, hasPostCommand
-        postCommandFilename = "postbuild"
-        defaultPostCommand = "%s/%s.%s" % (self.__settings.getSetting("default_postbuild_path"), postCommandFilename, self.getExt())
-        hasDefaultPostCommand = glob.glob(defaultPostCommand)
-        postCommand = "%s.%s" % (postCommandFilename, self.getExt())
-        hasPostCommand = glob.glob(postCommand)
