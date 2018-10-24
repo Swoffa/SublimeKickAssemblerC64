@@ -10,16 +10,18 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = ["kickass_run_path", 
-                   "kickass_debug_path", 
-                   "kickass_jar_path", 
-                   "kickass_args", 
-                   "kickass_run_args", 
-                   "kickass_debug_args", 
-                   "kickass_startup_file_path", 
+custom_var_list = ["kickass_run_path",
+                   "kickass_debug_path",
+                   "kickass_jar_path",
+                   "kickass_args",
+                   "kickass_run_args",
+                   "kickass_debug_args",
+                   "kickass_startup_file_path",
                    "kickass_breakpoint_filename",
-                   "kickass_compiled_filename", 
-                   "kickass_output_path"]
+                   "kickass_compiled_filename",
+                   "kickass_output_path",
+                   "default_prebuild_path",
+                   "default_postbuild_path"]
 
 vars_to_expand_list = ["kickass_compiled_filename"]
 
@@ -77,7 +79,24 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
 
-    def getPathDelimiter(self): 
+    def evaluatePrePostCommands(self, settings):
+        global defaultPreCommand, preCommand
+        global hasDefaultPreCommand, hasPreCommand
+        preCommandFilename = "prebuild"
+        defaultPreCommand = "%s/%s.%s" % (settings.getSetting("default_prebuild_path"), preCommandFilename, self.getExt())
+        hasDefaultPreCommand = glob.glob(defaultPreCommand)
+        preCommand = "%s.%s" % (preCommandFilename, self.getExt())
+        hasPreCommand = glob.glob(preCommand)
+
+        global defaultPostCommand, postCommand
+        global hasDefaultPostCommand, hasPostCommand
+        postCommandFilename = "postbuild"
+        defaultPostCommand = "%s/%s.%s" % (settings.getSetting("default_postbuild_path"), postCommandFilename, self.getExt())
+        hasDefaultPostCommand = glob.glob(defaultPostCommand)
+        postCommand = "%s.%s" % (postCommandFilename, self.getExt())
+        hasPostCommand = glob.glob(postCommand)
+
+    def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
 
     def getExt(self): 
@@ -97,10 +116,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
 
-        if hasPreCommand:
-            command = " ".join([self.getRunScriptStatement(preCommand), "&&", command])
-        if hasPostCommand:
-            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand)])
+        self.evaluatePrePostCommands(settings)
+
+        if hasPreCommand or hasDefaultPreCommand:
+            command = " ".join([self.getRunScriptStatement(preCommand if hasPreCommand else defaultPreCommand), "&&", command])
+        if hasPostCommand or hasDefaultPostCommand:
+            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand if hasPostCommand else defaultPostCommand)])
         if useDebug:
             command = " ".join([command, "&&", debugCommand])
         elif useRun:
@@ -121,13 +142,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         return z
 
     def run(self, **kwargs):
-        global preCommand, postCommand, hasPreCommand, hasPostCommand
-        buildMode = kwargs.pop('buildmode')
         settings = SublimeSettings(self)
-        preCommand = "prebuild."+self.getExt()
-        postCommand = "postbuild."+self.getExt()
-        hasPreCommand = glob.glob(preCommand)
-        hasPostCommand =  glob.glob(postCommand)
         outputFolder = settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
@@ -141,7 +156,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
             self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, buildMode, settings))
+        self.window.run_command('exec', self.createExecDict(kwargs, kwargs.pop('buildmode'), settings))
 
 class SublimeSettings():
     def __init__(self, parentCommand):
