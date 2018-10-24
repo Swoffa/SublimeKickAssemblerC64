@@ -105,7 +105,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         return "bat" if platform.system()=='Windows' else "sh" 
  
     def getRunScriptStatement(self, scriptname): 
-        return "call "+scriptname if platform.system()=='Windows' else ". "+scriptname 
+        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", scriptname)
  
     def createCommand(self, sourceDict, buildMode, settings): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
