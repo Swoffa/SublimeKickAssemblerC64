@@ -32,6 +32,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
     def createExecDict(self, sourceDict, buildMode, settings):
         global custom_var_list, vars_to_expand_list
+        global hasDefaultPreCommand, hasPreCommand
+        global hasDefaultPostCommand, hasPostCommand
 
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
@@ -40,7 +42,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         sourceDict['shell_cmd'] = self.createCommand(sourceDict, buildMode, settings)
 
         # Add pre and post variables
-        extendedDict = self.addPrePostVarsToDict(sourceDict, buildMode) if (hasPreCommand or hasPostCommand) else sourceDict
+        extendedDict = self.addPrePostVarsToDict(sourceDict, buildMode) if (hasPreCommand or hasPostCommand or hasDefaultPreCommand or hasDefaultPostCommand) else sourceDict
 
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
