@@ -39,10 +39,11 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         tmpPath = sourceDict.pop('path', None)
 
         # Create the command
-        sourceDict['shell_cmd'] = self.createCommand(sourceDict, buildMode, settings)
+        kickAssCommand = KickAssCommandFactory(settings).createCommand(sourceDict, buildMode)
+        sourceDict['shell_cmd'] = kickAssCommand.CommandText
 
         # Add pre and post variables
-        extendedDict = self.addPrePostVarsToDict(sourceDict, buildMode) if (hasPreCommand or hasPostCommand or hasDefaultPreCommand or hasDefaultPostCommand) else sourceDict
+        extendedDict = kickAssCommand.updateEnvVars(sourceDict)
 
         # Variables to expand; start with defaults, then add ours.
         useStartup = 'startup' in buildMode
@@ -63,73 +64,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
         return args
- 
-    def createMonCommandsScript(self):
-        if platform.system()=='Windows':
-            return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
-        else:
-            return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
- 
-    def addPrePostVarsToDict(self, sourceDict, buildMode):
-        prePostEnvVars = {
-            "kickass_buildmode": buildMode,
-            "kickass_file": "${build_file_base_name}.${file_extension}",
-            "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
-            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
-            }
-        sourceDict.get('env').update(prePostEnvVars)
-        return sourceDict
-
-    def evaluatePrePostCommands(self, settings):
-        global defaultPreCommand, preCommand
-        global hasDefaultPreCommand, hasPreCommand
-        preCommandFilename = "prebuild"
-        defaultPreCommand = "%s/%s.%s" % (settings.getSetting("default_prebuild_path"), preCommandFilename, self.getExt())
-        hasDefaultPreCommand = glob.glob(defaultPreCommand)
-        preCommand = "%s.%s" % (preCommandFilename, self.getExt())
-        hasPreCommand = glob.glob(preCommand)
-
-        global defaultPostCommand, postCommand
-        global hasDefaultPostCommand, hasPostCommand
-        postCommandFilename = "postbuild"
-        defaultPostCommand = "%s/%s.%s" % (settings.getSetting("default_postbuild_path"), postCommandFilename, self.getExt())
-        hasDefaultPostCommand = glob.glob(defaultPostCommand)
-        postCommand = "%s.%s" % (postCommandFilename, self.getExt())
-        hasPostCommand = glob.glob(postCommand)
 
     def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
-
-    def getExt(self): 
-        return "bat" if platform.system()=='Windows' else "sh" 
- 
-    def getRunScriptStatement(self, scriptname): 
-        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", scriptname)
- 
-    def createCommand(self, sourceDict, buildMode, settings): 
-        javaCommand = "java -cp \"${kickass_jar_path}\"" if settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
-        compileDebugCommandAdd = "-afo :afo=true :use${kickass_output_path}=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
-        useRun = 'run' in buildMode
-        useDebug = 'debug' in buildMode
-
-        command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
-
-        self.evaluatePrePostCommands(settings)
-
-        if hasPreCommand or hasDefaultPreCommand:
-            command = " ".join([self.getRunScriptStatement(preCommand if hasPreCommand else defaultPreCommand), "&&", command])
-        if hasPostCommand or hasDefaultPostCommand:
-            command = " ".join([command, "&&", self.getRunScriptStatement(postCommand if hasPostCommand else defaultPostCommand)])
-        if useDebug:
-            command = " ".join([command, "&&", debugCommand])
-        elif useRun:
-            command = " ".join([command, "&&", runCommand])
-
-        return command
 
     def emptyFolder(self, path):
         for root, dirs, files in os.walk(path):
@@ -176,3 +113,71 @@ class SublimeSettings():
 
     def getSettingAsBool(self, settingKey): 
         return self.getSetting(settingKey).lower() == "true"
+
+class KickAssCommand():
+    def __init__(self, commandText, hasPreCommand, hasPostCommand, buildMode):
+        self.__commandText = commandText
+        self.__hasPreCommand = hasPreCommand
+        self.__hasPostCommand = hasPostCommand
+        self.__buildMode = buildMode
+
+    @property
+    def CommandText(self):
+        return self.__commandText
+
+    def updateEnvVars(self, sourceDict):
+        if not self.__hasPreCommand and not self.__hasPostCommand: return sourceDict
+        prePostEnvVars = {
+            "kickass_buildmode": self.__buildMode,
+            "kickass_file": "${build_file_base_name}.${file_extension}",
+            "kickass_file_path": "${file_path}",
+            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
+            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
+            }
+        sourceDict.get('env').update(prePostEnvVars)
+        return sourceDict
+
+class KickAssCommandFactory():
+    def __init__(self, settings):
+        self.__settings = settings
+ 
+    def createCommand(self, sourceDict, buildMode): 
+        javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
+        compileDebugCommandAdd = "-afo :afo=true :use${kickass_output_path}=true"
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        useRun = 'run' in buildMode
+        useDebug = 'debug' in buildMode
+
+        command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsStatement()]) if useDebug else compileCommand
+
+        preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
+        postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
+
+        if preBuildScript:
+            command = " ".join([preBuildScript, "&&", command])
+        if postBuildScript:
+            command = " ".join([command, "&&", postBuildScript])
+        if useDebug:
+            command = " ".join([command, "&&", debugCommand])
+        elif useRun:
+            command = " ".join([command, "&&", runCommand])
+
+        return KickAssCommand(command, hasPreCommand or defaultPreCommand, hasPostCommand or defaultPostCommand, buildMode)
+
+    def getExt(self): 
+        return "bat" if platform.system()=='Windows' else "sh" 
+
+    def getRunScriptStatement(self, scriptFilename, defaultScriptPathSetting):
+        defaultScriptCommand = "%s/%s.%s" % (self.__settings.getSetting(defaultScriptPathSetting), scriptFilename, self.getExt())
+        hasDefaultScriptCommand = glob.glob(defaultScriptCommand)
+        scriptCommand = "%s.%s" % (scriptFilename, self.getExt())
+        hasScriptCommand = glob.glob(scriptCommand)
+        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", (scriptCommand if hasScriptCommand else defaultScriptCommand)) if hasScriptCommand or hasDefaultScriptCommand else None 
+ 
+    def createMonCommandsStatement(self):
+        if platform.system()=='Windows':
+            return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
+        else:
+            return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
