@@ -106,7 +106,7 @@ class SublimeSettings():
         # Get the view specific settings
         self.__view_settings = parentCommand.window.active_view().settings()
 
-        self.__default_settings = sublime.load_settings("KickAssembler (C64).sublime-settings")
+        self.__default_settings = sublime.load_settings("Preferences.sublime-settings")
 
     def getSetting(self, settingKey): 
         return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
@@ -144,7 +144,7 @@ class KickAssCommandFactory():
     def createCommand(self, sourceDict, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
         compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
-        compileDebugCommandAdd = "-afo :afo=true :use${kickass_output_path}=true"
+        compileDebugCommandAdd = "-afo :afo=true :usebin=true"
         runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
@@ -164,7 +164,7 @@ class KickAssCommandFactory():
         elif useRun:
             command = " ".join([command, "&&", runCommand])
 
-        return KickAssCommand(command, hasPreCommand or defaultPreCommand, hasPostCommand or defaultPostCommand, buildMode)
+        return KickAssCommand(command, preBuildScript != None, postBuildScript != None, buildMode)
 
     def getExt(self): 
         return "bat" if platform.system()=='Windows' else "sh" 
