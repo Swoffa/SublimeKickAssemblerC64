@@ -150,7 +150,7 @@ class KickAssCommandFactory():
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
-        command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsScript()]) if useDebug else compileCommand
+        command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsStatement()]) if useDebug else compileCommand
 
         preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
         postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
@@ -176,7 +176,7 @@ class KickAssCommandFactory():
         hasScriptCommand = glob.glob(scriptCommand)
         return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", (scriptCommand if hasScriptCommand else defaultScriptCommand)) if hasScriptCommand or hasDefaultScriptCommand else None 
  
-    def createMonCommandsScript(self):
+    def createMonCommandsStatement(self):
         if platform.system()=='Windows':
             return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
         else:
