@@ -1,12 +1,12 @@
 New in version 1.2.3:
-- New setting kickass_output_path for setting output-folder, default is bin (PR #30)
-- New setting kickass_compiled_filename for setting filename of compiled prg-file (PR #27)
+- New setting kickass_output_path for setting output-folder, default is bin
+- New setting kickass_compiled_filename for setting filename of compiled prg-file
   Default is SourceFile.prg, which is a change, before it was SourceFile_Compiled.prg
   Thanks wizofwor for suggestion
-- Menu items for accessing settings and preferences (PR #29)
+- Menu items for accessing settings and preferences
   Can be found in menu  Preferences -> Package Settings -> SublimeKickAssemblerC64
   Thanks to @brushesm (https://github.com/brushesm) for this.
-- New Feature: Setting for default prebuild-/postbuild-path (#25)
+- New Feature: Setting for default prebuild-/postbuild-path
   Setting to define default path for prebuild/postbuild-scripts.
   Prebuild/postbuild-scripts located in the current directory will take precedence, 
   but if not found the default path is also checked. No default value.
