@@ -1,0 +1,6 @@
+New in version 1.2.4:
+- Emergecy release to fix serious bugs breaking the whole think.
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
