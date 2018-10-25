@@ -1,0 +1,36 @@
+New in version 1.2.3:
+- New setting kickass_output_path for setting output-folder, default is bin (PR #30)
+- New setting kickass_compiled_filename for setting filename of compiled prg-file (PR #27)
+  Default is SourceFile.prg, which is a change, before it was SourceFile_Compiled.prg
+  Thanks wizofwor for suggestion
+- Menu items for accessing settings and preferences (PR #29)
+  Can be found in menu  Preferences -> Package Settings -> SublimeKickAssemblerC64
+  Thanks to @brushesm (https://github.com/brushesm) for this.
+- New Feature: Setting for default prebuild-/postbuild-path (#25)
+  Setting to define default path for prebuild/postbuild-scripts.
+  Prebuild/postbuild-scripts located in the current directory will take precedence, 
+  but if not found the default path is also checked. No default value.
+  Thanks to Achim (https://github.com/4ch1m) for fixing this
+  More info: https://github.com/Swoffa/SublimeKickAssemblerC64/pull/25
+- Bug fix: Paths for pre/post scripts can now include spaces
+- Bug fix: User settings in file Preferences.sublime-settings should now work again
+
+In case you missed it, here is the news in version 1.2.2 (previous version):
+- Bug fix: Creation of bin-folder no longer crashes on Linux 
+  Thanks to Achim (https://github.com/4ch1m) for fixing this
+  More info: https://github.com/Swoffa/SublimeKickAssemblerC64/pull/18
+- Bug fix: Using pre/post scripts no longer crashes on Linux
+  Thanks to Achim (https://github.com/4ch1m) for fixing this
+  More info: https://github.com/Swoffa/SublimeKickAssemblerC64/pull/17
+- Bin folder is now emptied before build by default
+  Can be deactivated with new setting kickass_empty_bin_folder_before_build
+- New setting kickass_breakpoint_filename for setting breakpoint filename, default is breakpoints.txt
+- New setting kickass_path for adding to path environment variable during build
+  Suggested by Tomek Augustyn, https://github.com/og2t
+  Details: https://github.com/Swoffa/SublimeKickAssemblerC64/issues/22
+- New snippet for inserting the "create breakpoint"-script (type brsc to insert)
+  Breakpoint script can be seen here: https://goatpower.org/projects-releases/sublime-package-kick-assembler-c64/#debugging-and-break-points
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
