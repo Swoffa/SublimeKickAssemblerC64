@@ -7,7 +7,7 @@ New in version 1.2.3:
   Can be found in menu  Preferences -> Package Settings -> SublimeKickAssemblerC64
   Thanks to @brushesm (https://github.com/brushesm) for this.
 - New Feature: Setting for default prebuild-/postbuild-path
-  Setting to define default path for prebuild/postbuild-scripts.
+  Settings default_prebuild_path and default_postbuild_path for setting default prebuild-/postbuild path
   Prebuild/postbuild-scripts located in the current directory will take precedence, 
   but if not found the default path is also checked. No default value.
   Thanks to Achim (https://github.com/4ch1m) for fixing this
