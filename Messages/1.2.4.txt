@@ -1,5 +1,5 @@
 New in version 1.2.4:
-- Emergecy release to fix serious bugs breaking the whole thing.
+- Emergency release to fix serious bugs breaking the whole thing.
 
 See http://goatpower.org for more details.
 
