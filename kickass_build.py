@@ -32,8 +32,6 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
     def createExecDict(self, sourceDict, buildMode, settings):
         global custom_var_list, vars_to_expand_list
-        global hasDefaultPreCommand, hasPreCommand
-        global hasDefaultPostCommand, hasPostCommand
 
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
