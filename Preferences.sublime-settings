@@ -7,5 +7,6 @@
 	"kickass_compiled_filename": "${build_file_base_name}.prg",
 	"kickass_output_path": "bin",
 	"default_prebuild_path": "",
-	"default_postbuild_path": ""
+	"default_postbuild_path": "",
+	"default_make_path": ""
 }

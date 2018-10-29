@@ -140,6 +140,14 @@ class KickAssCommandFactory():
         self.__settings = settings
  
     def createCommand(self, sourceDict, buildMode): 
+        return self.createMakeCommand(sourceDict, buildMode) if buildMode=="make" else self.createKickassCommand(sourceDict, buildMode)
+
+    def createMakeCommand(self, sourceDict, buildMode): 
+        makeCommand = self.getRunScriptStatement("make", "default_make_path")
+        makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("default_make_path")) if self.__settings.getSetting("default_make_path") else ".")
+        return KickAssCommand(makeCommand, True, False, buildMode)
+
+    def createKickassCommand(self, sourceDict, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
         compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"

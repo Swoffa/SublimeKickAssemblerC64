@@ -55,6 +55,12 @@
             // Build Startup (Super+Shift+B / Ctrl+Shift+B)
             "name": "Build Startup",
             "buildmode" : "build-startup",
+        },
+
+        {
+            // Make (F8)
+            "name": "Make",
+            "buildmode" : "make",
         }
     ]
 }
