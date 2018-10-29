@@ -8,13 +8,13 @@
                 "children":
                 [
                     {
-                        "caption": "SublimeKickAssemblerC64",
+                        "caption": "Kick Assembler (C64)",
                         "children":
                         [
                             {
                                 "command": "open_file",
                                 "args": {
-                                    "file": "${packages}/SublimeKickAssemblerC64/README.md",
+                                    "file": "${packages}/Kick Assembler (C64)/README.md",
                                 },
                                 "caption": "README"
                             },
@@ -23,15 +23,15 @@
                                 "caption": "Preferences",
                                 "command": "edit_settings",
                                 "args": {
-                                    "base_file": "${packages}/SublimeKickAssemblerC64/Preferences.sublime-settings",
-                                    "default": "// Settings in here override those in \"/SublimeKickAssemblerC64/Preferences.sublime-settings\",\n\n{\n\t$0\n}\n"}
+                                    "base_file": "${packages}/Kick Assembler (C64)/Preferences.sublime-settings",
+                                    "default": "// Settings in here override those in \"/Kick Assembler (C64)/Preferences.sublime-settings\",\n\n{\n\t$0\n}\n"}
                             },
                             {
                                 "caption": "Settings",
                                 "command": "edit_settings",
                                 "args": {
-                                    "base_file": "${packages}/SublimeKickAssemblerC64/KickAssembler (C64).sublime-settings",
-                                    "default": "// Settings in here override those in \"/SublimeKickAssemblerC64/KickAssembler (C64).sublime-settings\",\n\n{\n\t$0\n}\n"}
+                                    "base_file": "${packages}/Kick Assembler (C64)/KickAssembler (C64).sublime-settings",
+                                    "default": "// Settings in here override those in \"/Kick Assembler (C64)/KickAssembler (C64).sublime-settings\",\n\n{\n\t$0\n}\n"}
                             },
                         ]
                     },
