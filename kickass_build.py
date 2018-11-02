@@ -20,8 +20,9 @@ custom_var_list = ["kickass_run_path",
                    "kickass_breakpoint_filename",
                    "kickass_compiled_filename",
                    "kickass_output_path",
-                   "default_prebuild_path",
-                   "default_postbuild_path"]
+                   "kickass_default_prebuild_path",
+                   "kickass_default_postbuild_path",
+                   "kickass_default_make_path"]
 
 vars_to_expand_list = ["kickass_compiled_filename"]
 
@@ -143,8 +144,8 @@ class KickAssCommandFactory():
         return self.createMakeCommand(sourceDict, buildMode) if buildMode=="make" else self.createKickassCommand(sourceDict, buildMode)
 
     def createMakeCommand(self, sourceDict, buildMode): 
-        makeCommand = self.getRunScriptStatement("make", "default_make_path")
-        makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("default_make_path")) if self.__settings.getSetting("default_make_path") else ".")
+        makeCommand = self.getRunScriptStatement("make", "kickass_default_make_path")
+        makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("kickass_default_make_path")) if self.__settings.getSetting("kickass_default_make_path") else ".")
         return KickAssCommand(makeCommand, True, False, buildMode)
 
     def createKickassCommand(self, sourceDict, buildMode): 
@@ -158,8 +159,8 @@ class KickAssCommandFactory():
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsStatement()]) if useDebug else compileCommand
 
-        preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
-        postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
+        preBuildScript = self.getRunScriptStatement("prebuild", "kickass_default_prebuild_path")
+        postBuildScript = self.getRunScriptStatement("postbuild", "kickass_default_postbuild_path")
 
         if preBuildScript:
             command = " ".join([preBuildScript, "&&", command])
