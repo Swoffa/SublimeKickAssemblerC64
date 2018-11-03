@@ -55,3 +55,7 @@ tmp
 _yardoc
 doc/
 
+# IntelliJ / IDEA
+.idea
+*.iml
+

@@ -8,6 +8,7 @@
 	{ "keys": ["shift+f5"], "command": "build", "args": {"variant": "Build and Debug Startup"} },
 
 	{ "keys": ["f7"], "command": "build", "args": {"variant": "Build and Run"} },
-	{ "keys": ["shift+f7"], "command": "build", "args": {"variant": "Build and Debug"} }
+	{ "keys": ["shift+f7"], "command": "build", "args": {"variant": "Build and Debug"} },
 	
+	{ "keys": ["f8"], "command": "build", "args": {"variant": "Make"} },
 ]

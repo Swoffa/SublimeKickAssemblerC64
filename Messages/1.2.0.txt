@@ -1,14 +1,16 @@
 New in version 1.2.0:
 - New feature: Settings
    It is now possible to use the following settings in sublime; 
-   kickass_run_path, kickass_debug_path, kickass_jar_path, kickass_run_args, 
-   kickass_debug_args, kickass_startup_file_path. See below for details.
+   kickass_run_path, kickass_debug_path, kickass_jar_path
+   kickass_run_args, kickass_debug_args, kickass_args
+   kickass_startup_file_path. See below for details.
 - New feature: Pre and post build
    The ability to run custom scripts before and after build. Feature requested by Bacchus of Fairlight. 
 - Internal changes in build system to allow the new features above. 
    Big thanks to OdatNurd, STealthy and haSTy and their repo SublimeScraps for inspiration.
 - Minor corrections and improvements of syntax coloring
 
+You might have to restart Sublime for the settings features to start working.s
 See http://goatpower.org for more details.
 
 //Swoffa of Noice
