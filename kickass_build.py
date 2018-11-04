@@ -17,6 +17,7 @@ custom_var_list = ["kickass_run_path",
                    "kickass_run_args",
                    "kickass_debug_args",
                    "kickass_startup_file_path",
+                   "kickass_startup_file_root_path",
                    "kickass_breakpoint_filename",
                    "kickass_compiled_filename",
                    "kickass_output_path",
@@ -50,6 +51,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
 
+        # The startup root path is prepended to the appropriate paths during command creation, 
+        # so we reset it to "" if the user did not invoke the build with useStartup
+        variables['kickass_startup_file_root_path'] = settings.getSetting("kickass_startup_file_root_path") if useStartup else ""
+
         # Expand variables
         variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
         variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
@@ -80,7 +85,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         settings = SublimeSettings(self)
-        outputFolder = settings.getSetting("kickass_output_path")
+        outputFolder = settings.getSetting("kickass_startup_file_root_path") + settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
@@ -149,10 +154,10 @@ class KickAssCommandFactory():
 
     def createKickassCommand(self, sourceDict, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${kickass_startup_file_root_path}${build_file_base_name}.${file_extension}\" -log \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_startup_file_root_path}${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_startup_file_root_path}${kickass_output_path} ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_startup_file_root_path}${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_startup_file_root_path}${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
@@ -184,6 +189,6 @@ class KickAssCommandFactory():
  
     def createMonCommandsStatement(self):
         if platform.system()=='Windows':
-            return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
+            return "copy /Y \"${kickass_startup_file_root_path}${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_startup_file_root_path}${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_startup_file_root_path}${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""
         else:
-            return "[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
+            return "[ -f \"${kickass_startup_file_root_path}${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_startup_file_root_path}${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_startup_file_root_path}${kickass_output_path}/${build_file_base_name}_MonCommands.mon\""
