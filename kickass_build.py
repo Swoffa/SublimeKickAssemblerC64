@@ -37,17 +37,18 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
 
+        # Variables to expand; start with defaults, then add ours.
+        variables = self.window.extract_variables()
+        useStartup = 'startup' in buildMode
+        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
+
         # Create the command
-        kickAssCommand = KickAssCommandFactory(settings).createCommand(sourceDict, buildMode)
+        kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
         sourceDict['shell_cmd'] = kickAssCommand.CommandText
 
         # Add pre and post variables
         extendedDict = kickAssCommand.updateEnvVars(sourceDict)
 
-        # Variables to expand; start with defaults, then add ours.
-        useStartup = 'startup' in buildMode
-        variables = self.window.extract_variables()
-        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
         for custom_var in custom_var_list:
             variables[custom_var] = settings.getSetting(custom_var)
 
@@ -140,17 +141,17 @@ class KickAssCommandFactory():
     def __init__(self, settings):
         self.__settings = settings
  
-    def createCommand(self, sourceDict, buildMode): 
-        return self.createMakeCommand(sourceDict, buildMode) if buildMode=="make" else self.createKickassCommand(sourceDict, buildMode)
+    def createCommand(self, variables, buildMode): 
+        return self.createMakeCommand(variables, buildMode) if buildMode=="make" else self.createKickassCommand(variables, buildMode)
 
-    def createMakeCommand(self, sourceDict, buildMode): 
+    def createMakeCommand(self, variables, buildMode): 
         makeCommand = self.getRunScriptStatement("make", "kickass_default_make_path")
         makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("kickass_default_make_path")) if self.__settings.getSetting("kickass_default_make_path") else ".")
         return KickAssCommand(makeCommand, True, False, buildMode)
 
-    def createKickassCommand(self, sourceDict, buildMode): 
+    def createKickassCommand(self, variables, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir ${kickass_output_path} ${kickass_args}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
         runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
