@@ -17,9 +17,9 @@ custom_var_list = ["kickass_run_path",
                    "kickass_run_args",
                    "kickass_debug_args",
                    "kickass_startup_file_path",
+                   "kickass_startup_root_path",
                    "kickass_breakpoint_filename",
                    "kickass_compiled_filename",
-                   "kickass_output_path",
                    "default_prebuild_path",
                    "default_postbuild_path"]
 
@@ -38,8 +38,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Variables to expand; start with defaults, then add ours.
         variables = self.window.extract_variables()
-        useStartup = 'startup' in buildMode
-        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
+        self.adjustPathVariables(variables, buildMode, settings)
 
         # Create the command
         kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
@@ -62,7 +61,23 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Reset path to unexpanded add path addition from settings
         args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
+        # "return" output path, HACK
+        args.update({"kickass_output_path": variables.get("kickass_output_path")})
+
         return args
+
+    def adjustPathVariables(self, variables, buildMode, settings):
+        useStartup = 'startup' in buildMode
+        useMake = 'make' in buildMode
+        outputFolder = settings.getSetting("kickass_output_path")
+        buildFileBaseName = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
+        startupRootpath = settings.getSetting("kickass_startup_root_path") if useStartup or useMake else None
+        fileToCompile = os.path.join(os.getcwd(), '%s.%s' % (os.path.join(startupRootpath, buildFileBaseName) if startupRootpath else buildFileBaseName, variables["file_extension"]))
+        filePath = os.path.dirname(fileToCompile) 
+        variables.update({"build_file_base_name": buildFileBaseName})
+        variables.update({"build_file": fileToCompile})
+        variables.update({"file_path": filePath})
+        variables.update({"kickass_output_path": os.path.join(filePath, outputFolder)})
 
     def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
@@ -81,7 +96,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         settings = SublimeSettings(self)
-        outputFolder = settings.getSetting("kickass_output_path")
+        execDict = self.createExecDict(kwargs, kwargs.pop('buildmode'), settings)
+        outputFolder = execDict.pop("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
@@ -94,7 +110,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
             self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, kwargs.pop('buildmode'), settings))
+        self.window.run_command('exec', execDict)
 
 class SublimeSettings():
     def __init__(self, parentCommand):
@@ -130,8 +146,8 @@ class KickAssCommand():
             "kickass_buildmode": self.__buildMode,
             "kickass_file": "${build_file_base_name}.${file_extension}",
             "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
-            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
+            "kickass_prg_file": "${kickass_output_path}/${kickass_compiled_filename}",
+            "kickass_bin_folder": "${kickass_output_path}",
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
@@ -144,13 +160,13 @@ class KickAssCommandFactory():
         return self.createMakeCommand(variables, buildMode) if buildMode=="make" else self.createKickassCommand(variables, buildMode)
 
     def createMakeCommand(self, variables, buildMode): 
-        makeCommand = self.getRunScriptStatement("make", "default_make_path")
+        makeCommand = self.getRunScriptStatement(os.path.join(variables.get("file_path"), "make"), "default_make_path")
         makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("default_make_path")) if self.__settings.getSetting("default_make_path") else ".")
         return KickAssCommand(makeCommand, True, False, buildMode)
 
     def createKickassCommand(self, variables, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
         runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
         debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
@@ -159,8 +175,9 @@ class KickAssCommandFactory():
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsStatement()]) if useDebug else compileCommand
 
-        preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
-        postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
+        rootPath = variables.get("file_path")
+        preBuildScript = self.getRunScriptStatement(os.path.join(rootPath, "prebuild"), "default_prebuild_path")
+        postBuildScript = self.getRunScriptStatement(os.path.join(rootPath, "postbuild"), "default_postbuild_path")
 
         if preBuildScript:
             command = " ".join([preBuildScript, "&&", command])
