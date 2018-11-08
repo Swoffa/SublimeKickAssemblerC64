@@ -1,0 +1,6 @@
+{
+    "css_file": "SublimeKickAssemblerC64/css/default.css",
+    "help_directories": ["SublimeKickAssemblerC64/helpdb"],
+    "scopes": ["source.assembly.kickassembler"],
+    "log_level": "warning"
+}

@@ -1,0 +1,97 @@
+{
+    "rla": {
+        "descr": "{addr} = rol {addr} A = A and {addr}",
+        "name": "Combination of two operations with the same addressing mode (Sub-instructions: AND, ROL)",
+        "url": ""
+    },
+
+    "sre": {
+        "descr": "{addr}={addr}/2 A:=A eor {addr}",
+        "name": " Combination of two operations with the same addressing mode (Sub-instructions: EOR, LSR)",
+        "url": ""
+    },
+
+    "rra": {
+        "descr": "{addr} = ror {addr} A = A adc {addr}",
+        "name": "Combination of two operations with the same addressing mode (Sub-instructions: ADC, ROR)",
+        "url": ""
+    },
+
+    "sax": {
+        "descr": "{addr} = A & X",
+        "name": " Combination of two operations with the same addressing mode (Sub-instructions: STA, STX)",
+        "url": ""
+    },
+
+    "lax": {
+        "descr": "A,X = {addr}",
+        "name": "Combination of two operations with the same addressing mode (Sub-instructions: LDA, LDX)",
+        "url": ""
+    },
+
+    "dcp": {
+        "descr": "{addr} = {addr} - 1 A cmp {addr}",
+        "name": "Combination of two operations with the same addressing mode (Sub-instructions: CMP, DEC)",
+        "url": ""
+    },
+
+    "isc": {
+        "descr": "{addr} = {addr} + 1 A = A - {addr}",
+        "name": "Combination of two operations with the same addressing mode (Sub-instructions: SBC, INC)",
+        "url": ""
+    },
+
+    "anc": {
+        "descr": "A = A & #{imm} ",
+        "name": "Combination of an immediate and an implied command (Sub-instructions: AND, ASL/ROL)",
+        "url": ""
+    },
+
+    "alr": {
+        "descr": "A = (A & #{imm}) / 2",
+        "name": "Combination of an immediate and an implied command (Sub-instructions: AND, LSR)",
+        "url": ""
+    },
+
+    "arr": {
+        "descr": "A:=(A&#{imm})/2",
+        "name": "Combination of an immediate and an implied command (Sub-instructions: AND, ROR)",
+        "url": ""
+    },
+
+    "sbx": {
+        "descr": "X =A & X - #{imm}",
+        "name": "Combination of an immediate and an implied command (Sub-instructions: CMP, DEX)",
+        "url": ""
+    },
+
+    "las": {
+        "descr": "A,X,SP = {addr} & SP",
+        "name": "Combinations of STA/TXS and LDA/TSX",
+        "url": ""
+    },
+
+    "sha": {
+        "descr": "{addr} = A & X & {H+1} ",
+        "name": "Combinations of STA/STX/STY",
+        "url": ""
+    },
+
+    "shx": {
+        "descr": "{addr} = X & {H+1}",
+        "name": "Combinations of STA/STX/STY",
+        "url": ""
+    },
+
+    "shy": {
+        "descr": "{addr} = Y & {H+1}",
+        "name": "Combinations of STA/STX/STY",
+        "url": ""
+    },
+
+    "tas": {
+        "descr": "SP = A & X {addr} = SP & {H+1}",
+        "name": "Combinations of STA/TXS and LDA/TSX",
+        "url": ""
+    }
+  }
