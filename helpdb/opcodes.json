@@ -1,0 +1,283 @@
+{
+    "adc": {
+		"descr": "",
+		"name": "ADd with Carry",
+		"url": ""
+	},
+	"and": {
+		"descr": "",
+		"name": "Logic AND",
+		"url": ""
+	},
+	"asl": {
+		"descr": "",
+		"name": "Arithmetic Shift Left",
+		"url": ""
+	},
+	"bit": {
+		"descr": "",
+		"name": "BIT test",
+		"url": ""
+	},
+	"clc": {
+		"descr": "",
+		"name": "CLear Carry flag",
+		"url": ""
+	},
+	"cld": {
+		"descr": "",
+		"name": "CLear Decimal flag",
+		"url": ""
+	},
+	"cli": {
+		"descr": "",
+		"name": "CLear Interrupt flag",
+		"url": ""
+	},
+	"clv": {
+		"descr": "",
+		"name": "CLear oVerflow",
+		"url": ""
+	},
+	"cmp": {
+		"descr": "",
+		"name": "CoMPare",
+		"url": ""
+	},
+	"cpx": {
+		"descr": "",
+		"name": "ComPare X register",
+		"url": ""
+	},
+	"cpy": {
+		"descr": "",
+		"name": "ComPare Y register",
+		"url": ""
+	},
+	"dec": {
+		"descr": "",
+		"name": "DECrease",
+		"url": ""
+	},
+	"dex": {
+		"descr": "",
+		"name": "DEcrement X register",
+		"url": ""
+	},
+	"dey": {
+		"descr": "",
+		"name": "DEcrement Y register",
+		"url": ""
+	},
+	"eor": {
+		"descr": "",
+		"name": "Exclusive OR",
+		"url": ""
+	},
+	"inc": {
+		"descr": "",
+		"name": "INCrease",
+		"url": ""
+	},
+	"inx": {
+		"descr": "",
+		"name": "INcrease X register",
+		"url": ""
+	},
+	"iny": {
+		"descr": "",
+		"name": "INcrease Y register",
+		"url": ""
+	},
+	"lda": {
+		"descr": "",
+		"name": "LoaD Accumulator",
+		"url": ""
+	},
+	"ldx": {
+		"descr": "",
+		"name": "LoaD X register",
+		"url": ""
+	},
+	"ldy": {
+		"descr": "",
+		"name": "LoaD Y register",
+		"url": ""
+	},
+	"lsr": {
+		"descr": "",
+		"name": "Logic Shift Right",
+		"url": ""
+	},
+	"nop": {
+		"descr": "",
+		"name": "No OPeration",
+		"url": ""
+	},
+	"ora": {
+		"descr": "",
+		"name": "Logical OR on Accumulator",
+		"url": ""
+	},
+	"pha": {
+		"descr": "",
+		"name": "PusH Accumulator",
+		"url": ""
+	},
+	"php": {
+		"descr": "",
+		"name": "PusH Processor flags",
+		"url": ""
+	},
+	"pla": {
+		"descr": "",
+		"name": "PulL Accumulator",
+		"url": ""
+	},
+	"plp": {
+		"descr": "",
+		"name": "PulL Processor flags",
+		"url": ""
+	},
+	"rol": {
+		"descr": "",
+		"name": "ROtate Left",
+		"url": ""
+	},
+	"ror": {
+		"descr": "",
+		"name": "ROtate Right",
+		"url": ""
+	},
+	"sbc": {
+		"descr": "",
+		"name": "SuBtract with Carry",
+		"url": ""
+	},
+	"sec": {
+		"descr": "",
+		"name": "SEt Carry flag",
+		"url": ""
+	},
+	"sed": {
+		"descr": "",
+		"name": "SEt Decimal flag",
+		"url": ""
+	},
+	"sei": {
+		"descr": "",
+		"name": "SEt Interrupt flag",
+		"url": ""
+	},
+	"sta": {
+		"descr": "",
+		"name": "STore Accumulator",
+		"url": ""
+	},
+	"stx": {
+		"descr": "",
+		"name": "STore X register",
+		"url": ""
+	},
+	"sty": {
+		"descr": "",
+		"name": "STore X register",
+		"url": ""
+	},
+	"tax": {
+		"descr": "",
+		"name": "Transfer Accumulator to X register",
+		"url": ""
+	},
+	"txa": {
+		"descr": "",
+		"name": "Transfer X register to Accumulator",
+		"url": ""
+	},
+	"tay": {
+		"descr": "",
+		"name": "Transfer Accumulator to Y register",
+		"url": ""
+	},
+	"tya": {
+		"descr": "",
+		"name": "Transfer Y register to Accumulator",
+		"url": ""
+	},
+	"tsx": {
+		"descr": "",
+		"name": "Transfer Stack pointer to X register",
+		"url": ""
+	},
+	"txs": {
+		"descr": "",
+		"name": "Transfer X register to Stack pointer",
+		"url": ""
+    },
+	"bcc": {
+		"descr": "",
+		"name": "Branch if Carry flag is Clear",
+		"url": ""
+	},
+	"bcs": {
+		"descr": "",
+		"name": "Branch if Carry flag is Set",
+		"url": ""
+	},
+	"beq": {
+		"descr": "",
+		"name": "Branch if EQual",
+		"url": ""
+	},
+	"bmi": {
+		"descr": "",
+		"name": "Branch if MInus",
+		"url": ""
+	},
+	"bne": {
+		"descr": "",
+		"name": "Branch if Not Equal",
+		"url": ""
+	},
+	"bpl": {
+		"descr": "",
+		"name": "Branch if PLus",
+		"url": ""
+	},
+	"brk": {
+		"descr": "",
+		"name": "BReaK",
+		"url": ""
+	},
+	"bvc": {
+		"descr": "",
+		"name": "Branch if oVerflow flag is Clear",
+		"url": ""
+	},
+	"bvs": {
+		"descr": "",
+		"name": "Branch if oVerflow flag is Set",
+		"url": ""
+	},
+	"jmp": {
+		"descr": "",
+		"name": "JuMP",
+		"url": ""
+	},
+	"jsr": {
+		"descr": "",
+		"name": "Jump to SubRoutine",
+		"url": ""
+	},
+	"rti": {
+		"descr": "",
+		"name": "ReTurn from Interrupt",
+		"url": ""
+	},
+	"rts": {
+		"descr": "",
+		"name": "ReTurn from Subroutine",
+		"url": ""
+	}
+}
+
