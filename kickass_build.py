@@ -85,6 +85,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         settings = SublimeSettings(self)
+        if not settings.isLoaded(): 
+            errorMessage = "Settings could not be loaded, please restart Sublime Text."
+            sublime.error_message(errorMessage) 
+            print(errorMessage)
+            return
+
         outputFolder = settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
@@ -109,10 +115,15 @@ class SublimeSettings():
         # Get the view specific settings
         self.__view_settings = parentCommand.window.active_view().settings()
 
-        self.__default_settings = sublime.load_settings("Preferences.sublime-settings")
+    def isLoaded(self):
+        return self.__getSetting("kickass_output_path") != None
 
-    def getSetting(self, settingKey): 
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
+    def getSetting(self, settingKey):
+        setting = self.__getSetting(settingKey)
+        return setting if setting else ""
+
+    def __getSetting(self, settingKey): 
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, None))
 
     def getSettingAsBool(self, settingKey): 
         return self.getSetting(settingKey).lower() == "true"
