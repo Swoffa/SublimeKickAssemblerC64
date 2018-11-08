@@ -63,6 +63,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Reset path to unexpanded add path addition from settings
         args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
+        envSetting = settings.getSetting("kickass_env")
+        if envSetting:
+            args['env'].update(envSetting)
+
         return args
 
     def getPathDelimiter(self):
@@ -82,6 +86,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         settings = SublimeSettings(self)
+        if not settings.isLoaded(): 
+            errorMessage = "Settings could not be loaded, please restart Sublime Text."
+            sublime.error_message(errorMessage) 
+            print(errorMessage)
+            return
+
         outputFolder = settings.getSetting("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
@@ -106,10 +116,15 @@ class SublimeSettings():
         # Get the view specific settings
         self.__view_settings = parentCommand.window.active_view().settings()
 
-        self.__default_settings = sublime.load_settings("Preferences.sublime-settings")
+    def isLoaded(self):
+        return self.__getSetting("kickass_output_path") != None
 
-    def getSetting(self, settingKey): 
-        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, self.__default_settings.get(settingKey, "")))
+    def getSetting(self, settingKey):
+        setting = self.__getSetting(settingKey)
+        return setting if setting else ""
+
+    def __getSetting(self, settingKey): 
+        return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, None))
 
     def getSettingAsBool(self, settingKey): 
         return self.getSetting(settingKey).lower() == "true"
@@ -153,8 +168,8 @@ class KickAssCommandFactory():
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
         compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" ${kickass_run_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_compiled_filename}\""
-        debugCommand = "\"${kickass_debug_path}\" ${kickass_debug_args} -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" \"${kickass_output_path}/${kickass_compiled_filename}\""
+        runCommand = "\"${kickass_run_path}\" -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" ${kickass_run_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" ${kickass_debug_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
