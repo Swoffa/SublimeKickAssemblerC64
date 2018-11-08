@@ -62,6 +62,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Reset path to unexpanded add path addition from settings
         args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
+        envSetting = settings.getSetting("kickass_env")
+        if envSetting:
+            args['env'].update(envSetting)
+
         return args
 
     def getPathDelimiter(self):
