@@ -23,7 +23,7 @@ custom_var_list = ["kickass_run_path",
                    "default_prebuild_path",
                    "default_postbuild_path"]
 
-vars_to_expand_list = ["kickass_compiled_filename"
+vars_to_expand_list = ["kickass_compiled_filename",
                         "kickass_args",
                         "kickass_run_args",
                         "kickass_debug_args"]
