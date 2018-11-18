@@ -17,13 +17,19 @@ custom_var_list = ["kickass_run_path",
                    "kickass_run_args",
                    "kickass_debug_args",
                    "kickass_startup_file_path",
+                   "kickass_compile_logfile_filename",
+                   "kickass_debug_logfile_filename",
+                   "kickass_run_logfile_filename",
                    "kickass_breakpoint_filename",
                    "kickass_compiled_filename",
                    "kickass_output_path",
                    "default_prebuild_path",
                    "default_postbuild_path"]
 
-vars_to_expand_list = ["kickass_compiled_filename",
+vars_to_expand_list = [ "kickass_compiled_filename",
+                        "kickass_compile_logfile_filename",
+                        "kickass_debug_logfile_filename",
+                        "kickass_run_logfile_filename",
                         "kickass_args",
                         "kickass_run_args",
                         "kickass_debug_args"]
@@ -150,6 +156,7 @@ class KickAssCommand():
             "kickass_file_path": "${file_path}",
             "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
             "kickass_bin_folder": "${file_path}/${kickass_output_path}",
+
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
@@ -167,11 +174,13 @@ class KickAssCommandFactory():
         return KickAssCommand(makeCommand, True, False, buildMode)
 
     def createKickassCommand(self, variables, buildMode): 
+
+
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_output_path}/${build_file_base_name}_BuildLog.txt\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler \"${build_file_base_name}.${file_extension}\" -log \"${kickass_run_logfile_filename}\" -o \"${kickass_output_path}/${kickass_compiled_filename}\" -vicesymbols -showmem -symbolfiledir \"${kickass_output_path}\" ${kickass_args}"
         compileDebugCommandAdd = "-afo :afo=true :usebin=true"
-        runCommand = "\"${kickass_run_path}\" -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}.vs\" ${kickass_run_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
-        debugCommand = "\"${kickass_debug_path}\" -logfile \"${kickass_output_path}/${build_file_base_name}_ViceLog.txt\" -moncommands \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" ${kickass_debug_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
+        runCommand = "\"${kickass_run_path}\" -logfile \"${kickass_run_logfile_filename}\" ${kickass_run_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
+        debugCommand = "\"${kickass_debug_path}\" -logfile \"${kickass_debug_logfile_filename}\" ${kickass_debug_args} \"${kickass_output_path}/${kickass_compiled_filename}\""
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
