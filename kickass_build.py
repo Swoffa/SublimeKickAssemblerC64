@@ -10,8 +10,8 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = [ "kickass_compile_parameters",
-                    "kickass_compile_debug_additional_parameters",
+custom_var_list = [ "kickass_compile_args",
+                    "kickass_compile_debug_additional_args",
                     "kickass_run_command_c64debugger",
                     "kickass_debug_command_c64debugger",
                     "kickass_run_command_x64",
@@ -34,7 +34,7 @@ vars_to_expand_list = [
                         "kickass_args",
                         "kickass_run_args",
                         "kickass_debug_args",
-                        "kickass_compile_parameters",
+                        "kickass_compile_args",
                         "kickass_run_command_x64",
                         "kickass_debug_command_x64",
                         "kickass_run_command_c64debugger",
@@ -181,8 +181,8 @@ class KickAssCommandFactory():
 
     def createKickassCommand(self, variables, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler ${kickass_compile_parameters} "
-        compileDebugCommandAdd = "${kickass_compile_debug_additional_parameters}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler ${kickass_compile_args} "
+        compileDebugCommandAdd = "${kickass_compile_debug_additional_args}"
 
         runCommand = "${kickass_run_command_x64}" 
         if "c64debugger" in self.__settings.getSetting("kickass_run_path").lower():
