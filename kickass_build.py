@@ -10,10 +10,12 @@ import shutil
 # Huge thanks to OdatNurd!!
  
 # List of variable names we want to support 
-custom_var_list = [ "compile_parameters",
-                    "compile_debug_additional_parameters",
-                    "run_command",
-                    "debug_command",
+custom_var_list = [ "kickass_compile_parameters",
+                    "kickass_compile_debug_additional_parameters",
+                    "kickass_run_command_c64debugger",
+                    "kickass_debug_command_c64debugger",
+                    "kickass_run_command_x64",
+                    "kickass_debug_command_x64",
                     "kickass_run_path",
                     "kickass_debug_path",
                     "kickass_jar_path",
@@ -27,13 +29,17 @@ custom_var_list = [ "compile_parameters",
                     "default_prebuild_path",
                     "default_postbuild_path"]
 
-vars_to_expand_list = [ "compile_parameters",
-                        "run_command",
-                        "debug_command",
+vars_to_expand_list = [ 
                         "kickass_compiled_filename",
                         "kickass_args",
                         "kickass_run_args",
-                        "kickass_debug_args"]
+                        "kickass_debug_args",
+                        "kickass_compile_parameters",
+                        "kickass_run_command_x64",
+                        "kickass_debug_command_x64",
+                        "kickass_run_command_c64debugger",
+                        "kickass_debug_command_c64debugger",
+                        ]
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -175,10 +181,17 @@ class KickAssCommandFactory():
 
     def createKickassCommand(self, variables, buildMode): 
         javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler ${compile_parameters} "
-        compileDebugCommandAdd = "${compile_debug_additional_parameters}"
-        runCommand = "${run_command}"
-        debugCommand = "${debug_command}"
+        compileCommand = javaCommand+" cml.kickass.KickAssembler ${kickass_compile_parameters} "
+        compileDebugCommandAdd = "${kickass_compile_debug_additional_parameters}"
+
+        runCommand = "${kickass_run_command_x64}" 
+        if "c64debugger" in self.__settings.getSetting("kickass_run_path").lower():
+            runCommand = "${kickass_run_command_c64debugger}" 
+
+        debugCommand = "${kickass_debug_command_x64}"
+        if "c64debugger" in self.__settings.getSetting("kickass_debug_path").lower():
+            debugCommand = "${kickass_debug_command_c64debugger}" 
+
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
 
