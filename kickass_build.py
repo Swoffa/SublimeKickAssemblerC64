@@ -3,6 +3,7 @@ import os
 import platform 
 import glob
 import shutil
+import json
 
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
@@ -54,8 +55,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Variables to expand; start with defaults, then add ours.
         variables = self.window.extract_variables()
-        useStartup = 'startup' in buildMode
-        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
+        variables.update(self.getFilenameVariables(buildMode, settings, variables))
 
         # Create the command
         kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
@@ -83,6 +83,23 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             args['env'].update(envSetting)
 
         return args
+
+    def getFilenameVariables(self, buildMode, settings, variables):
+        useStartup = 'startup' in buildMode
+        fileToBuild = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
+        fileToBuildPath = "%s/%s.%s" % (variables["file_path"], fileToBuild, variables["file_extension"])
+        fileToRunAnnotation = self.parseAnnotation(fileToBuildPath, "file-to-run")
+        return {
+            "build_file_base_name": fileToBuild,
+            "start_filename" : fileToRunAnnotation if fileToRunAnnotation else "%s.prg" % (fileToBuild)
+            }
+
+    def parseAnnotation (self, filename, annotationName):
+        with open(filename, 'r') as handle:
+            firstline = handle.readline().strip()
+        if firstline.startswith("//") and "@kickass-annotations" in firstline:
+            annotations = json.loads(firstline[2:].strip().split (':', 1)[1])
+            return annotations[annotationName] if annotationName in annotations else None
 
     def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
