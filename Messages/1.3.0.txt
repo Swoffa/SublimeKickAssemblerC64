@@ -4,11 +4,11 @@ New in version 1.3.0:
   More documentation to come.
   Thanks to @brushesm (https://github.com/brushesm) and @ogt2 (https://github.com/og2t) for this.
 - New feature: Default commands for C64Debugger
-  Use of C64Debugger thru the `kickass_run_path` or `kickass_debug_path` settings 
+  Use of C64Debugger thru the kickass_run_path or kickass_debug_path settings 
   is now detected and a custom command is used to start C64Debugger.
   The command will use symbols and breakpoints (4.x breakpoints) from Kick Assembler, see note below.
   Thanks to @arekbr (https://github.com/arekbr) for suggestion and to @BroneCk (https://github.com/broneck) for help implementing
-- New setting `kickass_env` to add environment variables when building
+- New setting kickass_env to add environment variables when building
   These variables has precedence over other environment variables with the same names.
   Mostly useful for prebuild, postbuild and make commands
   Suggested by Tomek Augustyn (https://github.com/og2t)
@@ -16,23 +16,23 @@ New in version 1.3.0:
 - A warnig is now shown if settings cannot be loaded when a build is requested, asking the user to restart Sublime.
   This should avoid some strange errors after updating, or switching between cloned and package control install modes.
 - New settings for detailed customization of compile, run and debug commands:
-  `kickass_run_command_x64`
-  `kickass_debug_command_x64`
-  `kickass_debug_command_c64debugger`
-  `kickass_run_command_c64debugger`
-  `kickass_compile_args`
-  `kickass_compile_debug_additional_args`
+  kickass_run_command_x64
+  kickass_debug_command_x64
+  kickass_debug_command_c64debugger
+  kickass_run_command_c64debugger
+  kickass_compile_args
+  kickass_compile_debug_additional_args
   Hopefully I will write a more detailed blog post about this later, at https://goatpower.org/
   Thanks to @arekbr (https://github.com/arekbr) for suggestion and to @BroneCk (https://github.com/broneck) for help implementing
 - Verified basic Kick Assembler 5 support (Kick Assembler 4.x still supported)
-  Both old ( `break()` ) and new ( `.break` ) breakpoints can be used.
+  Both old ( break() ) and new ( .break ) breakpoints can be used.
   Using the default segment works, better support for multi segment things will be added later. 
 - Minor bug fixes and improvements
 
 Note:
 It is possible to use the new dbg-files created by Kick Assembler 5 in C64Debugger (version 0.64.56). 
 Just add this setting to your user settings.
-`"kickass_args": "-debugdump"` 
+"kickass_args": "-debugdump" 
 And C64Debugger will automatically load the dbg-file.
 
 See http://goatpower.org for more details.
