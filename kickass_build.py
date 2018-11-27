@@ -68,7 +68,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Expand variables
         variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
-        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
+        variables = self.mergeDictionaries(variables, sublime.expand_variables (sublime.expand_variables (variables_to_expand, variables), variables))
 
         # Create arguments to return by expanding variables in the
         # arguments given.
