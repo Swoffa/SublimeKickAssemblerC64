@@ -1,0 +1,283 @@
+{
+    "d000": {
+        "descr": "Sprite #0 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE0_X",
+        "url": ""
+    },
+
+    "d001": {
+        "descr": "Sprite #0 Y-coordinate.",
+        "name": "SPRITE0_Y",
+        "url": ""
+    },
+
+    "d002": {
+        "descr": "Sprite #1 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE1_X",
+        "url": ""
+    },
+
+    "d003": {
+        "descr": "Sprite #1 Y-coordinate.",
+        "name": "SPRITE1_Y",
+        "url": ""
+    },
+
+    "d004": {
+        "descr": "Sprite #2 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE2_X",
+        "url": ""
+    },
+
+    "d005": {
+        "descr": "Sprite #2 Y-coordinate.",
+        "name": "SPRITE2_Y",
+        "url": ""
+    },
+
+    "d006": {
+        "descr": "Sprite #3 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE3_X",
+        "url": ""
+    },
+
+    "d007": {
+        "descr": "Sprite #3 Y-coordinate.",
+        "name": "SPRITE3_Y",
+        "url": ""
+    },
+
+    "d008": {
+        "descr": "Sprite #4 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE4_X",
+        "url": ""
+    },
+
+    "d009": {
+        "descr": "Sprite #4 Y-coordinate.",
+        "name": "SPRITE4_Y",
+        "url": ""
+    },
+
+    "d00a": {
+        "descr": "Sprite #5 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE5_X",
+        "url": ""
+    },
+
+    "d00b": {
+        "descr": "Sprite #5 Y-coordinate.",
+        "name": "SPRITE5_Y",
+        "url": ""
+    },
+
+    "d00c": {
+        "descr": "Sprite #6 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE6_X",
+        "url": ""
+    },
+
+    "d00d": {
+        "descr": "Sprite #6 Y-coordinate.",
+        "name": "SPRITE6_Y",
+        "url": ""
+    },
+
+    "d00e": {
+        "descr": "Sprite #7 X-coordinate (only bits #0-#7).",
+        "name": "SPRITE7_X",
+        "url": ""
+    },
+
+    "d00f": {
+        "descr": "Sprite #7 Y-coordinate.",
+        "name": "SPRITE7_Y",
+        "url": ""
+    },
+
+    "d010": {
+        "descr": "Sprite #0-#7 X-coordinates (bit #8). <br>Bit #x: Sprite #x X-coordinate bit #8.",
+        "name": "SPRITES_X_MSB",
+        "url": ""
+    },
+
+    "d011": {
+        "descr": "Screen control register #1.<br>Bits #0-#2: Vertical raster scroll.<br>Bit #3: Screen height; 0 = 24 rows; 1 = 25 rows.<br>Bit #4: 0 = Screen off, complete screen is covered by border; 1 = Screen on, normal screen contents are visible.<br>Bit #5: 0 = Text mode; 1 = Bitmap mode.<br>Bit #6: 1 = Extended background mode on.<br>Bit #7: Read: Current raster line (bit #8).<br>Write: Raster line to generate interrupt at (bit #8).<br>Default: $1B, %00011011.",
+        "name": "VIC2_CTRL1",
+        "url": ""
+    },
+
+    "d012": {
+        "descr": "Read: Current raster line (bits #0-#7).<br>Write: Raster line to generate interrupt at (bits #0-#7).",
+        "name": "VIC2_RASTERLINE",
+        "url": ""
+    },
+
+    "d013": {
+        "descr": "Light pen X-coordinate (bits #1-#8). Read-only.",
+        "name": "VIC2_STROBE_X",
+        "url": ""
+    },
+
+    "d014": {
+        "descr": "Light pen Y-coordinate. Read-only.",
+        "name": "VIC2_STROBE_Y",
+        "url": ""
+    },
+
+    "d015": {
+        "descr": "Sprite enable register. <br>Bit #x: 1 = Sprite #x is enabled, drawn onto the screen.",
+        "name": "VIC2_SPR_ENABLE",
+        "url": ""
+    },
+
+    "d016": {
+        "descr": "Screen control register #2. <br>Bits #0-#2: Horizontal raster scroll.<br>Bit #3: Screen width; 0 = 38 columns; 1 = 40 columns.<br>Bit #4: 1 = Multicolor mode on.<br>Default: $C8, %11001000.",
+        "name": "VIC2_CTRL2",
+        "url": ""
+    },
+
+    "d017": {
+        "descr": "Sprite double height register. <br>Bit #x: 1 = Sprite #x is stretched to double height.",
+        "name": "VIC2_SPR_EXPANDY",
+        "url": ""
+    },
+
+    "d018": {
+        "descr": "Memory setup register.<br>Bits #1-#3: In text mode, pointer to character memory (bits #11-#13), relative to VIC bank, memory address $DD00. Values:<br>%000, 0: $0000-$07FF<br>%001, 1: $0800-$0FFF<br>%010, 2: $1000-$17FF<br>%011, 3: $1800-$1FFF<br>%100, 4: $2000-$27FF<br>%101, 5: $2800-$2FFF<br>%110, 6: $3000-$37FF<br>%111, 7: $3800-$3FFF<br><br>Values %010 and %011 in VIC bank #0 and #2 select Character ROM instead.<br>In bitmap mode, pointer to bitmap memory (bit #13), relative to VIC bank, memory address $DD00. Values:<br>%0xx, 0: $0000-$1FFF<br>%1xx, 4: $2000-$3FFF<br><br>Bits #4-#7: Pointer to screen memory (bits #10-#13), relative to VIC bank, memory address $DD00. Values:<br>%0000, 0: $0000-$03FF<br>%0001, 1: $0400-$07FF<br>%0010, 2: $0800-$0BFF<br>%0011, 3: $0C00-$0FFF<br>%0100, 4: $1000-$13FF<br>%0101, 5: $1400-$17FF<br>%0110, 6: $1800-$1BFF<br>%0111, 7: $1C00-$1FFF<br>%1000, 8: $2000-$23FF<br>%1001, 9: $2400-$27FF<br>%1010, 10: $2800-$2BFF<br>%1011, 11: $2C00-$2FFF<br>%1100, 12: $3000-$33FF<br>%1101, 13: $3400-$37FF<br>%1110, 14: $3800-$3BFF<br>%1111, 15: $3C00-$3FFF<br>",
+        "name": "VIC2_ADDR",
+        "url": ""
+    },
+
+    "d019": {
+        "descr": "Interrupt status register.<br><br>Read bits:<br><br>Bit #0: 1 = Current raster line is equal to the raster line to generate interrupt at.<br>Bit #1: 1 = Sprite-background collision occurred.<br>Bit #2: 1 = Sprite-sprite collision occurred.<br>Bit #3: 1 = Light pen signal arrived.<br>Bit #7: 1 = An event (or more events), that may generate an interrupt, occurred and it has not been (not all of them have been) acknowledged yet.<br><br>Write bits:<br><br>Bit #0: 1 = Acknowledge raster interrupt.<br>Bit #1: 1 = Acknowledge sprite-background collision interrupt.<br>Bit #2: 1 = Acknowledge sprite-sprite collision interrupt.<br>Bit #3: 1 = Acknowledge light pen interrupt.<br>",
+        "name": "VIC2_IRR",
+        "url": ""
+    },
+
+    "d01a": {
+        "descr": "Interrupt control register.<br>Bit #0: 1 = Raster interrupt enabled.<br>Bit #1: 1 = Sprite-background collision interrupt enabled.<br>Bit #2: 1 = Sprite-sprite collision interrupt enabled.<br>Bit #3: 1 = Light pen interrupt enabled.<br>",
+        "name": "VIC2_IMR",
+        "url": ""
+    },
+
+    "d01b": {
+        "descr": "Sprite priority register.<br>Bit #x: 0 = Sprite #x is drawn in front of screen contents; 1 = Sprite #x is behind screen contents.",
+        "name": "VIC2_BG_PRIORITY",
+        "url": ""
+    },
+
+    "d01c": {
+        "descr": "Sprite multicolor mode register.<br>Bit #x: 0 = Sprite #x is single color; 1 = Sprite #x is multicolor.",
+        "name": "VIC2_SPR_MCOLOUR",
+        "url": ""
+    },
+
+    "d01d": {
+        "descr": "Sprite double width register.<br>Bit #x: 1 = Sprite #x is stretched to double width.",
+        "name": "VIC2_SPR_EXPANDX",
+        "url": ""
+    },
+
+    "d01e": {
+        "descr": "Sprite-sprite collision register.<br>Read bits:<br>Bit #x: 1 = Sprite #x collided with another sprite.<br><br>Write: Enable further detection of sprite-sprite collisions.",
+        "name": "VIC2_SPR_COLL",
+        "url": ""
+    },
+
+    "d01f": {
+        "descr": "Sprite-background collision register.<br>Read bits:<br><br>Bit #x: 1 = Sprite #x collided with background.<br><br>Write: Enable further detection of sprite-background collisions.",
+        "name": "VIC2_SPR_BG_COLL",
+        "url": ""
+    },
+
+    "d020": {
+        "descr": "Border color (only bits #0-#3).",
+        "name": "VIC2_BORDERCOLOUR",
+        "url": ""
+    },
+
+    "d021": {
+        "descr": "Background color (only bits #0-#3).",
+        "name": "VIC2_BGCOLOUR",
+        "url": ""
+    },
+
+    "d022": {
+        "descr": "Extra background color #1 (only bits #0-#3).",
+        "name": "VIC2_BGCOLOUR1",
+        "url": ""
+    },
+
+    "d023": {
+        "descr": "Extra background color #2 (only bits #0-#3).",
+        "name": "VIC2_BGCOLOUR2",
+        "url": ""
+    },
+
+    "d024": {
+        "descr": "Extra background color #3 (only bits #0-#3).",
+        "name": "VIC2_BGCOLOUR3",
+        "url": ""
+    },
+
+    "d025": {
+        "descr": "Sprite extra color #1 (only bits #0-#3)",
+        "name": "VIC2_SPR_MCOLOUR0",
+        "url": ""
+    },
+
+    "d026": {
+        "descr": "Sprite extra color #2 (only bits #0-#3)",
+        "name": "VIC2_SPR_MCOLOUR1",
+        "url": ""
+    },
+
+    "d027": {
+        "descr": "Sprite #0 color (only bits #0-#3)",
+        "name": "VIC2_SPR0_COLOUR",
+        "url": ""
+    },
+
+    "d028": {
+        "descr": "Sprite #1 color (only bits #0-#3)",
+        "name": "VIC2_SPR1_COLOUR",
+        "url": ""
+    },
+
+    "d029": {
+        "descr": "Sprite #2 color (only bits #0-#3)",
+        "name": "VIC2_SPR2_COLOUR",
+        "url": ""
+    },
+
+    "d02a": {
+        "descr": "Sprite #3 color (only bits #0-#3)",
+        "name": "VIC2_SPR3_COLOUR",
+        "url": ""
+    },
+
+    "d02b": {
+        "descr": "Sprite #4 color (only bits #0-#3)",
+        "name": "VIC2_SPR4_COLOUR",
+        "url": ""
+    },
+
+    "d02c": {
+        "descr": "Sprite #5 color (only bits #0-#3)",
+        "name": "VIC2_SPR5_COLOUR",
+        "url": ""
+    },
+
+    "d02d": {
+        "descr": "Sprite #6 color (only bits #0-#3)",
+        "name": "VIC2_SPR6_COLOUR",
+        "url": ""
+    },
+
+    "d02e": {
+        "descr": "Sprite #7 color (only bits #0-#3)",
+        "name": "VIC2_SPR7_COLOUR",
+        "url": ""
+    }
+}

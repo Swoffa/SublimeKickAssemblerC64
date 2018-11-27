@@ -1,0 +1,55 @@
+{
+    "define": {
+        "descr": "define DEBUG<br>Defines a preprocessor symbol.",
+        "name": "#define",
+        "url": ""
+    },
+
+    "elif": {
+        "descr": "#elif TEST<br>The combination of an #else and an #if preprocessor directive.",
+        "name": "#elif",
+        "url": ""
+    },
+
+    "else": {
+        "descr": "Used after an #if to start an else block which is executed if the condition is false.",
+        "name": "#else",
+        "url": ""
+    },
+
+    "endif": {
+        "descr": "Marks the end of an #if/#else block.",
+        "name": "#endif",
+        "url": ""
+    },
+
+    "if": {
+        "descr": "#if !DEBUG<br>Discards the sourcecode after the #if-directive if the condition is false.",
+        "name": "#if",
+        "url": ""
+    },
+
+    "import": {
+        "descr": "#import \"file2.asm\"<br> Imports another sourcefile.",
+        "name": "#import",
+        "url": ""
+    },
+
+    "importif": {
+        "descr": "#importif !DEBUG \"file2.asm\"<br>Imports another sourcefile if the given expression is evaluated to true.",
+        "name": "#importif",
+        "url": ""
+    },
+
+    "importonce": {
+        "descr": "Make the assembler skip the current file if it has already been imported.",
+        "name": "#importonce",
+        "url": ""
+    },
+
+    "undef": {
+        "descr": "Removes the definition of a preprocessor symbol.",
+        "name": "#undef",
+        "url": ""
+    }
+  }
