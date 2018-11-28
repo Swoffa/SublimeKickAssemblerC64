@@ -23,9 +23,9 @@ custom_var_list = [ "kickass_compile_args",
                     "kickass_run_args",
                     "kickass_debug_args",
                     "kickass_startup_file_path",
+                    "kickass_startup_root_path",
                     "kickass_breakpoint_filename",
                     "kickass_compiled_filename",
-                    "kickass_output_path",
                     "default_prebuild_path",
                     "default_postbuild_path"]
 
@@ -54,8 +54,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Variables to expand; start with defaults, then add ours.
         variables = self.window.extract_variables()
-        useStartup = 'startup' in buildMode
-        variables.update({"build_file_base_name": settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]})
+        self.adjustPathVariables(variables, buildMode, settings)
 
         # Create the command
         kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
@@ -69,7 +68,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
         # Expand variables
         variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
-        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
+        variables = self.mergeDictionaries(variables, sublime.expand_variables (sublime.expand_variables (variables_to_expand, variables), variables))
 
         # Create arguments to return by expanding variables in the
         # arguments given.
@@ -82,7 +81,23 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         if envSetting:
             args['env'].update(envSetting)
 
+        # "return" output path, HACK
+        args.update({"kickass_output_path": variables.get("kickass_output_path")})
+
         return args
+
+    def adjustPathVariables(self, variables, buildMode, settings):
+        useStartup = 'startup' in buildMode
+        useMake = 'make' in buildMode
+        outputFolder = settings.getSetting("kickass_output_path")
+        buildFileBaseName = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
+        startupRootpath = settings.getSetting("kickass_startup_root_path") if useStartup or useMake else None
+        fileToCompile = os.path.join(os.getcwd(), '%s.%s' % (os.path.join(startupRootpath, buildFileBaseName) if startupRootpath else buildFileBaseName, variables["file_extension"]))
+        filePath = os.path.dirname(fileToCompile) 
+        variables.update({"build_file_base_name": buildFileBaseName})
+        variables.update({"build_file": fileToCompile})
+        variables.update({"file_path": filePath})
+        variables.update({"kickass_output_path": os.path.join(filePath, outputFolder)})
 
     def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
@@ -107,7 +122,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             print(errorMessage)
             return
 
-        outputFolder = settings.getSetting("kickass_output_path")
+        execDict = self.createExecDict(kwargs, kwargs.pop('buildmode'), settings)
+        outputFolder = execDict.pop("kickass_output_path")
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
@@ -120,7 +136,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
             self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, kwargs.pop('buildmode'), settings))
+        self.window.run_command('exec', execDict)
 
 class SublimeSettings():
     def __init__(self, parentCommand):
@@ -161,8 +177,8 @@ class KickAssCommand():
             "kickass_buildmode": self.__buildMode,
             "kickass_file": "${build_file_base_name}.${file_extension}",
             "kickass_file_path": "${file_path}",
-            "kickass_prg_file": "${file_path}/${kickass_output_path}/${kickass_compiled_filename}",
-            "kickass_bin_folder": "${file_path}/${kickass_output_path}",
+            "kickass_prg_file": "${kickass_output_path}/${kickass_compiled_filename}",
+            "kickass_bin_folder": "${kickass_output_path}",
             }
         sourceDict.get('env').update(prePostEnvVars)
         return sourceDict
@@ -175,7 +191,7 @@ class KickAssCommandFactory():
         return self.createMakeCommand(variables, buildMode) if buildMode=="make" else self.createKickassCommand(variables, buildMode)
 
     def createMakeCommand(self, variables, buildMode): 
-        makeCommand = self.getRunScriptStatement("make", "default_make_path")
+        makeCommand = self.getRunScriptStatement(os.path.join(variables.get("file_path"), "make"), "default_make_path")
         makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("default_make_path")) if self.__settings.getSetting("default_make_path") else ".")
         return KickAssCommand(makeCommand, True, False, buildMode)
 
@@ -197,8 +213,9 @@ class KickAssCommandFactory():
 
         command =  " ".join([compileCommand, compileDebugCommandAdd, "&&", self.createMonCommandsStatement()]) if useDebug else compileCommand
 
-        preBuildScript = self.getRunScriptStatement("prebuild", "default_prebuild_path")
-        postBuildScript = self.getRunScriptStatement("postbuild", "default_postbuild_path")
+        rootPath = variables.get("file_path")
+        preBuildScript = self.getRunScriptStatement(os.path.join(rootPath, "prebuild"), "default_prebuild_path")
+        postBuildScript = self.getRunScriptStatement(os.path.join(rootPath, "postbuild"), "default_postbuild_path")
 
         if preBuildScript:
             command = " ".join([preBuildScript, "&&", command])
