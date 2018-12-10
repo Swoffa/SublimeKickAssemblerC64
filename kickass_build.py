@@ -97,7 +97,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def parseAnnotation (self, filename, annotationName):
         with open(filename, 'r') as handle:
             firstline = handle.readline().strip()
-        if firstline.startswith("//") and "@kickass-annotations" in firstline:
+        if firstline.startswith("//") and "@kickass-build" in firstline:
             annotations = json.loads(firstline[2:].strip().split (':', 1)[1])
             return annotations[annotationName] if annotationName in annotations else None
 
