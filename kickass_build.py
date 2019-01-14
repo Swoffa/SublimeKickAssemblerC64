@@ -50,8 +50,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     def createExecDict(self, sourceDict, buildMode, settings):
         global custom_var_list, vars_to_expand_list
 
-        # Save path variable from expansion
-        tmpPath = sourceDict.pop('path', None)
+        try:
+            # Save path variable from expansion
+            tmpPath = sourceDict.pop('path', None)
 
             # Variables to expand; start with defaults, then add ours.
             variables = self.window.extract_variables()
@@ -78,9 +79,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             # Reset path to unexpanded and add path addition from settings
             args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
-        envSetting = settings.getSetting("kickass_env")
-        if envSetting:
-            args['env'].update(envSetting)
+            envSetting = settings.getSetting("kickass_env")
+            if envSetting:
+                args['env'].update(envSetting)
+        except Exception as ex:
+            sourceDict['shell_cmd'] = "echo %s" % ex
+            return sourceDict
 
         return args
 
