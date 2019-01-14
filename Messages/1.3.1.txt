@@ -1,0 +1,10 @@
+New in version 1.3.1:
+- New feature: Segment support, file annotaion to configure which file to start
+  Put startup-file annotation on first line of startup file (replace filename.prg): 
+  // @kickass-build "file-to-run": "filename.prg"
+  With Vice you can start files on D64-disks with syntax "diskFilename.d64:prgname" (lower case without prg-extension)
+  Issue #33 reported by Pontus Berg (https://github.com/BacchusFLT)
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
