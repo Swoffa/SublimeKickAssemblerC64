@@ -53,30 +53,30 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         # Save path variable from expansion
         tmpPath = sourceDict.pop('path', None)
 
-        # Variables to expand; start with defaults, then add ours.
-        variables = self.window.extract_variables()
-        variables.update(self.getFilenameVariables(buildMode, settings, variables))
+            # Variables to expand; start with defaults, then add ours.
+            variables = self.window.extract_variables()
+            variables.update(self.getFilenameVariables(buildMode, settings, variables))
 
-        # Create the command
-        kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
-        sourceDict['shell_cmd'] = kickAssCommand.CommandText
+            # Create the command
+            kickAssCommand = KickAssCommandFactory(settings).createCommand(variables, buildMode)
+            sourceDict['shell_cmd'] = kickAssCommand.CommandText
 
-        # Add pre and post variables
-        extendedDict = kickAssCommand.updateEnvVars(sourceDict)
+            # Add pre and post variables
+            extendedDict = kickAssCommand.updateEnvVars(sourceDict)
 
-        for custom_var in custom_var_list:
-            variables[custom_var] = settings.getSetting(custom_var)
+            for custom_var in custom_var_list:
+                variables[custom_var] = settings.getSetting(custom_var)
 
-        # Expand variables
-        variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
-        variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
+            # Expand variables
+            variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
+            variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
 
-        # Create arguments to return by expanding variables in the
-        # arguments given.
-        args = sublime.expand_variables (extendedDict, variables)
+            # Create arguments to return by expanding variables in the
+            # arguments given.
+            args = sublime.expand_variables (extendedDict, variables)
 
-        # Reset path to unexpanded and add path addition from settings
-        args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
+            # Reset path to unexpanded and add path addition from settings
+            args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
 
         envSetting = settings.getSetting("kickass_env")
         if envSetting:
@@ -88,18 +88,22 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         useStartup = 'startup' in buildMode
         fileToBuild = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
         fileToBuildPath = "%s/%s.%s" % (variables["file_path"], fileToBuild, variables["file_extension"])
-        fileToRunAnnotation = self.parseAnnotation(fileToBuildPath, "file-to-run")
+        buildAnnotations = self.parseAnnotations(fileToBuildPath)
+        fileToRunAnnotation = buildAnnotations.get("file-to-run") if buildAnnotations else None
         return {
             "build_file_base_name": fileToBuild,
             "start_filename" : fileToRunAnnotation if fileToRunAnnotation else "%s.prg" % (fileToBuild)
             }
 
-    def parseAnnotation (self, filename, annotationName):
+    def parseAnnotations (self, filename):
         with open(filename, 'r') as handle:
             firstline = handle.readline().strip()
-        if firstline.startswith("//") and "@kickass-build" in firstline:
-            annotations = json.loads(firstline[2:].strip().split (':', 1)[1])
-            return annotations[annotationName] if annotationName in annotations else None
+        try:
+            return (json.loads("{%s}" % firstline[2:].strip().split("@kickass-build", 1)[1]) 
+                    if firstline.startswith("//") and "@kickass-build" in firstline 
+                    else {})
+        except ValueError as err:
+            raise ValueError("Could not parse build annotations: %s" % err)
 
     def getPathDelimiter(self):
         return ";" if platform.system()=='Windows' else ":" 
