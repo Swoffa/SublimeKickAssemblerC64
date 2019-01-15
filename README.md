@@ -2,7 +2,7 @@ Sublime KickAssembler (C64)
 ===========================
 Sublime Package for C64 development with Kick Assembler, 
 contains language configuration/syntax coloring, build system and some snippets. Support for OSX, Windows and Linux.
-Requires Sublime Text, version 3 is supported.
+Requires Sublime Text, version 3 is supported. Both the [Vice](http://www.viceteam.org) C64 emulator and the [C64Debugger](https://sourceforge.net/projects/c64-debugger/) C64 emulator/debugger is supported for running/debugging.
 
 Below is a quick start guide, full documentation here: http://goatpower.wordpress.com/projects-releases/sublime-package-kick-assembler-c64/
 
@@ -58,12 +58,10 @@ Other build variants, accessed by pressing `Super+Shift+P` (OSX) / `Ctrl+Shift+P
  - Build Startup (`Command+Shift+B`/`Ctrl+Shift+B`), compiles a file with name Startup.asm in the same folder as the current file. Handy if you have several code files included in a main runnable file.
  - Build and Run Startup (`F5`), compiles a file with name Startup.asm in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file.
  - Build and Debug Startup (`Shift+F5`), compiles a file with name Startup.asm in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.
-
-Details, language and syntax
-----------------------------
-The syntax coloring and language configuration is under improvement and will hopefully be updated. 
-The language bundle is downloaded and modified from https://github.com/cbmeeks/cbmeeks-6502kickass-asm-tmbundle. Thanks!
-
-
+ - Make (`F8`), Invokes a script called make.bat/make.sh (configurable thru the `default_make_path setting`). The following (relevant?) environment variables will be available in the make script:
+   - `kickass_file`, filename of active file when command was triggered
+   - `kickass_file_path`, full path active file when command was triggered
+   - `kickass_prg_file`, full path for suggested prg file name, for active file when command was triggered
+   - `kickass_bin_folder`, path to current output folder (bin or specified by setting kickass_output_path)
 
 //Swoffa of Noice
