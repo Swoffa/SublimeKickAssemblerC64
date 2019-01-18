@@ -51,7 +51,7 @@ Develop, build and run
 Details, Build System
 ---------------------
 
-Action | Shortcut macOS | Shortcut Windows | Description
+Action&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Shortcut macOS | Shortcut Windows | Description
 :--|:--|:--|:--
 Other build variants (listed below) | `Super+Shift+P` | `Ctrl+Shift+P` | Shows the list of the following variants
 Build | `Command+Shift+P`  | `Control+Shift+P` | Compiles the __current__ file.
