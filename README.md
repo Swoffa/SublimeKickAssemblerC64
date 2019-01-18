@@ -50,18 +50,62 @@ Develop, build and run
 
 Details, Build System
 ---------------------
-Build (`Command+Shift+P` on OSX, `Control+Shift+P` on Windows) compiles the current file.
-Other build variants, accessed by pressing `Super+Shift+P` (OSX) / `Ctrl+Shift+P` (Windows), or by using the associated key (after each variant below):
 
- - Build and Run (`F7`), compiles the current file and runs it using the Vice emulator
- - Build and Debug (`Shift+F7`), compiles the current file and runs it using the Vice emulator. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging
- - Build Startup (`Command+Shift+B`/`Ctrl+Shift+B`), compiles a file with name Startup.asm in the same folder as the current file. Handy if you have several code files included in a main runnable file.
- - Build and Run Startup (`F5`), compiles a file with name Startup.asm in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file.
- - Build and Debug Startup (`Shift+F5`), compiles a file with name Startup.asm in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.
- - Make (`F8`), Invokes a script called make.bat/make.sh (configurable thru the `default_make_path setting`). The following (relevant?) environment variables will be available in the make script:
-   - `kickass_file`, filename of active file when command was triggered
-   - `kickass_file_path`, full path active file when command was triggered
-   - `kickass_prg_file`, full path for suggested prg file name, for active file when command was triggered
-   - `kickass_bin_folder`, path to current output folder (bin or specified by setting kickass_output_path)
+Action | Shortcut macOS | Shortcut Windows | Description
+:--|:--|:--|:--
+Other build variants (listed below) | `Super+Shift+P` | `Ctrl+Shift+P` | Shows the list of the following variants
+Build | `Command+Shift+P`  | `Control+Shift+P` | Compiles the __current__ file.
+Build and Run | `F7` | `F7` | Compiles the __current file__ and runs it using the Vice emulator.
+Build and Debug | `Shift+F7` | `Shift+F7` | Compiles the __current file__ and runs it using the Vice emulator. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.
+Build Startup | `Command+Shift+B` | `Ctrl+Shift+B` | Compiles __a file with name Startup.asm__ in the same folder as the current file. Handy if you have several code files included in a main runnable file. The filename can be configured via `kickass_startup_file_path` setting.
+Build and Run Startup | `F5` | `F5` | Compiles __a file with name Startup.asm__ in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file. The filename can be configured via `kickass_startup_file_path` setting.
+Build and Debug Startup | `Shift+F5` | `Shift+F5` | Compiles __a file with name Startup.asm__ in the same folder as the current file, and runs it using the Vice emulator. Handy if you have several code files included in a main runnable file. __This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.__ The filename can be configured via `kickass_startup_file_path` setting.
+Make | `F8` | `F8` | Invokes a script called `make.bat` for Windows, `make.sh` for macOS (configurable through the `default_make_path` setting).
 
-//Swoffa of Noice
+
+The following (relevant?) environment variables will be available in the make script:
+
+Variable | Info
+:--|:--
+`kickass_file` | Filename of active file when command was triggered
+`kickass_file_path` | Full path active file when command was triggered
+`kickass_prg_file` | Full path for suggested prg file name, for active file when command was triggered
+`kickass_bin_folder` | Path to current output folder (`bin` by default or specified by `kickass_output_path` setting)
+
+Pre/post-build
+--------------
+
+There's a way to execute custom scripts before/after the build.
+
+Variable | Info
+:--|:--
+`default_prebuild_path` | Full path to the `.bat` or `.sh` script file that will be executed __before__ the build.
+`default_postbuild_path` | Full path to the `.bat` or `.sh` script file that will be executed __after__ the build. Useful for file compression etc.
+
+
+KickassTooltips
+===============
+
+This plugin makes working with Kick Assembler easier by displaying various helpful tooltip information. Tooltips database can be extended to provide more c64 related info. So far rudimentary help files with Kick Assembler directives, illegal opcodes, VIC registers and SID registers are ready. This plugin was added by Roman Dobosz (Gryf/Elysium) and Krzysztof Dabrowski (Brush/Elysium)
+
+Configuration
+-------------
+
+Navigate to Preferences/Package Settings/KickassTooltips and select the configuration file to edit. Currently you can configure:
+
+	"css_file": "KickassTooltips/css/default.css"
+
+This is a file that has the css file used to style the tooltips.
+
+    "help_directories": ["KickassTooltips/helpdb"],
+
+This defines the directory where json formatted help files are. Feel free to drop in your own.
+
+    "scopes": ["source.assembly.kickassembler"],
+
+This definies in which scopes the plugin should work. So far it will fire up only in Kick Assembler scope.
+
+    "log_level": "warning"
+
+For the debuggin purposes you can increase the log level to info or debug, open Python console (ctrl-`) and observe what is going on and what problems the plugin has. If you report a bug, please use "debug" level and make sure you copy paset the whole output.
+
