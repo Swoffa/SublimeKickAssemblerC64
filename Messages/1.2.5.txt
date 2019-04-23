@@ -1,0 +1,12 @@
+New in version 1.2.5:
+- Bug fix: Preferences and settings menus now  works when package is installed thru Package Control.
+  Thanks Pontus Berg (https://github.com/BacchusFLT) for reporting this
+- New Feature: Make command, assigned to key F8. Invokes a script called make.bat/make.sh.
+  Use setting default_make_path for setting default make path,
+  make-scripts located in the current directory will take precedence, 
+  but if not found the default path is also checked. No default value.
+  Suggested by Pontus Berg (https://github.com/BacchusFLT)
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice

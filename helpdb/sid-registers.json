@@ -1,0 +1,175 @@
+{
+    "d400": {
+        "descr": "Voice #1 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d401": {
+        "descr": "Voice #1 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d402": {
+        "descr": "Voice #1 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d403": {
+        "descr": "Voice #1 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d404": {
+        "descr": "Voice #1 control register. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d405": {
+        "descr": "Voice #1 Attack and Decay length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d406": {
+        "descr": "Voice #1 Sustain volume and Release length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d407": {
+        "descr": "Voice #2 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d408": {
+        "descr": "Voice #2 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d409": {
+        "descr": "Voice #2 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d40a": {
+        "descr": "Voice #2 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d40b": {
+        "descr": "Voice #2 control register. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d40c": {
+        "descr": "Voice #2 Attack and Decay length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d40d": {
+        "descr": "Voice #2 Sustain volume and Release length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d40e": {
+        "descr": "Voice #3 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d40f": {
+        "descr": "Voice #3 frequency. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d410": {
+        "descr": "Voice #3 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d411": {
+        "descr": "Voice #3 pulse width. Write-only.",
+        "name": "",
+        "url": ""
+    },
+
+    "d412": {
+        "descr": "Voice #3 control register. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d413": {
+        "descr": "Voice #3 Attack and Decay length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d414": {
+        "descr": "Voice #3 Sustain volume and Release length. Write-only",
+        "name": "",
+        "url": ""
+    },
+
+    "d415": {
+        "descr": "Filter cutoff frequency low byte",
+        "name": "",
+        "url": ""
+    },
+
+    "d416": {
+        "descr": "Filter cutoff frequency high byte",
+        "name": "",
+        "url": ""
+    },
+
+    "d417": {
+        "descr": "Filter resonance and routing",
+        "name": "",
+        "url": ""
+    },
+
+    "d418": {
+        "descr": "Filter mode and main volume control",
+        "name": "",
+        "url": ""
+    },
+
+    "d419": {
+        "descr": "Paddle x value (read only)",
+        "name": "",
+        "url": ""
+    },
+
+    "d41a": {
+        "descr": "Paddle y value (read only)",
+        "name": "",
+        "url": ""
+    },
+
+    "d41b": {
+        "descr": "Oscillator voice 3 (read only)",
+        "name": "",
+        "url": ""
+    },
+
+    "d41c": {
+        "descr": "Envelope voice 3 (read only)",
+        "name": "",
+        "url": ""
+    }
+}
