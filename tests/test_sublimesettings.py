@@ -2,16 +2,7 @@ import sublime
 import sys
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch
-
-version = sublime.version()
-
-if version < '3000':
-    # st2
-    kickassbuild = sys.modules["kickass_build"]
-else:
-    # st3
-    kickassbuild = sys.modules["SublimeKickAssemblerC64.kickass_build"]
-
+from module_references import kickassbuild
 
 class TestSublimeSettings(TestCase):
     def setUp(self):
