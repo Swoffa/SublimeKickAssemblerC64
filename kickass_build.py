@@ -76,8 +76,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             # arguments given.
             args = sublime.expand_variables (extendedDict, variables)
 
-            # Reset path to unexpanded and add path addition from settings
-            args['path'] = self.getPathDelimiter().join([settings.getSetting("kickass_path"), tmpPath])
+        # Reset path to unexpanded and add path addition from settings
+            args['path'] = self.getPathDelimiter().join(filter(None, [settings.getSetting("kickass_path"), tmpPath]))
 
             envSetting = settings.getSetting("kickass_env")
             if envSetting:
