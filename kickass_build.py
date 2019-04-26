@@ -234,7 +234,7 @@ class KickAssCommandFactory():
         elif useRun:
             command = " ".join([command, "&&", runCommand])
 
-        return KickAssCommand(command, preBuildScript != None, postBuildScript != None, buildMode)
+        return KickAssCommand(command.strip(), preBuildScript != None, postBuildScript != None, buildMode)
 
     def getExt(self): 
         return "bat" if platform.system()=='Windows' else "sh" 
