@@ -41,9 +41,12 @@ class TestSublimeSettings(TestCase):
         actual = kickassbuild.SublimeSettings(self.command_mock).getSetting("test-setting2")
         self.assertEqual('', actual)
 
-    def test_getSetting_nosettingsnotexist_returnemptystring(self):
+    def test_getSetting_nosettingsexist_returnemptystring(self):
         actual = kickassbuild.SublimeSettings(self.command_mock).getSetting("test-settingp")
         self.assertEqual('', actual)
+
+    #TODO: More gettsetting tests, view settings vs project settings
+    #getSettingAsBool, 3 tests, true, false, None, tom, annat
 
 if __name__ == '__main__':
     unittest.main()

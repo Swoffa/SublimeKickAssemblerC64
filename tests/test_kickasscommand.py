@@ -13,5 +13,8 @@ class TestKickAssCommand(TestCase):
         actual = target.CommandText
         self.assertEqual('TestCommandText', actual)
 
+    #TODO: updateEnvVars
+    #TODO: constructor
+
 if __name__ == '__main__':
     unittest.main()
