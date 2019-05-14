@@ -29,24 +29,62 @@ class TestSublimeSettings(TestCase):
         actual = self.target.isLoaded()
         self.assertEqual(False, actual)
 
-    def test_getSetting_settingexist_returnsettingvalue(self):
-        view_settings = {'test-setting': 'test-value'}
-        self.command_mock.window.active_view.return_value.settings.return_value = view_settings
-        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting("test-setting")
-        self.assertEqual("test-value", actual)
-
-    def test_getSetting_settingnotexist_returnemptystring(self):
-        view_settings = {'test-setting': 'test-value'}
-        self.command_mock.window.active_view.return_value.settings.return_value = view_settings
-        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting("test-setting2")
-        self.assertEqual('', actual)
-
     def test_getSetting_nosettingsexist_returnemptystring(self):
-        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting("test-settingp")
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting('test-setting')
         self.assertEqual('', actual)
 
-    #TODO: More gettsetting tests, view settings vs project settings
-    #getSettingAsBool, 3 tests, true, false, None, tom, annat
+    def test_getSettingasbool_parentcommandwindowhasviewsetting_returnviewsetting(self):
+        view_settings = {'test-setting': 'test-view-value'}
+        self.command_mock.window.active_view.return_value.settings.return_value = view_settings
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting('test-setting')
+        self.assertEqual('test-view-value', actual)
+
+    def test_getSettingasbool_parentcommandwindowhasprojectetting_returnprojectsetting(self):
+        project_settings = {'test-setting': 'test-project-value'}
+        self.command_mock.window.project_data.return_value = {'settings': project_settings}
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting('test-setting')
+        self.assertEqual('test-project-value', actual)
+
+    def test_getSettingasbool_parentcommandwindowhasviewsettingandprojectetting_returnviewsetting(self):
+        view_settings = {'test-setting': 'test-view-value'}
+        project_settings = {'test-setting': 'test-project-value'}
+        self.command_mock.window.active_view.return_value.settings.return_value = view_settings
+        self.command_mock.window.project_data.return_value = {'settings': project_settings}
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting('test-setting')
+        self.assertEqual('test-view-value', actual)
+
+    def test_getSettingasbool_parentcommandwindowhasneitherviewsettingorprojectsetting_returnemptystring(self):
+        view_settings = {'test-setting': 'test-view-value'}
+        project_settings = {'test-setting': 'test-project-value'}
+        self.command_mock.window.active_view.return_value.settings.return_value = view_settings
+        self.command_mock.window.project_data.return_value = {'settings': project_settings}
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSetting('test-setting1')
+        self.assertEqual('', actual)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value='true')
+    def test_getSettingasbool_settingvalueistrue_returntrue(self, getSettings_mock):
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
+        self.assertEqual(True, actual)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value='TRUE')
+    def test_getSettingasbool_settingvalueiscapitaltrue_returntrue(self, getSettings_mock):
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
+        self.assertEqual(True, actual)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value='false')
+    def test_getSettingasbool_settingvalueisfalse_returnfalse(self, getSettings_mock):
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
+        self.assertEqual(False, actual)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value=None)
+    def test_getSettingasbool_settingvalueisnone_throwserror(self, getSettings_mock):
+        with self.assertRaises(AttributeError) as cm:
+            actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
+
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value='abc')
+    def test_getSettingasbool_settingvalueisabc_returnfalse(self, getSettings_mock):
+        actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
+        self.assertEqual(False, actual)
 
 if __name__ == '__main__':
     unittest.main()
