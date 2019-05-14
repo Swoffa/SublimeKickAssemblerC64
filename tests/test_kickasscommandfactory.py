@@ -43,7 +43,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createCommand_buildmodeisbuild_createkickasscommandiscalledOnce(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
+    def test_createCommand_buildmode_is_build_createkickasscommand_is_called_once(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'build'
         actual = self.target.createCommand({}, buildMode)
 
@@ -53,7 +53,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createCommand_buildmodeisbuildrun_createkickasscommandiscalledOnce(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
+    def test_createCommand_buildmode_is_buildrun_createkickasscommand_is_called_once(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'build-run'
         actual = self.target.createCommand({}, buildMode)
 
@@ -63,26 +63,16 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createCommand_buildmodeismake_createmakecommandiscalledOnce(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
+    def test_createCommand_buildmode_is_make_createmakecommandÄ_is_called_once(self, command_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'make'
         actual = self.target.createCommand({}, buildMode)
 
         createMakeCommand_mock.assert_called_once_with({}, buildMode)
         createKickassCommand_mock.assert_net_called()
 
-    ## createMakeCommand
-
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createMakeCommand_makescriptdoesnotexist_getrunscriptstatementiscalledonce(self, command_mock, getRunScriptStatement_mock):
-        buildMode = 'build'
-        actual = self.target.createMakeCommand({}, buildMode)
-
-        command_mock.getRunScriptStatement_mock("make", "default_make_path")
-
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement')
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createMakeCommand_makescriptdoesnotexist_getrunscriptstatementiscalledonce(self, command_mock, getRunScriptStatement_mock):
+    def test_createMakeCommand_makescript_does_not_exist_getrunscriptstatement_is_called_once(self, command_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         actual = self.target.createMakeCommand({}, buildMode)
 
@@ -90,7 +80,7 @@ class TestKickAssCommandFactory(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createMakeCommand_makescriptdoesnotexistandnodefaultmakepathsettingexist_returnerrorcommand(self, command_mock, getRunScriptStatement_mock):
+    def test_createMakeCommand_makescript_does_not_exist_and_no_default_makepath_setting_exist_returns_error_command(self, command_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -100,7 +90,7 @@ class TestKickAssCommandFactory(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createMakeCommand_makescriptdoesnotexistanddefaultmakepathsettingexist_returnerrorcommand(self, command_mock, getRunScriptStatement_mock):
+    def test_createMakeCommand_makescript_does_not_exist_and_default_makepat_hsetting_exist_returns_error_command(self, command_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         settings = TestSettings(default_settings_dict)
         settings.addSetting('default_make_path', 'test-default-path')
@@ -112,7 +102,7 @@ class TestKickAssCommandFactory(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value='test-make-script')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createMakeCommand_makescriptexist_returncorrectmakecommand(self, command_mock, getRunScriptStatement_mock):
+    def test_createMakeCommand_makescript_exist_returns_correct_makecommand(self, command_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -123,7 +113,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_jarpathsettingnotexist_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_no_jarpath_setting_exist_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -134,7 +124,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_jarpathsettingexist_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_jarpath_setting_exist_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build'
         settings = TestSettings(default_settings_dict)
         settings.addSetting('kickass_jar_path', 'testpath')
@@ -147,7 +137,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuildrun_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_buildrun_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-run'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -158,7 +148,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuildrunandrunpathsettinghasc64debugger_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_buildrun_and_runpath_setting_has_c64debugger_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-run'
         settings = TestSettings(default_settings_dict)
         settings.addSetting('kickass_run_path', 'c64debugger')
@@ -171,7 +161,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuilddebug_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_builddebug_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-debug'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -182,7 +172,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', return_value=None )
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuilddebugandrunpathsettinghasc64debugger_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_builddebug_and_runpath_setting_has_c64debugger_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-debug'
         settings = TestSettings(default_settings_dict)
         settings.addSetting('kickass_debug_path', 'c64debugger')
@@ -195,7 +185,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', side_effect=['test-pre-statement', None])
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuilddebugandhasprebuildscript_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_builddebug_and_has_prebuildscript_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-debug'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -206,7 +196,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', side_effect=[None, 'test-post-statement'])
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuilddebugandhaspostbuildscript_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_builddebug_and_has_postbuildscript_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-debug'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -217,7 +207,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', side_effect=['test-pre-statement', 'test-post-statement'])
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMonCommandsStatement', return_value='mocked-moncommand')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand')
-    def test_createKickassCommand_buildmodeisbuilddebugandhasprebuildscriptandhaspostbuildscript_returncorrectcompilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
+    def test_createKickassCommand_buildmode_is_builddebug_and_hasprebuildscript_and_haspostbuildscript_returns_correct_compilecommand(self, command_mock, createmonstatement_mock, getRunScriptStatement_mock):
         buildMode = 'build-debug'
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
 
@@ -226,23 +216,23 @@ class TestKickAssCommandFactory(TestCase):
         command_mock.assert_called_once_with('test-pre-statement && java cml.kickass.KickAssembler ${kickass_compile_args}  ${kickass_compile_debug_additional_args} && mocked-moncommand && test-post-statement && ${kickass_debug_command_x64}', True, True, buildMode)
 
     @patch('platform.system', return_value='Windows')
-    def test_getExt_platformiswindows_returnbat(self, platform_mock):
+    def test_getExt_platform_is_windows_returns_bat(self, platform_mock):
         actual = self.target.getExt()
         self.assertEqual('bat', actual)
 
     @patch('platform.system', return_value='Linux')
-    def test_getExt_platformislinux_returnsh(self, platform_mock):
+    def test_getExt_platform_is_linux_returns_sh(self, platform_mock):
         actual = self.target.getExt()
         self.assertEqual('sh', actual)
 
     @patch('platform.system', return_value='Darwin')
-    def test_getExt_platformisDarwin_returnsh(self, platform_mock):
+    def test_getExt_platform_is_Darwin_returns_sh(self, platform_mock):
         actual = self.target.getExt()
         self.assertEqual('sh', actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[False,False])
-    def test_getRunScriptStatement_nocommandordefaultcommandexist_returnnone(self, glob_mock, getext_mock):
+    def test_getRunScriptStatement_no_command_or_defaultcommand_exist_returns_none(self, glob_mock, getext_mock):
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
@@ -254,7 +244,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[False,True])
     @patch('platform.system', return_value='Windows')
-    def test_getRunScriptStatement_platformiswindowsandcommandexistbutnodefaultcommandexist_returnscriptstatement(self, platform_mock, glob_mock, getext_mock):
+    def test_getRunScriptStatement_platform_is_windows_and_command_exist_and_no_default_commandexist_returns_scriptstatement(self, platform_mock, glob_mock, getext_mock):
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
@@ -266,7 +256,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[False,True])
     @patch('platform.system', return_value='Darwin')
-    def test_getRunScriptStatement_platformisdarwinsandcommandexistbutnodefaultcommandexist_returnscriptstatement(self, platform_mock, glob_mock, getext_mock):
+    def test_getRunScriptStatement_platform_is_darwin_and_command_exist_and_no_default_command_exist_returns_scriptstatement(self, platform_mock, glob_mock, getext_mock):
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
@@ -278,7 +268,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[False,True])
     @patch('platform.system', return_value='Linux')
-    def test_getRunScriptStatement_platformislinuxsandcommandexistbutnodefaultcommandexist_returnscriptstatement(self, platform_mock, glob_mock, getext_mock):
+    def test_getRunScriptStatement_platform_is_linux_and_command_exist_and_no_default_command_exist_returns_scriptstatement(self, platform_mock, glob_mock, getext_mock):
         target = kickassbuild.KickAssCommandFactory(self.default_settings)
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
@@ -290,7 +280,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[True,False])
     @patch('platform.system', return_value='Windows')
-    def test_getRunScriptStatement_platformiswindowsandnocommandexistbutdefaultcommandexist_returndefaultscriptstatement(self, platform_mock, glob_mock, getext_mock):
+    def test_getRunScriptStatement_platform_is_windows_and_no_command_exist_and_default_command_exist_returndefaultscriptstatement(self, platform_mock, glob_mock, getext_mock):
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
         settings = TestSettings(default_settings_dict)
@@ -304,7 +294,7 @@ class TestKickAssCommandFactory(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getExt', return_value='test-ext')
     @patch('glob.glob', side_effect=[True,True])
     @patch('platform.system', return_value='Windows')
-    def test_getRunScriptStatement_platformiswindowsandbothcommandanddefaultcommandexist_returndefaultscriptstatement(self, platform_mock, glob_mock, getext_mock):
+    def test_getRunScriptStatement_platform_is_windows_and_command_exist_and_default_command_exist_returndefaultscriptstatement(self, platform_mock, glob_mock, getext_mock):
         scriptName = 'test-script-name'
         settingName = 'test-setting-name'
         settings = TestSettings(default_settings_dict)
@@ -316,19 +306,19 @@ class TestKickAssCommandFactory(TestCase):
         self.assertEqual('call "test-script-name.test-ext"', actual)
 
     @patch('platform.system', return_value='Windows')
-    def test_createMonCommandsStatement_platformiswindows_returncorrectmoncommandstatement(self, platform_mock):
+    def test_createMonCommandsStatement_platform_is_windows_returns_correct_moncommand_statement(self, platform_mock):
         actual = self.target.createMonCommandsStatement()
 
         self.assertEqual('copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\"', actual)
 
     @patch('platform.system', return_value='Darwin')
-    def test_createMonCommandsStatement_platformisdarwin_returncorrectmoncommandstatement(self, platform_mock):
+    def test_createMonCommandsStatement_platform_is_darwin_returns_correct_moncommand_statement(self, platform_mock):
         actual = self.target.createMonCommandsStatement()
 
         self.assertEqual('[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\"', actual)
 
     @patch('platform.system', return_value='Linux')
-    def test_createMonCommandsStatement_platformislinux_returncorrectmoncommandstatement(self, platform_mock):
+    def test_createMonCommandsStatement_platform_is_linux_returns_correct_moncommand_statement(self, platform_mock):
         actual = self.target.createMonCommandsStatement()
 
         self.assertEqual('[ -f \"${kickass_output_path}/${kickass_breakpoint_filename}\" ] && cat \"${kickass_output_path}/${build_file_base_name}.vs\" \"${kickass_output_path}/${kickass_breakpoint_filename}\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\" || cat \"${kickass_output_path}/${build_file_base_name}.vs\" > \"${kickass_output_path}/${build_file_base_name}_MonCommands.mon\"', actual)

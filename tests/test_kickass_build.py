@@ -59,21 +59,21 @@ class TestKickassBuildCommand(TestCase):
     def tearDown(self):
         self.platform_system_patch.stop()
 
-    def test_getPathDelimiter_platformiswindows_returnsemicolon(self):
+    def test_getPathDelimiter_platform_is_windows_returns_semicolon(self):
         self.platform_system.return_value = 'Windows'
 
         actual = self.target.getPathDelimiter()
 
         self.assertEqual(';', actual)
 
-    def test_getPathDelimiter_platformislinux_returncolon(self):
+    def test_getPathDelimiter_platform_is_linux_returns_colon(self):
         self.platform_system.return_value = 'Linux'
 
         actual = self.target.getPathDelimiter()
 
         self.assertEqual(':', actual)
 
-    def test_getPathDelimiter_platformisDarwin_returncolon(self):
+    def test_getPathDelimiter_platform_is_Darwin_returns_colon(self):
         self.platform_system.return_value = 'Darwin'
 
         actual = self.target.getPathDelimiter()
@@ -81,7 +81,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(':', actual)
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuild_sourcedictitemsisreturned(self, file_mock):
+    def test_createExecDict_buildmode_is_build_returns_sourcedict_items(self, file_mock):
         sourceDict = {
             'path': '%PATH%', 
             'shell': True, 
@@ -97,7 +97,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual)
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuild_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_build_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin" '
 
@@ -106,7 +106,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuildstartup_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_buildstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin" '
 
@@ -115,7 +115,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuildandrun_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Test_ViceLog.txt" -moncommands "bin/Test.vs"  "bin/Test.prg"'
 
@@ -124,7 +124,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuildandrunstartup_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup.vs"  "bin/Startup.prg"'
 
@@ -133,7 +133,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuildandrun_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Test.vs" "bin/breakpoints.txt" > "bin/Test_MonCommands.mon" || cat "bin/Test.vs" > "bin/Test_MonCommands.mon" && "x64" -logfile "bin/Test_ViceLog.txt" -moncommands "bin/Test_MonCommands.mon"  "bin/Test.prg"'
 
@@ -142,7 +142,7 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmodeisbuildandrunstartup_returndictionarywithcorrectbuildcommand(self, file_mocks):
+    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Startup.vs" "bin/breakpoints.txt" > "bin/Startup_MonCommands.mon" || cat "bin/Startup.vs" > "bin/Startup_MonCommands.mon" && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup_MonCommands.mon"  "bin/Startup.prg"'
 
@@ -152,7 +152,7 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
-    def test_createExecDict_buildmodeismake_returndictionarywithcorrectmakecommand(self, glob_mock, file_mock):
+    def test_createExecDict_buildmode_is_make_return_dictionary_with_correct_makecommand(self, glob_mock, file_mock):
         sourceDict = {'env':{}}
         expected = '. "make.sh"'
 
@@ -162,7 +162,7 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
-    def test_createExecDict_buildmodeismake_returndictionarywithcorrectenvvariables(self, glob_mock, file_mock):
+    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_env_variables(self, glob_mock, file_mock):
         sourceDict = {'env':{}}
         expected = {
             'kickass_buildmode': 'make', 
@@ -180,7 +180,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
     @patch('sublime.error_message')
-    def test_run_settingsnotloaded_returnwitherrormessage(self, sublime_error_mock, settings_mock, glob_mock, file_mock):
+    def test_run_settings_not_loaded_sets_error_message_and_returns(self, sublime_error_mock, settings_mock, glob_mock, file_mock):
         settings_mock.return_value.isLoaded.return_value = False
 
         actual = self.target.run(buildmode = 'build', env = {})
@@ -194,7 +194,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
-    def test_run_allconditionsvalid_createsoutputdirfromsetting(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    def test_run_creates_makedirs_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
 
@@ -209,7 +209,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
-    def test_run_emptybinfolderisenabled_emptyfolderiscalled(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
+    def test_run_emptybinfolder_setting_is_true_emptyfolder_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
         settings_mock.return_value.getSettingAsBool.return_value = True
@@ -225,7 +225,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
-    def test_run_emptybinfolderisdisabled_emptyfolderisnotcalled(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
+    def test_run_emptybinfolder_setting_is_false_emptyfolder_is_not_called(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
         settings_mock.return_value.getSettingAsBool.return_value = False
@@ -239,7 +239,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
-    def test_run_allconditionsvalid_windowruncommandiscalledonce(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    def test_run_window_runcommand_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSettingAsBool.return_value = False
         exec_dict_val = {'key11':'val11'}
@@ -254,7 +254,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
-    def test_run_allconditionsvalid_createexecdictiscalledonce(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    def test_run_createexecdict_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSettingAsBool.return_value = False
 
