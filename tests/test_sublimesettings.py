@@ -2,7 +2,7 @@ import sublime
 import sys
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch
-from module_references import kickassbuild
+from testglobals import kickassbuild
 
 class TestSublimeSettings(TestCase):
     def setUp(self):
