@@ -2,9 +2,9 @@ import sublime
 import sys
 import os
 from unittest import TestCase
-from unittest.mock import MagicMock, Mock, patch, create_autospec, mock_open
+from unittest.mock import MagicMock, Mock, patch, create_autospec   
 from testsettings import TestSettings
-from testglobals import kickassbuild, default_settings_dict
+from testglobals import kickassbuild, default_settings_dict, mock_open34
 
 #Use project path as root, if exist?
 #Use platform from variables
@@ -61,7 +61,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(':', actual)
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_returns_sourcedict_items(self, file_mock):
         sourceDict = {
             'path': '%PATH%', 
@@ -77,7 +77,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual)
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin" '
@@ -86,7 +86,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin" '
@@ -95,7 +95,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Test_ViceLog.txt" -moncommands "bin/Test.vs"  "bin/Test.prg"'
@@ -104,7 +104,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup.vs"  "bin/Startup.prg"'
@@ -113,7 +113,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Test.asm" -log "bin/Test_BuildLog.txt" -o "bin/Test.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Test.vs" "bin/breakpoints.txt" > "bin/Test_MonCommands.mon" || cat "bin/Test.vs" > "bin/Test_MonCommands.mon" && "x64" -logfile "bin/Test_ViceLog.txt" -moncommands "bin/Test_MonCommands.mon"  "bin/Test.prg"'
@@ -122,7 +122,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         sourceDict = {}
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Startup.vs" "bin/breakpoints.txt" > "bin/Startup_MonCommands.mon" || cat "bin/Startup.vs" > "bin/Startup_MonCommands.mon" && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup_MonCommands.mon"  "bin/Startup.prg"'
@@ -131,9 +131,9 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
-    def test_createExecDict_buildmode_is_make_return_dictionary_with_correct_makecommand(self, glob_mock, file_mock):
+    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_makecommand(self, glob_mock, file_mock):
         sourceDict = {'env':{}}
         expected = '. "make.sh"'
 
@@ -141,7 +141,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['shell_cmd'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_env_variables(self, glob_mock, file_mock):
         sourceDict = {'env':{}}
@@ -157,7 +157,7 @@ class TestKickassBuildCommand(TestCase):
 
         self.assertEqual(expected, actual['env'])
 
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
     @patch('sublime.error_message')
@@ -171,7 +171,7 @@ class TestKickassBuildCommand(TestCase):
 
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict')
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
@@ -186,7 +186,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('os.path.isdir', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder')
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict')
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
@@ -202,7 +202,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('os.path.isdir', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder')
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict')
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
@@ -216,7 +216,7 @@ class TestKickassBuildCommand(TestCase):
         emptyfolder_mock.assert_not_called('outputdir')
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict')
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
@@ -231,7 +231,7 @@ class TestKickassBuildCommand(TestCase):
         self.window_mock.run_command.assert_called_once_with('exec', exec_dict_val)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict')
-    @patch('builtins.open', new_callable=mock_open, read_data='.filenamespace goatPowerExample')
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
     @patch('os.makedirs')
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
@@ -243,11 +243,113 @@ class TestKickassBuildCommand(TestCase):
 
         execDict_mock.assert_called_once_with({'env': {}}, 'build', settings_mock.return_value)
 
-    #TODO: mergeDictionaries
+    def test_mergedictionaries_no_collisions_dictionaries_merged(self):
+        dict1 = {'a':'b'}
+        dict2 = {'c':'d'}
+        expected = {'a':'b', 'c':'d'}
+        actual = self.target.mergeDictionaries(dict1, dict2)
+
+        self.assertEqual(expected, actual)
+
+    def test_mergedictionaries_collisions_dictionaries_merged(self):
+        dict1 = {'a':'b'}
+        dict2 = {'a':'d'}
+        expected = {'a':'d'}
+        actual = self.target.mergeDictionaries(dict1, dict2)
+
+        self.assertEqual(expected, actual)
+
+    def test_mergedictionaries_source_dictionaries_unchanged(self):
+        dict1 = {'a':'b'}
+        dict2 = {'c':'d'}
+        actual = self.target.mergeDictionaries(dict1, dict2)
+
+        self.assertEqual({'a':'b'}, dict1)
+        self.assertEqual({'c':'d'}, dict2)
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_parseAnnotations_open_is_called_oince(self, open_mock):
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        open_mock.assert_called_once_with(filename, 'r')
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_parseAnnotations_readline_is_called_oince(self, open_mock):
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        open_mock.return_value.readline.assert_called_once()
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='')
+    def test_parseAnnotations_firstline_is_empty(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({}, actual)
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_parseAnnotations_firstline_not_annotation_returns_empty_dict(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({}, actual)
+    @patch('builtins.open', new_callable=mock_open34, read_data='@kickass-build "test-annotation-1": "val1"')
+    def test_parseAnnotations_firstline_is_not_a_comment_returns_empty_dict(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({}, actual)
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='// @kickass-not-build "test-annotation-1": "val1"')
+    def test_parseAnnotations_firstline_is_a_comment_no_kickassbuild_directive_returns_empty_dict(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({}, actual)
+
+    @patch("builtins.open", new_callable=mock_open34, read_data='// @kickass-build "test-annotation-1": "val1", "test-annotation-2": "val2"')
+    def test_parseAnnotations_firstline_is_a_comment_has_kickassbuild_directive_returns_parsed_dict(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({'test-annotation-1': 'val1', 'test-annotation-2': 'val2'}, actual)
+
+    @patch("builtins.open", new_callable=mock_open34, read_data='// @kickass-build "test-annotation-1"= "val1"')
+    def test_parseAnnotations_firstline_is_a_comment_has_kickassbuild_directive_illegal_format_raises_valueerror(self, open_mock):
+        open_mock.return_value.__iter__ = lambda self:self
+        open_mock.return_value.__next__ = lambda self: self.readline()
+        filename = 'test-file.asm'
+        with self.assertRaisesRegexp(ValueError, 'Could not parse build annotations: .*') as cm:
+            actual = self.target.parseAnnotations(filename)
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='// some-extra-text @kickass-build "test-annotation-1": "val1"')
+    def test_parseAnnotations_firstline_is_a_comment_has_kickassbuild_directive_and_extra_text_returns_parsed_dict(self, open_mock):
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({'test-annotation-1': 'val1'}, actual)
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='  //  @kickass-build  "test-annotation-1":  "val1" ')
+    def test_parseAnnotations_firstline_is_a_comment_has_kickassbuild_directive_and_extra_spaces_returns_parsed_dict(self, open_mock):
+        filename = 'test-file.asm'
+        actual = self.target.parseAnnotations(filename)
+
+        self.assertEqual({'test-annotation-1': 'val1'}, actual)
+
     #TODO: emptyFolder
-    #TODO: parseAnnotations
     #TODO: getFilenameVariables
-    #TODO: Maybe fix or rework createExecDict tests for all build modes, another file (integration tests? use run?)    
+    #TODO: Maybe fix or rework createExecDict tests for all build modes, another file (system tests?)    
 
 if __name__ == '__main__':
     unittest.main()
