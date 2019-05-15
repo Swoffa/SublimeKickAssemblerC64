@@ -78,7 +78,7 @@ class TestSublimeSettings(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value=None)
     def test_getSettingasbool_setting_value_is_none_raises_attributeerror(self, getSettings_mock):
-        with self.assertRaises(AttributeError) as cm:
+        with self.assertRaisesRegexp(AttributeError, "'NoneType' object has no attribute 'lower'") as cm:
             actual = kickassbuild.SublimeSettings(self.command_mock).getSettingAsBool('any')
 
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings.getSetting', return_value='abc')

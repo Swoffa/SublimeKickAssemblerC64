@@ -4,7 +4,7 @@ import os
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch, create_autospec   
 from testsettings import TestSettings
-from testglobals import kickassbuild, default_settings_dict, mock_open34
+from testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34
 
 #Use project path as root, if exist?
 #Use platform from variables
@@ -16,19 +16,8 @@ class TestKickassBuildCommand(TestCase):
         self.platform_system = self.platform_system_patch.start()
         self.platform_system.return_value = 'Darwin'
 
-        self.default_variables = {
-            #'file_name': 'test-file.asm',
-            #'platform': 'Windows', 
-            #'packages': 'C:\\Users\\SimonOskarsson\\AppData\\Roaming\\Sublime Text 3\\Packages', 
-            #'folder': filePath, 
-            #'file': filePath+'test-file.asm', 
-            'file_extension': 'asm', 
-            'file_path': 'test-path', 
-            'file_base_name': 'test-file'
-            }
-
         self.window_mock = Mock()
-        self.window_mock.extract_variables.return_value = self.default_variables
+        self.window_mock.extract_variables.return_value = default_variables_dict
 
         self.settings_mock = create_autospec(kickassbuild.SublimeSettings)
         self.settings_mock.getSetting.return_value = ''
@@ -78,86 +67,6 @@ class TestKickassBuildCommand(TestCase):
         actual = self.target.createExecDict(sourceDict, 'build', self.settings_mock)
 
         self.assertEqual(expected, actual)
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_build_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
-
-        actual = self.target.createExecDict(sourceDict, 'build', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_buildstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin" '
-
-        actual = self.target.createExecDict(sourceDict, 'build-startup', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file.vs"  "bin/test-file.prg"'
-
-        actual = self.target.createExecDict(sourceDict, 'build-and-run', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup.vs"  "bin/Startup.prg"'
-
-        actual = self.target.createExecDict(sourceDict, 'build-and-run-startup', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/test-file.vs" "bin/breakpoints.txt" > "bin/test-file_MonCommands.mon" || cat "bin/test-file.vs" > "bin/test-file_MonCommands.mon" && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file_MonCommands.mon"  "bin/test-file.prg"'
-
-        actual = self.target.createExecDict(sourceDict, 'build-and-debug', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
-        sourceDict = {}
-        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Startup.vs" "bin/breakpoints.txt" > "bin/Startup_MonCommands.mon" || cat "bin/Startup.vs" > "bin/Startup_MonCommands.mon" && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup_MonCommands.mon"  "bin/Startup.prg"'
-
-        actual = self.target.createExecDict(sourceDict, 'build-and-debug-startup', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    @patch('glob.glob', return_value=True)
-    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_makecommand(self, glob_mock, file_mock):
-        sourceDict = {'env':{}}
-        expected = '. "make.sh"'
-
-        actual = self.target.createExecDict(sourceDict, 'make', self.all_settings)
-
-        self.assertEqual(expected, actual['shell_cmd'])
-
-    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    @patch('glob.glob', return_value=True)
-    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_env_variables(self, glob_mock, file_mock):
-        sourceDict = {'env':{}}
-        expected = {
-            'kickass_buildmode': 'make', 
-            'kickass_file': 'test-file.asm', 
-            'kickass_file_path': 'test-path', 
-            'kickass_bin_folder': 'test-path/bin', 
-            'kickass_prg_file': 'test-path/bin/test-file.prg'
-            }
-
-        actual = self.target.createExecDict(sourceDict, 'make', self.all_settings)
-
-        self.assertEqual(expected, actual['env'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', return_value=True)
@@ -353,39 +262,120 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', return_value={})
     def test_getFilenameVariables_buildmode_does_not_have_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, self.default_variables)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
 
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', return_value={})
     def test_getFilenameVariables_buildmode_has_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build-startup', settings, self.default_variables)
+        actual = self.target.getFilenameVariables('build-startup', settings, default_variables_dict)
 
         self.assertEqual({'build_file_base_name': 'test-startup-base-name', 'start_filename': 'test-startup-base-name.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', return_value={})
     def test_getFilenameVariables_calls_parseAnnotations_once(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, self.default_variables)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
 
         parseannotations_mock.assert_called_once_with('test-path/test-file.asm')
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', return_value={'file-to-run': 'test-run-file.ext'})
     def test_getFilenameVariables_has_filetorun_annotation_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, self.default_variables)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
 
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-run-file.ext'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', return_value={'file-to-not-run': 'test-run-file.ext'})
     def test_getFilenameVariables_has_other_annotation_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, self.default_variables)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
 
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
-    #TODO: Maybe fix or rework createExecDict tests for all build modes, another file (system tests?)    
+    #System tests
+    #TODO: Maybe rework or move createExecDict syastemn tests for all build modes, another file?
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
+
+        actual = self.target.createExecDict(sourceDict, 'build', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_buildstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin" '
+
+        actual = self.target.createExecDict(sourceDict, 'build-startup', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file.vs"  "bin/test-file.prg"'
+
+        actual = self.target.createExecDict(sourceDict, 'build-and-run', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup.vs"  "bin/Startup.prg"'
+
+        actual = self.target.createExecDict(sourceDict, 'build-and-run-startup', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/test-file.vs" "bin/breakpoints.txt" > "bin/test-file_MonCommands.mon" || cat "bin/test-file.vs" > "bin/test-file_MonCommands.mon" && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file_MonCommands.mon"  "bin/test-file.prg"'
+
+        actual = self.target.createExecDict(sourceDict, 'build-and-debug', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
+        sourceDict = {}
+        expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Startup.vs" "bin/breakpoints.txt" > "bin/Startup_MonCommands.mon" || cat "bin/Startup.vs" > "bin/Startup_MonCommands.mon" && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup_MonCommands.mon"  "bin/Startup.prg"'
+
+        actual = self.target.createExecDict(sourceDict, 'build-and-debug-startup', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    @patch('glob.glob', return_value=True)
+    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_makecommand(self, glob_mock, file_mock):
+        sourceDict = {'env':{}}
+        expected = '. "make.sh"'
+
+        actual = self.target.createExecDict(sourceDict, 'make', self.all_settings)
+
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    @patch('glob.glob', return_value=True)
+    def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_env_variables(self, glob_mock, file_mock):
+        sourceDict = {'env':{}}
+        expected = {
+            'kickass_buildmode': 'make', 
+            'kickass_file': 'test-file.asm', 
+            'kickass_file_path': 'test-path', 
+            'kickass_bin_folder': 'test-path/bin', 
+            'kickass_prg_file': 'test-path/bin/test-file.prg'
+            }
+
+        actual = self.target.createExecDict(sourceDict, 'make', self.all_settings)
+
+        self.assertEqual(expected, actual['env'])
 
 if __name__ == '__main__':
     unittest.main()
