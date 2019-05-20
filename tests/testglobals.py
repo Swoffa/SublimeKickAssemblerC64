@@ -2,6 +2,7 @@ import sublime
 import sys
 import io
 from unittest.mock import MagicMock, mock_open, file_spec, DEFAULT
+from copy import deepcopy
 
 version = sublime.version()
 
@@ -21,6 +22,12 @@ default_variables_dict = {
     'file_extension': 'asm', 
     'file_path': 'test-path', 
     'file_base_name': 'test-file'
+    }
+
+
+default_filename_variables_dict = {
+    'build_file_base_name': 'test-file',
+    'start_filename' : 'test-run-file'
     }
 
 default_settings_dict = {
@@ -119,3 +126,9 @@ def mock_open34(mock=None, read_data=''):
     mock.side_effect = reset_data
     mock.return_value = handle
     return mock
+
+class CopyingMock(MagicMock):
+    def __call__(self, *args, **kwargs):
+        args = deepcopy(args)
+        kwargs = deepcopy(kwargs)
+        return super(CopyingMock, self).__call__(*args, **kwargs)
