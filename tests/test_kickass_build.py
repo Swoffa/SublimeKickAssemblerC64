@@ -6,10 +6,6 @@ from unittest.mock import MagicMock, Mock, patch, create_autospec, PropertyMock
 from testsettings import TestSettings
 from testglobals import kickassbuild, default_settings_dict, default_variables_dict, default_filename_variables_dict, mock_open34, CopyingMock
 
-#Use project path as root, if exist?
-#Use platform from variables
-#Why is path saved from expansion?
-
 def createCommand_mock(command_text='test-command-text'):
     return fix_createCommand_mock(create_autospec(kickassbuild.KickAssCommand), command_text)
 
