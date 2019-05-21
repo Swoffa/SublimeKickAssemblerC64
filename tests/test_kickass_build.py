@@ -100,7 +100,7 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={'test-filename-var':'test-filename'})
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', new_callable=CopyingMock) #TODO: Fix autospec if possible
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', new_callable=CopyingMock)
     def test_createExecDict_kickasscommand_is_called_with_window_variables_and_filename_variables(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         fix_createCommand_mock(createCommand_mock.return_value)
         self.window_mock.extract_variables.return_value = {'test-var':'test-value'}
@@ -206,13 +206,13 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', autospec=True, return_value=True)
-    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings')
+    @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
     @patch('sublime.error_message', autospec=True)
     def test_run_settings_not_loaded_sets_error_message_and_returns(self, sublime_error_mock, settings_mock, glob_mock, getFilenameVariables_mock):
         settings_mock.return_value.isLoaded.return_value = False
         actual = self.target.run(buildmode = 'build', env = {})
         sublime_error_mock.assert_called_once_with("Settings could not be loaded, please restart Sublime Text.")
-        settings_mock.getSetting.assert_not_called() #TODO: Does not work
+        self.assertEqual(0, settings_mock.return_value.getSetting.call_count)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict', autospec=True)
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
@@ -240,7 +240,7 @@ class TestKickassBuildCommand(TestCase):
         emptyfolder_mock.assert_called_once_with(self.target, 'outputdir')
 
     @patch('os.path.isdir', return_value=True)
-    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict', autospec=True)
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', autospec=True, return_value=True)
@@ -251,7 +251,7 @@ class TestKickassBuildCommand(TestCase):
         settings_mock.return_value.getSetting.return_value = 'outputdir'
         settings_mock.return_value.getSettingAsBool.return_value = False
         actual = self.target.run(buildmode = 'build', env = {})
-        emptyfolder_mock.assert_not_called('outputdir')
+        self.assertEqual(0, emptyfolder_mock.call_count)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict', autospec=True)
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
@@ -307,7 +307,7 @@ class TestKickassBuildCommand(TestCase):
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_parseAnnotations_readline_is_called_oince(self, open_mock):
         actual = self.target.parseAnnotations('test-file.asm')
-        open_mock.return_value.readline.assert_called_once()
+        open_mock.return_value.readline.assert_called_once_with()
 
     @patch('builtins.open', new_callable=mock_open34, read_data='')
     def test_parseAnnotations_firstline_is_empty(self, open_mock):

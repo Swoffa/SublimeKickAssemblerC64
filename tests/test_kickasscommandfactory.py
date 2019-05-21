@@ -19,31 +19,31 @@ class TestKickAssCommandFactory(TestCase):
         self.platform_system_patch.stop()
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand', autospec=True)
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand', autospec=True)
     def test_createCommand_buildmode_is_build_createkickasscommand_is_called_once(self, kickassCommand_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'build'
         actual = self.target.createCommand({}, buildMode)
-        createMakeCommand_mock.assert_not_called()
         createKickassCommand_mock.assert_called_once_with(self.target, {}, buildMode)
+        self.assertEqual(0, createMakeCommand_mock.call_count)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand', autospec=True)
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand', autospec=True)
     def test_createCommand_buildmode_is_buildrun_createkickasscommand_is_called_once(self, kickassCommand_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'build-run'
         actual = self.target.createCommand({}, buildMode)
-        createMakeCommand_mock.assert_not_called()
         createKickassCommand_mock.assert_called_once_with(self.target, {}, buildMode)
+        self.assertEqual(0, createMakeCommand_mock.call_count)
 
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createKickassCommand', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createMakeCommand', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand', autospec=True)
     def test_createCommand_buildmode_is_make_createmakecommandÄ_is_called_once(self, kickassCommand_mock, createMakeCommand_mock, createKickassCommand_mock):
         buildMode = 'make'
         actual = self.target.createCommand({}, buildMode)
         createMakeCommand_mock.assert_called_once_with(self.target, {}, buildMode)
-        createKickassCommand_mock.assert_not_called()
+        self.assertEqual(0, createKickassCommand_mock.call_count)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.getRunScriptStatement', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommand', autospec=True)
