@@ -107,5 +107,20 @@ This definies in which scopes the plugin should work. So far it will fire up onl
 
     "log_level": "warning"
 
-For the debuggin purposes you can increase the log level to info or debug, open Python console (ctrl-`) and observe what is going on and what problems the plugin has. If you report a bug, please use "debug" level and make sure you copy paset the whole output.
+For the debuggin purposes you can increase the log level to info or debug, open Python console (ctrl-\`) and observe what is going on and what problems the plugin has. If you report a bug, please use "debug" level and make sure you copy paset the whole output.
 
+Contribute
+==========
+
+Making changes
+--------------
+Fork repo, make changes and submit pull requests.
+
+Local development
+-----------------
+Just clone repo into Sublime package folder and you can test the package "live" during development.
+
+Running all tests
+-----------------
+1. Install package [UnitTesting](https://packagecontrol.io/packages/UnitTesting) thru [Package Control](ttps://packagecontrol.io/)
+2. In Sublime Text, run command `UnitTesting: Test Current pakcage` with the SublimeKickAssemblerC64-folder opened
