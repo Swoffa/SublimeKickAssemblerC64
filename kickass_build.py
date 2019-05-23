@@ -68,9 +68,10 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             for custom_var in custom_var_list:
                 variables[custom_var] = settings.getSetting(custom_var)
 
-            # Expand variables
-            variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
-            variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
+            # Expand variables (mutiple times to support variables in Variables)
+            for x in range(2):
+                variables_to_expand = {k: v for k, v in variables.items() if k in vars_to_expand_list}
+                variables = self.mergeDictionaries(variables, sublime.expand_variables (variables_to_expand, variables))
 
             # Create arguments to return by expanding variables in the
             # arguments given.
@@ -96,7 +97,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         fileToRunAnnotation = buildAnnotations.get("file-to-run") if buildAnnotations else None
         return {
             "build_file_base_name": fileToBuild,
-            "start_filename" : fileToRunAnnotation if fileToRunAnnotation else "%s.prg" % (fileToBuild)
+            "start_filename" : fileToRunAnnotation if fileToRunAnnotation else settings.getSetting("kickass_compiled_filename")
             }
 
     def parseAnnotations (self, filename):

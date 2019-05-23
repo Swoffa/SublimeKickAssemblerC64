@@ -177,6 +177,33 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
+    def test_createExecDict_expandable_variables_gets_double_expanded(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
+        createCommand_mock
+        settings = TestSettings({
+            'kickass_compiled_filename': 'kickass_compiled_filename-value',
+            'kickass_compile_args': 'kickass_compile_args-value ${kickass_compiled_filename}',
+            'kickass_run_command_x64': '${kickass_compile_args}'
+            })
+        sourceDict = {'test-key': '${kickass_run_command_x64}'}
+        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        self.assertEqual('kickass_compile_args-value kickass_compiled_filename-value', actual['test-key'])
+
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock(command_text='test-command-text ${kickass_run_command_x64}'))
+    def test_createExecDict_expandable_variables_gets_double_expanded1(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
+        createCommand_mock
+        settings = TestSettings({
+            'kickass_compiled_filename': 'kickass_compiled_filename-value',
+            'kickass_compile_args': 'kickass_compile_args-value ${kickass_compiled_filename}',
+            'kickass_run_command_x64': 'x64 ${kickass_compile_args}'
+            })
+        actual = self.target.createExecDict({}, 'build', settings)
+        self.assertEqual('test-command-text x64 kickass_compile_args-value kickass_compiled_filename-value', actual['shell_cmd'])
+
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
     def test_createExecDict_non_expandalbe_variables_not_expanded(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         settings = TestSettings({
             'kickass_compile_args': 'kickass_compile_args-value',
@@ -352,15 +379,15 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_buildmode_does_not_have_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
-        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
+        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
         actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_buildmode_has_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
-        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
+        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-startup-file.prg'})
         actual = self.target.getFilenameVariables('build-startup', settings, default_variables_dict)
-        self.assertEqual({'build_file_base_name': 'test-startup-base-name', 'start_filename': 'test-startup-base-name.prg'}, actual)
+        self.assertEqual({'build_file_base_name': 'test-startup-base-name', 'start_filename': 'test-startup-file.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_calls_parseAnnotations_once(self, parseannotations_mock):
@@ -376,7 +403,7 @@ class TestKickassBuildCommand(TestCase):
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={'file-to-not-run': 'test-run-file.ext'})
     def test_getFilenameVariables_has_other_annotation_returns_correct_dictionary(self, parseannotations_mock):
-        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
+        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
         actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
