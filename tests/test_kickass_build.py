@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch, create_autospec, PropertyMock
 from testsettings import TestSettings
-from testglobals import kickassbuild, default_settings_dict, default_variables_dict, default_filename_variables_dict, mock_open34, CopyingMock
+from testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
 
 def createCommand_mock(command_text='test-command-text'):
     return fix_createCommand_mock(create_autospec(kickassbuild.KickAssCommand), command_text)
@@ -19,7 +19,7 @@ class TestKickassBuildCommand(TestCase):
         self.platform_system.return_value = 'Darwin'
 
         self.window_mock = Mock()
-        self.window_mock.extract_variables.return_value = default_variables_dict
+        self.window_mock.extract_variables.return_value = default_variables_dict.copy()
 
         self.settings_mock = create_autospec(kickassbuild.SublimeSettings)
         self.settings_mock.getSetting.return_value = ''
@@ -94,7 +94,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory', autospec=True)
     def test_createExecDict_kickasscommand_createcommand_is_called_once(self, commandFactory_mock, getPathDelimiter_mock, getFilenameVariables_mock):
-        commandFactory_mock.return_value.createCommand.return_value =createCommand_mock()
+        commandFactory_mock.return_value.createCommand = CopyingMock()
+        commandFactory_mock.return_value.createCommand.return_value.updateEnvVars.side_effect = (lambda dict: dict)
         actual = self.target.createExecDict({}, 'build', self.settings_mock)
         commandFactory_mock.return_value.createCommand.assert_called_once_with(default_variables_dict, 'build')
 
@@ -380,31 +381,31 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_buildmode_does_not_have_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
-        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_buildmode_has_startup_no_annotations_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-startup-file.prg'})
-        actual = self.target.getFilenameVariables('build-startup', settings, default_variables_dict)
+        actual = self.target.getFilenameVariables('build-startup', settings, default_variables_dict.copy())
         self.assertEqual({'build_file_base_name': 'test-startup-base-name', 'start_filename': 'test-startup-file.prg'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={})
     def test_getFilenameVariables_calls_parseAnnotations_once(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
         parseannotations_mock.assert_called_once_with(self.target, 'test-path/test-file.asm')
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={'file-to-run': 'test-run-file.ext'})
     def test_getFilenameVariables_has_filetorun_annotation_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name'})
-        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-run-file.ext'}, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={'file-to-not-run': 'test-run-file.ext'})
     def test_getFilenameVariables_has_other_annotation_returns_correct_dictionary(self, parseannotations_mock):
         settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
-        actual = self.target.getFilenameVariables('build', settings, default_variables_dict)
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
     #System tests

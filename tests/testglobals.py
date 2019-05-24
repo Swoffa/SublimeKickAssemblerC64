@@ -24,12 +24,6 @@ default_variables_dict = {
     'file_base_name': 'test-file'
     }
 
-
-default_filename_variables_dict = {
-    'build_file_base_name': 'test-file',
-    'start_filename' : 'test-run-file'
-    }
-
 default_settings_dict = {
     "kickass_run_path": "x64",
     "kickass_debug_path": "x64",
