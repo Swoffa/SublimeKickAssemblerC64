@@ -466,5 +466,58 @@ class TestKickassBuildCommand(TestCase):
         actual = self.target.createExecDict({'env':{}}, 'make', self.all_settings)
         self.assertEqual(expected, actual['env'])
 
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':True, '/postbuild.sh':False, 'postbuild.sh':False}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_prebuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':False, '/postbuild.sh':False, 'postbuild.sh':True}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':True, '/postbuild.sh':False, 'postbuild.sh':True}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_prebuild_script_exist_and_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':False, 'postbuild.sh':False}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_default_prebuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
+        expected = '. "test-default-prebuild-path/prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':False, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':False}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_default_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
+        expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "test-default-postbuild-path/postbuild.sh"'
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':True, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':True}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_all_prebuild_postbuild_scripts_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
+        expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
+    @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':False}[x])
+    @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
+    def test_createExecDict_buildmode_is_build_and_default_prebuild_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
+        settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
+        expected = '. "test-default-prebuild-path/prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "test-default-postbuild-path/postbuild.sh"'
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        self.assertEqual(expected, actual['shell_cmd'])
+
 if __name__ == '__main__':
     unittest.main()
