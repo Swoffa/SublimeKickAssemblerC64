@@ -1,6 +1,6 @@
-import sublime, sublime_plugin 
-import os 
-import platform 
+import sublime, sublime_plugin
+import os
+import platform
 import glob
 import shutil
 import json
@@ -9,8 +9,8 @@ import json
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
 #
 # Huge thanks to OdatNurd!!
- 
-# List of variable names we want to support 
+
+# List of variable names we want to support
 custom_var_list = [ "kickass_compile_args",
                     "kickass_compile_debug_additional_args",
                     "kickass_run_command_c64debugger",
@@ -30,7 +30,7 @@ custom_var_list = [ "kickass_compile_args",
                     "default_prebuild_path",
                     "default_postbuild_path"]
 
-vars_to_expand_list = [ 
+vars_to_expand_list = [
                         "kickass_compiled_filename",
                         "kickass_args",
                         "kickass_run_args",
@@ -91,27 +91,28 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def getFilenameVariables(self, buildMode, settings, variables):
         useStartup = 'startup' in buildMode
+        kickass_encoding = settings.getSetting("kickass_encoding")
         fileToBuild = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
         fileToBuildPath = "%s/%s.%s" % (variables["file_path"], fileToBuild, variables["file_extension"])
-        buildAnnotations = self.parseAnnotations(fileToBuildPath)
+        buildAnnotations = self.parseAnnotations(fileToBuildPath, kickass_encoding)
         fileToRunAnnotation = buildAnnotations.get("file-to-run") if buildAnnotations else None
         return {
             "build_file_base_name": fileToBuild,
             "start_filename" : fileToRunAnnotation if fileToRunAnnotation else settings.getSetting("kickass_compiled_filename")
             }
 
-    def parseAnnotations (self, filename):
-        with open(filename, 'r') as handle:
+    def parseAnnotations (self, filename, kickass_encoding):
+        with open(filename, 'r', encoding=kickass_encoding) as handle:
             firstline = handle.readline().strip()
         try:
-            return (json.loads("{%s}" % firstline[2:].strip().split("@kickass-build", 1)[1]) 
-                    if firstline.startswith("//") and "@kickass-build" in firstline 
+            return (json.loads("{%s}" % firstline[2:].strip().split("@kickass-build", 1)[1])
+                    if firstline.startswith("//") and "@kickass-build" in firstline
                     else {})
         except ValueError as err:
             raise ValueError("Could not parse build annotations: %s" % err)
 
     def getPathDelimiter(self):
-        return ";" if platform.system()=='Windows' else ":" 
+        return ";" if platform.system()=='Windows' else ":"
 
     def emptyFolder(self, path):
         for root, dirs, files in os.walk(path):
@@ -127,9 +128,9 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         settings = SublimeSettings(self)
-        if not settings.isLoaded(): 
+        if not settings.isLoaded():
             errorMessage = "Settings could not be loaded, please restart Sublime Text."
-            sublime.error_message(errorMessage) 
+            sublime.error_message(errorMessage)
             print(errorMessage)
             return
 
@@ -164,10 +165,10 @@ class SublimeSettings():
         setting = self.__getSetting(settingKey)
         return setting if setting else ""
 
-    def __getSetting(self, settingKey): 
+    def __getSetting(self, settingKey):
         return self.__view_settings.get(settingKey, self.__project_settings.get(settingKey, None))
 
-    def getSettingAsBool(self, settingKey): 
+    def getSettingAsBool(self, settingKey):
         return self.getSetting(settingKey).lower() == "true"
 
 class KickAssCommand():
@@ -196,27 +197,27 @@ class KickAssCommand():
 class KickAssCommandFactory():
     def __init__(self, settings):
         self.__settings = settings
- 
-    def createCommand(self, variables, buildMode): 
+
+    def createCommand(self, variables, buildMode):
         return self.createMakeCommand(variables, buildMode) if buildMode=="make" else self.createKickassCommand(variables, buildMode)
 
-    def createMakeCommand(self, variables, buildMode): 
+    def createMakeCommand(self, variables, buildMode):
         makeCommand = self.getRunScriptStatement("make", "default_make_path")
         makeCommand = makeCommand if makeCommand else "echo Make file not found. Place a file named make.%s in ${file_path}%s" % (self.getExt(), " or %s." % (self.__settings.getSetting("default_make_path")) if self.__settings.getSetting("default_make_path") else ".")
         return KickAssCommand(makeCommand, True, False, buildMode)
 
-    def createKickassCommand(self, variables, buildMode): 
-        javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
+    def createKickassCommand(self, variables, buildMode):
+        javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"
         compileCommand = javaCommand+" cml.kickass.KickAssembler ${kickass_compile_args} "
         compileDebugCommandAdd = "${kickass_compile_debug_additional_args}"
 
-        runCommand = "${kickass_run_command_x64}" 
+        runCommand = "${kickass_run_command_x64}"
         if "c64debugger" in self.__settings.getSetting("kickass_run_path").lower():
-            runCommand = "${kickass_run_command_c64debugger}" 
+            runCommand = "${kickass_run_command_c64debugger}"
 
         debugCommand = "${kickass_debug_command_x64}"
         if "c64debugger" in self.__settings.getSetting("kickass_debug_path").lower():
-            debugCommand = "${kickass_debug_command_c64debugger}" 
+            debugCommand = "${kickass_debug_command_c64debugger}"
 
         useRun = 'run' in buildMode
         useDebug = 'debug' in buildMode
@@ -237,16 +238,16 @@ class KickAssCommandFactory():
 
         return KickAssCommand(command.strip(), preBuildScript != None, postBuildScript != None, buildMode)
 
-    def getExt(self): 
-        return "bat" if platform.system()=='Windows' else "sh" 
+    def getExt(self):
+        return "bat" if platform.system()=='Windows' else "sh"
 
     def getRunScriptStatement(self, scriptFilename, defaultScriptPathSetting):
         defaultScriptCommand = "%s/%s.%s" % (self.__settings.getSetting(defaultScriptPathSetting), scriptFilename, self.getExt())
         hasDefaultScriptCommand = glob.glob(defaultScriptCommand)
         scriptCommand = "%s.%s" % (scriptFilename, self.getExt())
         hasScriptCommand = glob.glob(scriptCommand)
-        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", (scriptCommand if hasScriptCommand else defaultScriptCommand)) if hasScriptCommand or hasDefaultScriptCommand else None 
- 
+        return "%s \"%s\"" % ("call" if platform.system()=='Windows' else ".", (scriptCommand if hasScriptCommand else defaultScriptCommand)) if hasScriptCommand or hasDefaultScriptCommand else None
+
     def createMonCommandsStatement(self):
         if platform.system()=='Windows':
             return "copy /Y \"${kickass_output_path}\\\\${build_file_base_name}.vs\" + \"${kickass_output_path}\\\\${kickass_breakpoint_filename}\" \"${kickass_output_path}\\\\${build_file_base_name}_MonCommands.mon\""

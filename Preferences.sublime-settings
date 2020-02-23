@@ -1,4 +1,4 @@
-{	
+{
 	"kickass_run_path": "x64",
 	"kickass_debug_path": "x64",
 	"kickass_startup_file_path": "Startup",
@@ -6,6 +6,7 @@
 	"kickass_breakpoint_filename" : "breakpoints.txt",
 	"kickass_compiled_filename": "${build_file_base_name}.prg",
 	"kickass_output_path": "bin",
+	"kickass_encoding": "utf-8",
 	"default_prebuild_path": "",
 	"default_postbuild_path": "",
 	"default_make_path": "",
