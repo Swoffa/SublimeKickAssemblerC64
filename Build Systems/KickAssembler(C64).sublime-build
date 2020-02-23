@@ -1,7 +1,7 @@
 {
     "selector": "source.assembly.kickassembler",
     "shell": true,
-    "encoding": "cp1252", //Windows: Needed
+    //"encoding": "utf-8", //Windows: cp1252, not used at all?
     "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     //Settings,
@@ -39,13 +39,13 @@
             "buildmode" : "build-debug",
         },
 
-        { 
+        {
             // Build and Run startup (F5)
             "name": "Build and Run Startup",
             "buildmode" : "build-run-startup",
         },
 
-        { 
+        {
             // Build and Debug startup (Shift+F5)
             "name": "Build and Debug Startup",
             "buildmode" : "build-debug-startup",
