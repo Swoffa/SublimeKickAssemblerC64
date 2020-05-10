@@ -7,14 +7,14 @@ Requires Sublime Text, version 3 is supported. Both the [Vice](http://www.vicete
 Below is a quick start guide, full documentation here: http://goatpower.wordpress.com/projects-releases/sublime-package-kick-assembler-c64/
 
 
-Installation, OSX
+Installation, OSX/macOS
 -----------------
  - Ensure a fairly modern version of java is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
  - Download KickAssembler from http://theweb.dk/KickAssembler/, extract to folder `KickAssembler` in your Applications folder (\*)  
-   Folder `/Applications/Kick Assembler/` should now contain KickAss.jar and some other files/folders.
+   Folder `/Applications/KickAssembler/` should now contain KickAss.jar and some other files/folders.
  - Download Vice C64 emulator from http://www.viceteam.org/#download, extract to folder `Vice` in your Applications folder (\**)  
    Folder `/Applications/Vice/` should now contain x64 and some other files/folders.
- - Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://packagecontrol.io/packages/Kick%20Assembler%20(C64) ), or clone/download this GitHub repository into subfolder of `~/Library/Application Support/Sublime Text 3/Packages/`  
+ - Install [Package Control](https://sublime.wbond.net/) for Sublime and install package [Kick Assembler (C64)](https://packagecontrol.io/packages/Kick%20Assembler%20%28C64%29), or clone/download this GitHub repository into subfolder of `~/Library/Application Support/Sublime Text 3/Packages/`  
 
 \* If you want a custom path for Kick Assembler, add the full path to KickAss.jar to the CLASSPATH environment variable  
 \*\* If you want a custom path for Vice, add the path to the Vice folder containing x64 to the PATH environment variable
