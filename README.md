@@ -1,13 +1,13 @@
 Sublime KickAssembler (C64)
 ===========================
 Sublime Package for C64 development with Kick Assembler, 
-contains language configuration/syntax coloring, build system and some snippets. Support for OSX, Windows and Linux.
+contains language configuration/syntax coloring, build system and some snippets. Support for macOS, Windows and Linux.
 Requires Sublime Text, version 3 is supported. Both the [Vice](http://www.viceteam.org) C64 emulator and the [C64Debugger](https://sourceforge.net/projects/c64-debugger/) C64 emulator/debugger is supported for running/debugging.
 
 Below is a quick start guide, full documentation here: http://goatpower.wordpress.com/projects-releases/sublime-package-kick-assembler-c64/
 
 
-Installation, OSX/macOS
+Installation, macOS
 -----------------
  - Ensure a fairly modern version of java is installed (download from http://www.oracle.com/technetwork/java/javase/downloads/index.htm)
  - Download KickAssembler from http://theweb.dk/KickAssembler/, extract to folder `KickAssembler` in your Applications folder (\*)  
