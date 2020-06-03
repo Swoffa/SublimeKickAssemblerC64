@@ -1,0 +1,7 @@
+Changes in version 1.3.2:
+- Fix: Changed the default executable for run and debug, from x64 to x64sc (both Vice).
+  In Vice 3.4 x64 is no longer available, so x64sc is used instead.
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
