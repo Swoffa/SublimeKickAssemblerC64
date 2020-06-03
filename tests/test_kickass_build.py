@@ -1,7 +1,13 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch, create_autospec, PropertyMock
-from testsettings import TestSettings
-from testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
+try:
+    from tests.testsettings import TestSettings
+except ImportError:
+    from testsettings import TestSettings
+try:
+    from tests.testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
+except ImportError:
+    from testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
 
 def createCommand_mock(command_text='test-command-text'):
     return fix_createCommand_mock(create_autospec(kickassbuild.KickAssCommand), command_text)

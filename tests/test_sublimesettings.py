@@ -1,6 +1,9 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch
-from testglobals import kickassbuild
+try:
+    from tests.testglobals import kickassbuild
+except ImportError:
+    from testglobals import kickassbuild
 
 class TestSublimeSettings(TestCase):
     def setUp(self):
