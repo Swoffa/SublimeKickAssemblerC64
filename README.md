@@ -53,7 +53,7 @@ Details, Build System
 
 Action&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Shortcut macOS | Shortcut Windows | Description
 :--|:--|:--|:--
-Other build variants (listed below) | `Super+Shift+P` | `Ctrl+Shift+P` | Shows the list of the following variants
+Other build variants (listed below) | `Super+Shift+P` | `Ctrl+Shift+P` | Start writing Build, and a list of the following variants is shown
 Build | `Command+B`  | `Control+B` | Compiles the __current__ file.
 Build and Run | `F7` | `F7` | Compiles the __current file__ and runs it using the Vice emulator.
 Build and Debug | `Shift+F7` | `Shift+F7` | Compiles the __current file__ and runs it using the Vice emulator. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.
