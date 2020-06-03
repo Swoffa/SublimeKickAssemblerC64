@@ -327,13 +327,13 @@ class TestKickassBuildCommand(TestCase):
         self.assertEqual({'c':'d'}, dict2)
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_parseAnnotations_open_is_called_oince(self, open_mock):
+    def test_parseAnnotations_open_is_called_once(self, open_mock):
         filename = 'test-file.asm'
         actual = self.target.parseAnnotations(filename)
         open_mock.assert_called_once_with(filename, 'r')
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
-    def test_parseAnnotations_readline_is_called_oince(self, open_mock):
+    def test_parseAnnotations_readline_is_called_once(self, open_mock):
         actual = self.target.parseAnnotations('test-file.asm')
         open_mock.return_value.readline.assert_called_once_with()
 
