@@ -54,7 +54,7 @@ Details, Build System
 Action&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Shortcut macOS | Shortcut Windows | Description
 :--|:--|:--|:--
 Other build variants (listed below) | `Super+Shift+P` | `Ctrl+Shift+P` | Shows the list of the following variants
-Build | `Command+Shift+P`  | `Control+Shift+P` | Compiles the __current__ file.
+Build | `Command+B`  | `Control+B` | Compiles the __current__ file.
 Build and Run | `F7` | `F7` | Compiles the __current file__ and runs it using the Vice emulator.
 Build and Debug | `Shift+F7` | `Shift+F7` | Compiles the __current file__ and runs it using the Vice emulator. This option allows the creation of a file containing breakpoints, which is sent to the Vice emulator for debugging.
 Build Startup | `Command+Shift+B` | `Ctrl+Shift+B` | Compiles __a file with name Startup.asm__ in the same folder as the current file. Handy if you have several code files included in a main runnable file. The filename can be configured via `kickass_startup_file_path` setting.
