@@ -14,7 +14,7 @@
     "windows":
     {
         "env" : { "CLASSPATH" : "%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
-        "path": "%PATH%;C:\\C64\\Tools\\Vice\\;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
+        "path": "C:\\C64\\Tools\\Vice\\bin;%PATH%;C:\\C64\\Tools\\Vice\\;%PATH%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
     },
     "osx":
     {
