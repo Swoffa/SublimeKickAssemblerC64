@@ -1,0 +1,8 @@
+Changes in version 1.3.2:
+- Fix: Changed the default (Vice) executable path for run and debug, 
+  since Vice executable is now located in the bin sub folder.
+  Issue #58 reported by Pontus Berg (https://github.com/BacchusFLT)
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
