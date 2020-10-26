@@ -1,7 +1,6 @@
 {
     "selector": "source.assembly.kickassembler",
     "shell": true,
-    "encoding": "cp1252", //Windows: Needed
     "file_regex": "^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)", //filename, line number, column number and error message
 
     //Settings,
@@ -13,6 +12,7 @@
     "buildmode" : "build",
     "windows":
     {
+        "encoding": "cp1252", // Needed for correct console output
         "env" : { "CLASSPATH" : "%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar"},
         "path": "C:\\C64\\Tools\\Vice\\bin;%PATH%;C:\\C64\\Tools\\Vice\\;%PATH%;%programfiles%\\Java\\jre7\\bin;%programfiles%\\Java\\jre6\\bin;%programfiles%\\Java\\jre5\\bin;%programfiles(x86)%\\Java\\jre7\\bin;%programfiles(x86)%\\Java\\jre6\\bin;%programfiles(x86)%\\Java\\jre5\\bin;%windir%\\SysWOW64;",
     },
