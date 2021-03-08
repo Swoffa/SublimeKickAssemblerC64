@@ -1,0 +1,13 @@
+Changes in version 1.3.4:
+- Fix: Using full paths for Vice (c64) commands, 
+  Since version 3.5 for macOS does not handle relative paths well.
+  Issue #64 reported by John Cook (https://github.com/jcook793)
+- New feature: startup-file build annotion
+  Put startup-file annotation on first line of a file to configure which file to compile for "startup commands".
+  Has precedence over setting kickass_startup_file_path.
+  // @kickass-build "startup-file": "filename.asm"
+  Issue #57 reported by Pontus Berg (https://github.com/BacchusFLT)
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
