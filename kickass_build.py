@@ -91,9 +91,12 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
 
     def getFilenameVariables(self, buildMode, settings, variables):
         useStartup = 'startup' in buildMode
-        fileToBuild = settings.getSetting("kickass_startup_file_path") if useStartup else variables["file_base_name"]
+        currentFilePath = variables["file"]
+        currentFileBuildAnnotations = self.parseAnnotations(currentFilePath)
+        startupFileAnnotation = currentFileBuildAnnotations.get("startup-file") if currentFileBuildAnnotations else None
+        fileToBuild = (startupFileAnnotation if startupFileAnnotation else settings.getSetting("kickass_startup_file_path")) if useStartup else variables["file_base_name"]
         fileToBuildPath = "%s/%s.%s" % (variables["file_path"], fileToBuild, variables["file_extension"])
-        buildAnnotations = self.parseAnnotations(fileToBuildPath)
+        buildAnnotations = self.parseAnnotations(fileToBuildPath) if useStartup else currentFileBuildAnnotations
         fileToRunAnnotation = buildAnnotations.get("file-to-run") if buildAnnotations else None
         return {
             "build_file_base_name": fileToBuild,

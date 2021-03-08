@@ -1,7 +1,13 @@
 from unittest import TestCase
 from unittest.mock import patch, create_autospec
-from testglobals import kickassbuild, default_settings_dict
-from testsettings import TestSettings
+try:
+    from tests.testglobals import kickassbuild, default_settings_dict
+except ImportError:
+    from testglobals import kickassbuild, default_settings_dict
+try:
+    from tests.testsettings import TestSettings
+except ImportError:
+    from testsettings import TestSettings
 
 class TestKickAssCommandFactory(TestCase):
 
