@@ -1,5 +1,5 @@
 Changes in version 1.3.4:
-- Fix: Using full paths for Vice (c64) commands, 
+- Fix: Using full paths for Vice (x64) commands, 
   Since version 3.5 for macOS does not handle relative paths well.
   Issue #64 reported by John Cook (https://github.com/jcook793)
 - New feature: startup-file build annotion
