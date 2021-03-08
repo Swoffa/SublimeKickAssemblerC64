@@ -18,7 +18,7 @@ default_variables_dict = {
     #'platform': 'Windows', 
     #'packages': 'C:\\Users\\SimonOskarsson\\AppData\\Roaming\\Sublime Text 3\\Packages', 
     #'folder': filePath, 
-    #'file': filePath+'test-file.asm', 
+    'file': 'test-path/test-file.asm', 
     'file_extension': 'asm', 
     'file_path': 'test-path', 
     'file_base_name': 'test-file'

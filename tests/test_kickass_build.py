@@ -414,6 +414,18 @@ class TestKickassBuildCommand(TestCase):
         actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
         self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
 
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={'startup-file': 'test-startup-path/test-startup-file.ext'})
+    def test_getFilenameVariables_buildmode_has_startup_and_has_startupfile_annotation_returns_correct_dictionary(self, parseannotations_mock):
+        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
+        actual = self.target.getFilenameVariables('build-startup', settings, default_variables_dict.copy())
+        self.assertEqual({'build_file_base_name': 'test-startup-path/test-startup-file.ext', 'start_filename': 'test-file.prg'}, actual)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.parseAnnotations', autospec=True, return_value={'startup-file': 'test-startup-path/test-startup-file.ext'})
+    def test_getFilenameVariables_buildmode_does_not_have_startup_and_has_startupfile_annotation_returns_correct_dictionary(self, parseannotations_mock):
+        settings = TestSettings({'kickass_startup_file_path': 'test-startup-base-name', 'kickass_compiled_filename': 'test-file.prg'})
+        actual = self.target.getFilenameVariables('build', settings, default_variables_dict.copy())
+        self.assertEqual({'build_file_base_name': 'test-file', 'start_filename': 'test-file.prg'}, actual)
+
     #System tests
     #TODO: Maybe rework or move createExecDict system tests for all build modes, another file?
 
