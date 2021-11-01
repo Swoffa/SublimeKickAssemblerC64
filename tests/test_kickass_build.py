@@ -65,9 +65,10 @@ class TestKickassBuildCommand(TestCase):
             'env': {'CLASSPATH': '%CLASSPATH%;C:/C64/Tools/KickAssembler/KickAss.jar'}, 
             'file_regex': '^\\s*\\((.+\\.\\S+)\\s(\\d*):(\\d*)\\)\\s(.*)'
             }
+        variables = default_variables_dict.copy()
         expected = sourceDict.copy()
         expected['shell_cmd'] = 'test-command-text';
-        actual = self.target.createExecDict(sourceDict, 'build', self.settings_mock)
+        actual = self.target.createExecDict(sourceDict, variables, 'build', self.settings_mock)
         self.assertEqual(expected, actual)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -76,7 +77,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_path_is_dict_path_and_settings_path(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         settings = TestSettings({'kickass_path': 'test-settings-path'})
         sourceDict = {'path': 'test-dict-path'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual('test-settings-path:test-dict-path', actual['path'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -85,7 +87,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_path_is_not_expanded(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         settings = TestSettings({'kickass_path': '${file_path}'})
         sourceDict = {'path': '${file_extension}'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual('${file_path}:${file_extension}', actual['path'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -93,7 +96,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory', autospec=True)
     def test_createExecDict_kickasscommandfactory_ctor_is_called_once(self, commandFactory_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         commandFactory_mock.return_value.createCommand.return_value.updateEnvVars.side_effect = (lambda dict: dict)
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', self.settings_mock)
         commandFactory_mock.assert_called_once_with(self.settings_mock)
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -102,7 +106,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_kickasscommand_createcommand_is_called_once(self, commandFactory_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         commandFactory_mock.return_value.createCommand = CopyingMock()
         commandFactory_mock.return_value.createCommand.return_value.updateEnvVars.side_effect = (lambda dict: dict)
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', self.settings_mock)
         commandFactory_mock.return_value.createCommand.assert_called_once_with(default_variables_dict, 'build')
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={'test-filename-var':'test-filename'})
@@ -110,15 +115,16 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', new_callable=CopyingMock)
     def test_createExecDict_kickasscommand_is_called_with_window_variables_and_filename_variables(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         fix_createCommand_mock(createCommand_mock.return_value)
-        self.window_mock.extract_variables.return_value = {'test-var':'test-value'}
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
+        variables = {'test-var':'test-value'}
+        actual = self.target.createExecDict({}, variables, 'build', self.settings_mock)
         createCommand_mock.assert_called_once_with({'test-filename-var':'test-filename', 'test-var':'test-value'}, 'build')
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
     def test_createExecDict_returns_dict_with_shellcmd_from_kickasscommand(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', self.settings_mock)
         self.assertEqual('test-command-text', actual['shell_cmd'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -126,7 +132,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
     def test_createExecDict_returns_dict_with_envvars_from_kickasscommand(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         createCommand_mock.return_value.updateEnvVars.side_effect = (lambda dict: {'env': {'test-env-var1':'env-var1','test-env-var2':'env-var2'}})
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', self.settings_mock)
         self.assertEqual({'test-env-var1':'env-var1','test-env-var2':'env-var2'}, actual['env'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -155,7 +162,8 @@ class TestKickassBuildCommand(TestCase):
             })
         sourceDict = {'test-key': '${kickass_compile_args} ${kickass_compile_debug_additional_args} ${kickass_run_command_c64debugger} ${kickass_debug_command_c64debugger} ${kickass_run_command_x64} ${kickass_debug_command_x64} ${kickass_run_path} ${kickass_debug_path} ${kickass_jar_path} ${kickass_args} ${kickass_run_args} ${kickass_debug_args} ${kickass_startup_file_path} ${kickass_breakpoint_filename} ${kickass_compiled_filename} ${kickass_output_path} ${default_prebuild_path} ${default_postbuild_path}'}
         expected = 'kickass_compile_args-value kickass_compile_debug_additional_args-value kickass_run_command_c64debugger-value kickass_debug_command_c64debugger-value kickass_run_command_x64-value kickass_debug_command_x64-value kickass_run_path-value kickass_debug_path-value kickass_jar_path-value kickass_args-value kickass_run_args-value kickass_debug_args-value kickass_startup_file_path-value kickass_breakpoint_filename-value kickass_compiled_filename-value kickass_output_path-value default_prebuild_path-value default_postbuild_path-value'
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual(expected, actual['test-key'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -164,7 +172,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_non_expandable_gets_emptied(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         settings = TestSettings({'kickass_args1': 'test-args'})
         sourceDict = {'test-key': '${kickass_args1} a'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual(' a', actual['test-key'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -178,7 +187,8 @@ class TestKickassBuildCommand(TestCase):
             'kickass_args': 'kickass_args-value'
             })
         sourceDict = {'test-key': '${kickass_run_command_x64} ${kickass_compile_args}'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual('kickass_compiled_filename-value kickass_args-value kickass_compile_args-value', actual['test-key'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -192,7 +202,8 @@ class TestKickassBuildCommand(TestCase):
             'kickass_run_command_x64': '${kickass_compile_args}'
             })
         sourceDict = {'test-key': '${kickass_run_command_x64}'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual('kickass_compile_args-value kickass_compiled_filename-value', actual['test-key'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -205,7 +216,8 @@ class TestKickassBuildCommand(TestCase):
             'kickass_compile_args': 'kickass_compile_args-value ${kickass_compiled_filename}',
             'kickass_run_command_x64': 'x64 ${kickass_compile_args}'
             })
-        actual = self.target.createExecDict({}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', settings)
         self.assertEqual('test-command-text x64 kickass_compile_args-value kickass_compiled_filename-value', actual['shell_cmd'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -219,7 +231,8 @@ class TestKickassBuildCommand(TestCase):
             'kickass_args': 'kickass_args-value'
             })
         sourceDict = {'test-key': '${kickass_breakpoint_filename} ${kickass_compile_args}'}
-        actual = self.target.createExecDict(sourceDict, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict(sourceDict, variables, 'build', settings)
         self.assertEqual('${kickass_compiled_filename} ${kickass_args} kickass_compile_args-value', actual['test-key'])
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
@@ -227,16 +240,9 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
     def test_createExecDict_returns_dict_with_envvars_from_settings(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         settings = TestSettings({'kickass_env': {'test-settings-env-var1':'env-var1','test-settings-env-var2':'env-var2'}})
-        actual = self.target.createExecDict({'env':{}}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env':{}}, variables, 'build', settings)
         self.assertEqual({'test-settings-env-var1':'env-var1','test-settings-env-var2':'env-var2'}, actual['env'])
-
-    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
-    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
-    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
-    def test_createExecDict_error_occurs_returns_dict_with_error_command(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
-        self.window_mock.extract_variables.side_effect = Exception('test-error')
-        actual = self.target.createExecDict({}, 'build', self.settings_mock)
-        self.assertEqual('echo test-error', actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', autospec=True, return_value=True)
@@ -247,6 +253,14 @@ class TestKickassBuildCommand(TestCase):
         actual = self.target.run(buildmode = 'build', env = {})
         sublime_error_mock.assert_called_once_with("Settings could not be loaded, please restart Sublime Text.")
         self.assertEqual(0, settings_mock.return_value.getSetting.call_count)
+
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
+    @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
+    @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
+    def test_run_error_occurs_returns_dict_with_error_command(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
+        self.window_mock.extract_variables.side_effect = Exception('test-error')
+        with self.assertRaisesRegexp(Exception, 'test-error') as cm:
+            self.target.run(buildmode = 'build', env = {})
 
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.createExecDict', autospec=True)
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
@@ -308,8 +322,10 @@ class TestKickassBuildCommand(TestCase):
     def test_run_createexecdict_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSettingAsBool.return_value = False
+        variables = default_variables_dict.copy()
+        self.window_mock.extract_variables.return_value = variables
         actual = self.target.run(buildmode = 'build', env = {})
-        execDict_mock.assert_called_once_with(self.target, {'env': {}}, 'build', settings_mock.return_value)
+        execDict_mock.assert_called_once_with(self.target, {'env': {}}, variables, 'build', settings_mock.return_value)
 
     def test_mergedictionaries_no_collisions_dictionaries_merged(self):
         dict1 = {'a':'b'}
@@ -432,43 +448,50 @@ class TestKickassBuildCommand(TestCase):
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
-        actual = self.target.createExecDict({}, 'build', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin" '
-        actual = self.target.createExecDict({}, 'build-startup', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build-startup', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file.vs"  "bin/test-file.prg"'
-        actual = self.target.createExecDict({}, 'build-and-run', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build-and-run', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup.vs"  "bin/Startup.prg"'
-        actual = self.target.createExecDict({}, 'build-and-run-startup', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build-and-run-startup', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrun_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/test-file.vs" "bin/breakpoints.txt" > "bin/test-file_MonCommands.mon" || cat "bin/test-file.vs" > "bin/test-file_MonCommands.mon" && "x64" -logfile "bin/test-file_ViceLog.txt" -moncommands "bin/test-file_MonCommands.mon"  "bin/test-file.prg"'
-        actual = self.target.createExecDict({}, 'build-and-debug', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build-and-debug', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_buildandrunstartup_returns_dictionary_with_correct_build_command(self, file_mocks):
         expected = 'java cml.kickass.KickAssembler "Startup.asm" -log "bin/Startup_BuildLog.txt" -o "bin/Startup.prg" -vicesymbols -showmem -odir "bin"   -afo :afo=true && [ -f "bin/breakpoints.txt" ] && cat "bin/Startup.vs" "bin/breakpoints.txt" > "bin/Startup_MonCommands.mon" || cat "bin/Startup.vs" > "bin/Startup_MonCommands.mon" && "x64" -logfile "bin/Startup_ViceLog.txt" -moncommands "bin/Startup_MonCommands.mon"  "bin/Startup.prg"'
-        actual = self.target.createExecDict({}, 'build-and-debug-startup', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({}, variables, 'build-and-debug-startup', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     @patch('glob.glob', autospec=True, return_value=True)
     def test_createExecDict_buildmode_is_make_returns_dictionary_with_correct_makecommand(self, glob_mock, getFilenameVariables_mock):
-        actual = self.target.createExecDict({'env':{}}, 'make', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env':{}}, variables, 'make', self.all_settings)
         self.assertEqual('. "make.sh"', actual['shell_cmd'])
 
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
@@ -481,28 +504,32 @@ class TestKickassBuildCommand(TestCase):
             'kickass_bin_folder': 'test-path/bin', 
             'kickass_prg_file': 'test-path/bin/test-file.prg'
             }
-        actual = self.target.createExecDict({'env':{}}, 'make', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env':{}}, variables, 'make', self.all_settings)
         self.assertEqual(expected, actual['env'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':True, '/postbuild.sh':False, 'postbuild.sh':False}[x])
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_and_prebuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':False, '/postbuild.sh':False, 'postbuild.sh':True}[x])
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_and_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'/prebuild.sh':False, 'prebuild.sh':True, '/postbuild.sh':False, 'postbuild.sh':True}[x])
     @patch('builtins.open', new_callable=mock_open34, read_data='.filenamespace goatPowerExample')
     def test_createExecDict_buildmode_is_build_and_prebuild_script_exist_and_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', self.all_settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', self.all_settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':False, 'postbuild.sh':False}[x])
@@ -510,7 +537,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_buildmode_is_build_and_default_prebuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
         expected = '. "test-default-prebuild-path/prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin" '
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':False, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':False}[x])
@@ -518,7 +546,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_buildmode_is_build_and_default_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
         expected = 'java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "test-default-postbuild-path/postbuild.sh"'
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':True, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':True}[x])
@@ -526,7 +555,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_buildmode_is_build_and_all_prebuild_postbuild_scripts_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
         expected = '. "prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "postbuild.sh"'
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
     @patch('glob.glob', autospec=True, side_effect=lambda x: {'test-default-prebuild-path/prebuild.sh':True, 'prebuild.sh':False, 'test-default-postbuild-path/postbuild.sh':True, 'postbuild.sh':False}[x])
@@ -534,7 +564,8 @@ class TestKickassBuildCommand(TestCase):
     def test_createExecDict_buildmode_is_build_and_default_prebuild_postbuild_script_exist_returns_dictionary_with_correct_build_command(self, file_mocks, glob_mock):
         settings = TestSettings(dict(default_settings_dict, **{'default_prebuild_path': 'test-default-prebuild-path', 'default_postbuild_path': 'test-default-postbuild-path'}))
         expected = '. "test-default-prebuild-path/prebuild.sh" && java cml.kickass.KickAssembler "test-file.asm" -log "bin/test-file_BuildLog.txt" -o "bin/test-file.prg" -vicesymbols -showmem -odir "bin"   && . "test-default-postbuild-path/postbuild.sh"'
-        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, 'build', settings)
+        variables = default_variables_dict.copy()
+        actual = self.target.createExecDict({'env': {'test-env-key':'test-env-value'}}, variables, 'build', settings)
         self.assertEqual(expected, actual['shell_cmd'])
 
 if __name__ == '__main__':
