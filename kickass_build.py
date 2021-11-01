@@ -136,7 +136,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             return
 
         variables = self.window.extract_variables()
-        outputFolder = settings.getSetting("kickass_output_path")
+        outputFolder = os.path.join(variables["file_path"], settings.getSetting("kickass_output_path"))
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
