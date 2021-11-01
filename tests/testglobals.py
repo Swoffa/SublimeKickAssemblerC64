@@ -1,6 +1,7 @@
 import sublime
 import sys
 import io
+import os 
 from unittest.mock import MagicMock, mock_open, file_spec, DEFAULT
 from copy import deepcopy
 
@@ -43,6 +44,9 @@ default_settings_dict = {
     "kickass_compile_debug_additional_args": "-afo :afo=true"
     }
 
+
+def pathJoin(p1, p2):
+    return os.path.join(p1, p2)
 
 #Support for readline in mock_open, implemented inb puthon 3.4, sublime uses python 3.3
 #Copied from source: https://github.com/python/cpython/blob/master/Lib/unittest/mock.py

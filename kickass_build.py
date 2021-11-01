@@ -47,7 +47,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
     Provide custom build variables to a build system, such as a value that needs
     to be specific to a current project.
     """
-    def createExecDict(self, sourceDict, buildMode, settings):
+    def createExecDict(self, sourceDict, variables, buildMode, settings):
         global custom_var_list, vars_to_expand_list
 
         try:
@@ -55,7 +55,6 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             tmpPath = sourceDict.pop('path', None)
 
             # Variables to expand; start with defaults, then add ours.
-            variables = self.window.extract_variables()
             variables.update(self.getFilenameVariables(buildMode, settings, variables))
 
             # Create the command
@@ -77,7 +76,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             # arguments given.
             args = sublime.expand_variables (extendedDict, variables)
 
-        # Reset path to unexpanded and add path addition from settings
+            # Reset path to unexpanded and add path addition from settings
             args['path'] = self.getPathDelimiter().join(filter(None, [settings.getSetting("kickass_path"), tmpPath]))
 
             envSetting = settings.getSetting("kickass_env")
@@ -136,7 +135,8 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             print(errorMessage)
             return
 
-        outputFolder = settings.getSetting("kickass_output_path")
+        variables = self.window.extract_variables()
+        outputFolder = os.path.join(variables["file_path"], settings.getSetting("kickass_output_path"))
 
         # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
         # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
@@ -149,7 +149,7 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
         if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
             self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, kwargs.pop('buildmode'), settings))
+        self.window.run_command('exec', self.createExecDict(kwargs, variables, kwargs.pop('buildmode'), settings))
 
 class SublimeSettings():
     def __init__(self, parentCommand):
