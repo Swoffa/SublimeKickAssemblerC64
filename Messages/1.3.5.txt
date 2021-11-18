@@ -1,0 +1,11 @@
+Changes in version 1.3.5:
+- Fix: Make command now works again
+  Also fixes non-working pre- and post build commands
+  Issue #72 reported by Pontus Berg (https://github.com/BacchusFLT)
+- Fix: Correct default path to x64c
+  Issue #68 reported by Anthony Clarke (https://github.com/anthonyjclarke)
+- Fix: Create and empty bin-folder works correctly again
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
