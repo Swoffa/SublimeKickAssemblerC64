@@ -5,7 +5,7 @@ try:
 except ImportError:
     from testsettings import TestSettings
 try:
-    from tests.testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock, pathJoin
+    from tests.testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
 except ImportError:
     from testglobals import kickassbuild, default_settings_dict, default_variables_dict, mock_open34, CopyingMock
 
@@ -248,7 +248,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
     @patch('sublime.error_message', autospec=True)
-    def test_run_settings_not_loaded_sets_error_message_and_returns(self, sublime_error_mock, settings_mock, glob_mock, getFilenameVariables_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_settings_not_loaded_sets_error_message_and_returns(self, cd_mock, sublime_error_mock, settings_mock, glob_mock, getFilenameVariables_mock):
         settings_mock.return_value.isLoaded.return_value = False
         actual = self.target.run(buildmode = 'build', env = {})
         sublime_error_mock.assert_called_once_with("Settings could not be loaded, please restart Sublime Text.")
@@ -257,7 +258,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getFilenameVariables', autospec=True, return_value={})
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.getPathDelimiter', autospec=True, return_value=':')
     @patch('SublimeKickAssemblerC64.kickass_build.KickAssCommandFactory.createCommand', autospec=True, return_value=createCommand_mock())
-    def test_run_error_occurs_returns_dict_with_error_command(self, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_error_occurs_returns_dict_with_error_command(self, cd_mock, createCommand_mock, getPathDelimiter_mock, getFilenameVariables_mock):
         self.window_mock.extract_variables.side_effect = Exception('test-error')
         with self.assertRaisesRegexp(Exception, 'test-error') as cm:
             self.target.run(buildmode = 'build', env = {})
@@ -267,14 +269,12 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('os.makedirs', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
-    def test_run_creates_makedirs_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_creates_makedirs_called_once(self, cd_mock, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
-        variabels = default_variables_dict.copy()
-        self.window_mock.extract_variables.return_value = variabels
-        expected = pathJoin(variabels["file_path"], "outputdir")
         actual = self.target.run(buildmode = 'build', env = {})
-        os_mock.assert_called_once_with(expected, exist_ok=True)
+        os_mock.assert_called_once_with('outputdir', exist_ok=True)
 
     @patch('os.path.isdir', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder', autospec=True)
@@ -283,15 +283,13 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('os.makedirs', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
-    def test_run_emptybinfolder_setting_is_true_emptyfolder_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_emptybinfolder_setting_is_true_emptyfolder_is_called_once(self, cd_mock, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
         settings_mock.return_value.getSettingAsBool.return_value = True
-        variabels = default_variables_dict.copy()
-        self.window_mock.extract_variables.return_value = variabels
-        expected = pathJoin(variabels["file_path"], "outputdir")
         actual = self.target.run(buildmode = 'build', env = {})
-        emptyfolder_mock.assert_called_once_with(self.target, expected)
+        emptyfolder_mock.assert_called_once_with(self.target, 'outputdir')
 
     @patch('os.path.isdir', return_value=True)
     @patch('SublimeKickAssemblerC64.kickass_build.KickassBuildCommand.emptyFolder', autospec=True)
@@ -300,7 +298,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('os.makedirs', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
-    def test_run_emptybinfolder_setting_is_false_emptyfolder_is_not_called(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_emptybinfolder_setting_is_false_emptyfolder_is_not_called(self, cd_mock, settings_mock, os_mock, glob_mock, file_mock, execDict_mock, emptyfolder_mock, isdir_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSetting.return_value = 'outputdir'
         settings_mock.return_value.getSettingAsBool.return_value = False
@@ -312,7 +311,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('os.makedirs', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
-    def test_run_window_runcommand_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_window_runcommand_is_called_once(self, cd_mock, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSettingAsBool.return_value = False
         settings_mock.return_value.getSetting.return_value = 'outputdir'
@@ -326,7 +326,8 @@ class TestKickassBuildCommand(TestCase):
     @patch('glob.glob', autospec=True, return_value=True)
     @patch('os.makedirs', autospec=True)
     @patch('SublimeKickAssemblerC64.kickass_build.SublimeSettings', autospec=True)
-    def test_run_createexecdict_is_called_once(self, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
+    @patch('SublimeKickAssemblerC64.kickass_build.setTemporaryWorkingDirectory', autospec=True)
+    def test_run_createexecdict_is_called_once(self, cd_mock, settings_mock, os_mock, glob_mock, file_mock, execDict_mock):
         settings_mock.return_value.isLoaded.return_value = True
         settings_mock.return_value.getSettingAsBool.return_value = False
         settings_mock.return_value.getSetting.return_value = 'outputdir'
