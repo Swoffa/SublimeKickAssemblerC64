@@ -64,7 +64,7 @@ class KickAssTooltip:
         setup_logging(self.log_level)
 
         plug_path = sublime.packages_path()
-        default_css = os.path.join(plug_path, 'Kick Assembler (C64)/css/default.css')
+        default_css = os.path.join(plug_path, 'SublimeKickAssemblerC64/css/default.css')
 
         KickAssTooltip.css_file = self.settings.get('css_file', default_css)
 
