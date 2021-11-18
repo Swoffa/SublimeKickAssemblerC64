@@ -4,6 +4,7 @@ import platform
 import glob
 import shutil
 import json
+import contextlib
 
 # This file is based on work from:
 # https://github.com/STealthy-and-haSTy/SublimeScraps/blob/master/build_enhancements/custom_build_variables.py
@@ -41,6 +42,15 @@ vars_to_expand_list = [
                         "kickass_run_command_c64debugger",
                         "kickass_debug_command_c64debugger",
                         ]
+
+@contextlib.contextmanager
+def setTemporaryWorkingDirectory(path):
+    _cwd = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(_cwd)
 
 class KickassBuildCommand(sublime_plugin.WindowCommand):
     """
@@ -136,20 +146,21 @@ class KickassBuildCommand(sublime_plugin.WindowCommand):
             return
 
         variables = self.window.extract_variables()
-        outputFolder = os.path.join(variables["file_path"], settings.getSetting("kickass_output_path"))
+        with setTemporaryWorkingDirectory(variables["file_path"]):
+            outputFolder = settings.getSetting("kickass_output_path")
 
-        # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
-        # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
-        # (the output-directory will be generated anyway via the output-parameter in the compile-command)
-        try:
-            os.makedirs(outputFolder, exist_ok=True)
-        except:
-            pass
+            # os.makedirs() caused trouble with Python versions < 3.4.1 (see https://docs.python.org/3/library/os.html#os.makedirs);
+            # to avoid abortion (on UNIX-systems) here, we simply wrap the call with a try-except
+            # (the output-directory will be generated anyway via the output-parameter in the compile-command)
+            try:
+                os.makedirs(outputFolder, exist_ok=True)
+            except:
+                pass
 
-        if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
-            self.emptyFolder(outputFolder)
+            if settings.getSettingAsBool("kickass_empty_bin_folder_before_build") and os.path.isdir(outputFolder):
+                self.emptyFolder(outputFolder)
 
-        self.window.run_command('exec', self.createExecDict(kwargs, variables, kwargs.pop('buildmode'), settings))
+            self.window.run_command('exec', self.createExecDict(kwargs, variables, kwargs.pop('buildmode'), settings))
 
 class SublimeSettings():
     def __init__(self, parentCommand):
