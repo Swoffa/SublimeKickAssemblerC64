@@ -21,6 +21,7 @@ custom_var_list = [ "kickass_compile_args",
                     "kickass_run_path",
                     "kickass_debug_path",
                     "kickass_jar_path",
+                    "kickass_main_class_name",
                     "kickass_args",
                     "kickass_run_args",
                     "kickass_debug_args",
@@ -220,8 +221,9 @@ class KickAssCommandFactory():
         return KickAssCommand(makeCommand, True, False, buildMode)
 
     def createKickassCommand(self, variables, buildMode): 
-        javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"  
-        compileCommand = javaCommand+" cml.kickass.KickAssembler ${kickass_compile_args} "
+        javaCommand = "java -cp \"${kickass_jar_path}\"" if self.__settings.getSetting("kickass_jar_path") else "java"
+        kickAssClassName = "${kickass_main_class_name}" if self.__settings.getSetting("kickass_main_class_name") else "cml.kickass.KickAssembler"
+        compileCommand = "%s %s ${kickass_compile_args} " % (javaCommand, kickAssClassName)
         compileDebugCommandAdd = "${kickass_compile_debug_additional_args}"
 
         runCommand = "${kickass_run_command_x64}" 
