@@ -1,0 +1,9 @@
+Changes in version 1.3.6:
+- New feature: Added setting kickass_main_class_name
+  Optional setting for configuring the Kick Assempler main class name
+  Useful for this: https://gitlab.com/jespergravgaard/kickassembler65ce02
+  Requested by PrincePhaze101
+
+See http://goatpower.org for more details.
+
+//Swoffa of Noice
